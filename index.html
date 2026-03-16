@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+(function(){
+  const KEY = 'bs_auth_v1';
+  if (sessionStorage.getItem(KEY) === '1') return;
+  document.addEventListener('DOMContentLoaded', function() {
+    const gate = document.createElement('div');
+    gate.id = 'auth-gate';
+    gate.innerHTML = `
+      <div class="gate-box">
+        <div class="gate-logo">BOOST.SPACE</div>
+        <div class="gate-sub">TOFU Marketing Report — Restricted Access</div>
+        <div class="gate-form">
+          <input id="g-user" type="text" placeholder="Username" autocomplete="username" />
+          <input id="g-pass" type="password" placeholder="Password" autocomplete="current-password" />
+          <button id="g-btn">Access Report</button>
+          <div id="g-err"></div>
+        </div>
+      </div>`;
+    gate.style.cssText = 'position:fixed;inset:0;background:#1b3a5c;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:system-ui,sans-serif';
+    const style = document.createElement('style');
+    style.textContent = `
+      .gate-box{background:#fff;border-radius:14px;padding:40px 48px;max-width:380px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+      .gate-logo{font-size:22px;font-weight:800;color:#1b3a5c;letter-spacing:2px;margin-bottom:6px}
+      .gate-sub{font-size:12px;color:#888;margin-bottom:28px;line-height:1.4}
+      .gate-form input{display:block;width:100%;padding:11px 14px;margin-bottom:12px;border:1px solid #dde3ec;border-radius:8px;font-size:14px;outline:none;box-sizing:border-box}
+      .gate-form input:focus{border-color:#2e75b6}
+      .gate-form button{width:100%;padding:12px;background:#2e75b6;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px}
+      .gate-form button:hover{background:#1b3a5c}
+      #g-err{color:#c00;font-size:12px;margin-top:10px;min-height:16px}`;
+    document.head.appendChild(style);
+    document.body.prepend(gate);
+    function attempt() {
+      const u = document.getElementById('g-user').value.trim();
+      const p = document.getElementById('g-pass').value;
+      if (u === 'Boostspace' && p === 'posthog') {
+        sessionStorage.setItem(KEY, '1');
+        gate.style.opacity = '0';
+        gate.style.transition = 'opacity .3s';
+        setTimeout(() => gate.remove(), 300);
+      } else {
+        document.getElementById('g-err').textContent = 'Incorrect credentials.';
+        document.getElementById('g-pass').value = '';
+      }
+    }
+    document.getElementById('g-btn').addEventListener('click', attempt);
+    document.getElementById('g-pass').addEventListener('keydown', e => e.key === 'Enter' && attempt());
+    document.getElementById('g-user').addEventListener('keydown', e => e.key === 'Enter' && document.getElementById('g-pass').focus());
+  });
+})();
+</script>
+<title>BOOST.SPACE — TOFU Marketing Report</title>
+<style>
+  :root {
+    --navy: #1b3a5c;
+    --blue: #2e75b6;
+    --light-blue: #d5e8f0;
+    --red: #c00000;
+    --orange: #e67e22;
+    --green: #27ae60;
+    --yellow: #f39c12;
+    --gray: #666;
+    --light-gray: #f5f7fa;
+    --border: #dde3ec;
+    --white: #fff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+    background: var(--light-gray);
+    color: #222;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--navy);
+    color: white;
+    padding: 28px 40px 20px;
+    text-align: center;
+  }
+  .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 2px; color: white; }
+  .header h2 { font-size: 18px; color: var(--light-blue); margin-top: 6px; font-weight: 400; }
+  .header .meta { font-size: 12px; color: #aac4de; margin-top: 8px; }
+
+  /* NAV TABS */
+  .nav-tabs {
+    background: white;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    gap: 0;
+    padding: 0 40px;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .nav-tab {
+    padding: 14px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--gray);
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .nav-tab:hover { color: var(--blue); }
+  .nav-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* MAIN */
+  .main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+  /* SECTIONS */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  @media (max-width: 768px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+    .main { padding: 16px; }
+    .nav-tabs { padding: 0 16px; }
+    .header { padding: 20px 16px; }
+  }
+  @media (max-width: 480px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  }
+
+  /* KPI CARDS */
+  .kpi {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .kpi.green::before { background: var(--green); }
+  .kpi.red::before { background: var(--red); }
+  .kpi.orange::before { background: var(--orange); }
+  .kpi.blue::before { background: var(--blue); }
+  .kpi-label { font-size: 11px; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .kpi-value { font-size: 30px; font-weight: 700; color: var(--navy); margin: 6px 0 4px; line-height: 1; }
+  .kpi-value.red { color: var(--red); }
+  .kpi-value.green { color: var(--green); }
+  .kpi-value.orange { color: var(--orange); }
+  .kpi-delta { font-size: 12px; font-weight: 600; }
+  .kpi-delta.down { color: var(--red); }
+  .kpi-delta.up { color: var(--green); }
+  .kpi-delta.neutral { color: var(--gray); }
+
+  /* ALERT BANNERS */
+  .alert {
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+  }
+  .alert.critical { background: #fdf0f0; border-left: 4px solid var(--red); color: #7a1515; }
+  .alert.warning { background: #fef9ec; border-left: 4px solid var(--yellow); color: #7a5500; }
+  .alert.info { background: #edf4fb; border-left: 4px solid var(--blue); color: #1b3a5c; }
+  .alert.success { background: #edfaf3; border-left: 4px solid var(--green); color: #145230; }
+  .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .alert strong { display: block; font-size: 13px; margin-bottom: 2px; }
+
+  /* TABLES */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .data-table th {
+    background: var(--navy);
+    color: white;
+    padding: 9px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+  }
+  .data-table th:first-child { border-radius: 6px 0 0 0; }
+  .data-table th:last-child { border-radius: 0 6px 0 0; }
+  .data-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: #f8fafc; }
+  .data-table tr.highlight td { background: var(--light-blue); }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .tag.red { background: #fdecea; color: var(--red); }
+  .tag.green { background: #e9f7ef; color: var(--green); }
+  .tag.orange { background: #fef3e2; color: var(--orange); }
+  .tag.blue { background: #eaf1fb; color: var(--blue); }
+  .tag.gray { background: #f0f0f0; color: var(--gray); }
+
+  /* FUNNEL */
+  .funnel { display: flex; flex-direction: column; gap: 0; }
+  .funnel-step {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    background: white;
+    border: 1px solid var(--border);
+    margin-bottom: -1px;
+    transition: background 0.15s;
+  }
+  .funnel-step:first-child { border-radius: 8px 8px 0 0; }
+  .funnel-step:last-child { border-radius: 0 0 8px 8px; margin-bottom: 0; }
+  .funnel-step:hover { background: #f8fafc; }
+  .funnel-bar-wrap { flex: 1; height: 10px; background: #eee; border-radius: 5px; overflow: hidden; }
+  .funnel-bar { height: 100%; border-radius: 5px; transition: width 0.8s ease; }
+  .funnel-label { width: 180px; font-size: 13px; font-weight: 600; color: var(--navy); }
+  .funnel-vol { width: 80px; text-align: right; font-weight: 700; font-size: 14px; color: var(--navy); }
+  .funnel-cvr { width: 60px; text-align: right; font-size: 12px; color: var(--gray); }
+  .funnel-status { width: 28px; text-align: center; font-size: 16px; }
+
+  /* TREND SPARKLINE */
+  .trend-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .trend-row:last-child { border-bottom: none; }
+  .trend-label { width: 180px; font-size: 13px; color: var(--navy); font-weight: 500; }
+  .trend-bars { display: flex; align-items: flex-end; gap: 4px; height: 40px; flex: 1; }
+  .trend-bar { flex: 1; border-radius: 3px 3px 0 0; min-height: 4px; transition: height 0.6s ease; }
+  .trend-vals { display: flex; gap: 16px; }
+  .trend-val { font-size: 12px; }
+  .trend-val .wk { color: var(--gray); font-size: 10px; }
+  .trend-val .n { font-weight: 600; }
+
+  /* SPEND BREAKDOWN */
+  .spend-platform {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 16px;
+  }
+  .spend-platform:last-child { border-bottom: none; }
+  .spend-name { width: 120px; font-weight: 700; font-size: 14px; }
+  .spend-bar-wrap { flex: 1; height: 12px; background: #eee; border-radius: 6px; overflow: hidden; }
+  .spend-bar { height: 100%; border-radius: 6px; }
+  .spend-amt { width: 100px; text-align: right; font-weight: 700; }
+  .spend-conv { width: 80px; text-align: right; font-size: 12px; }
+
+  /* PROGRESS */
+  .initiative-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .initiative-row:last-child { border-bottom: none; }
+  .initiative-name { flex: 1; font-size: 13px; font-weight: 500; }
+  .initiative-notes { flex: 2; font-size: 12px; color: var(--gray); }
+  .status-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .status-dot.done { background: #e9f7ef; }
+  .status-dot.fail { background: #fdecea; }
+  .status-dot.wip { background: #fef3e2; }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .section-icon {
+    width: 40px; height: 40px;
+    background: var(--light-blue);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--navy); }
+  .section-sub { font-size: 12px; color: var(--gray); margin-top: 2px; }
+
+  /* OPEN QUESTIONS */
+  .question {
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: white;
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .q-num {
+    width: 24px; height: 24px;
+    background: var(--blue);
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .q-text { font-size: 13px; line-height: 1.5; flex: 1; }
+  .q-priority { font-size: 11px; font-weight: 700; margin-top: 4px; }
+
+  /* TOOLTIP-LIKE INFO */
+  .info-box {
+    background: var(--light-blue);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+
+  /* PULSE ANIMATION */
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  .pulse { animation: pulse 2s infinite; }
+
+  /* SCROLL ANIMATION */
+  @keyframes slideIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .animate-in { animation: slideIn 0.4s ease forwards; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>BOOST.SPACE</h1>
+  <h2>TOFU Marketing Report</h2>
+  <div class="meta">Reporting Period: Feb 17 – Mar 9, 2026 &nbsp;|&nbsp; Data: PostHog + Google Ads + LinkedIn Ads</div>
+</div>
+
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="showTab('summary')">📊 Executive Summary</div>
+  <div class="nav-tab" onclick="showTab('reach')">🌐 Layer 1: Reach</div>
+  <div class="nav-tab" onclick="showTab('engagement')">🔥 Layer 2: Engagement</div>
+  <div class="nav-tab" onclick="showTab('leads')">🎯 Layer 3: Leads</div>
+  <div class="nav-tab" onclick="showTab('mql')">💰 Layer 4: MQL</div>
+  <div class="nav-tab" onclick="showTab('paid')">💵 Paid Channels</div>
+  <div class="nav-tab" onclick="showTab('funnel')">🔍 Full Funnel</div>
+  <div class="nav-tab" onclick="showTab('status')">✅ Status Check</div>
+</div>
+
+<div class="main">
+
+  <!-- SUMMARY -->
+  <div class="section active" id="summary">
+    <div class="section-header">
+      <div class="section-icon">📊</div>
+      <div>
+        <div class="section-title">Executive Summary</div>
+        <div class="section-sub">Mar W1 (Mar 2–9, 2026) vs Feb W3–W4</div>
+      </div>
+    </div>
+
+    <div class="alert critical">
+      <span class="alert-icon">🛑</span>
+      <div>
+        <strong>CRITICAL: Demo Meetings Booked = 0 in March W1</strong>
+        Dropped from 24 (Feb W3) → 11 (Feb W4) → 0 (Mar W1). ~16 demo lead forms submitted but NONE converted to a booked meeting. Calendar integration broken or tracking event stopped firing?
+      </div>
+    </div>
+
+    <div class="alert warning">
+      <span class="alert-icon">⚠️</span>
+      <div>
+        <strong>CTA Click Rate Declining 3 Weeks Straight</strong>
+        1.68% → 1.11% → 0.99%. LinkedIn paid scale-up is driving volume but lower-intent visitors.
+      </div>
+    </div>
+
+    <div class="alert info">
+      <span class="alert-icon">ℹ️</span>
+      <div>
+        <strong>Event Rename Mid-Mar W1</strong>
+        be_form_submit_demo_lead consolidated into form_submit (form_type=demo_lead). 12 captures on old event + 4 on new = ~16 total demo leads. Possible overlap — verify with analytics.
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="kpi blue">
+        <div class="kpi-label">Pageviews / Week</div>
+        <div class="kpi-value">13.7K</div>
+        <div class="kpi-delta down">↓ 4.3% WoW</div>
+      </div>
+      <div class="kpi orange">
+        <div class="kpi-label">CTA Click Rate</div>
+        <div class="kpi-value orange">0.99%</div>
+        <div class="kpi-delta down">↓ 3wk decline</div>
+      </div>
+      <div class="kpi orange">
+        <div class="kpi-label">Form Submissions</div>
+        <div class="kpi-value">120</div>
+        <div class="kpi-delta down">↓ 12.4% WoW</div>
+      </div>
+      <div class="kpi red">
+        <div class="kpi-label">Meetings Booked</div>
+        <div class="kpi-value red">0</div>
+        <div class="kpi-delta down pulse">↓ 100% WoW 🛑</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">💵 Combined Paid Spend — Mar W1</div>
+        <table class="data-table">
+          <thead><tr><th>Platform</th><th>Spend</th><th>Clicks</th><th>Conversions</th></tr></thead>
+          <tbody>
+            <tr><td>LinkedIn Ads</td><td>$4,062</td><td>7,862</td><td><span class="tag red">0</span></td></tr>
+            <tr><td>Google Ads</td><td>~$1,210</td><td>903</td><td><span class="tag green">8</span></td></tr>
+            <tr class="highlight"><td><strong>TOTAL</strong></td><td><strong>~$5,272</strong></td><td><strong>8,765</strong></td><td><span class="tag orange">8</span></td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border); display:flex; gap:20px; flex-wrap:wrap;">
+          <div style="text-align:center"><div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.5px">CPL (all forms)</div><div style="font-size:20px;font-weight:700;color:var(--navy)">$44</div></div>
+          <div style="text-align:center"><div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.5px">Cost / Demo Lead</div><div style="font-size:20px;font-weight:700;color:var(--orange)">$329</div></div>
+          <div style="text-align:center"><div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.5px">CPA (meetings)</div><div style="font-size:20px;font-weight:700;color:var(--red)">∞</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📉 3-Week Trend Snapshot</div>
+        <div class="trend-row">
+          <div class="trend-label">Pageviews</div>
+          <div class="trend-vals">
+            <div class="trend-val"><div class="wk">Feb W3</div><div class="n">12,797</div></div>
+            <div class="trend-val"><div class="wk">Feb W4</div><div class="n">14,347</div></div>
+            <div class="trend-val"><div class="wk">Mar W1</div><div class="n" style="color:var(--orange)">13,727</div></div>
+          </div>
+        </div>
+        <div class="trend-row">
+          <div class="trend-label">CTA Click Rate</div>
+          <div class="trend-vals">
+            <div class="trend-val"><div class="wk">Feb W3</div><div class="n">1.68%</div></div>
+            <div class="trend-val"><div class="wk">Feb W4</div><div class="n">1.11%</div></div>
+            <div class="trend-val"><div class="wk">Mar W1</div><div class="n" style="color:var(--red)">0.99%</div></div>
+          </div>
+        </div>
+        <div class="trend-row">
+          <div class="trend-label">Form Submissions</div>
+          <div class="trend-vals">
+            <div class="trend-val"><div class="wk">Feb W3</div><div class="n">133</div></div>
+            <div class="trend-val"><div class="wk">Feb W4</div><div class="n">137</div></div>
+            <div class="trend-val"><div class="wk">Mar W1</div><div class="n" style="color:var(--orange)">120</div></div>
+          </div>
+        </div>
+        <div class="trend-row">
+          <div class="trend-label">Meetings Booked</div>
+          <div class="trend-vals">
+            <div class="trend-val"><div class="wk">Feb W3</div><div class="n" style="color:var(--green)">24</div></div>
+            <div class="trend-val"><div class="wk">Feb W4</div><div class="n" style="color:var(--orange)">11</div></div>
+            <div class="trend-val"><div class="wk">Mar W1</div><div class="n" style="color:var(--red)" class="pulse">0 🛑</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REACH -->
+  <div class="section" id="reach">
+    <div class="section-header">
+      <div class="section-icon">🌐</div>
+      <div>
+        <div class="section-title">Layer 1: Reach</div>
+        <div class="section-sub">Awareness and traffic volume — how many people are we putting Boost.space in front of?</div>
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="kpi blue"><div class="kpi-label">Pageviews</div><div class="kpi-value">13,727</div><div class="kpi-delta down">↓ 4.3% WoW</div></div>
+      <div class="kpi orange"><div class="kpi-label">Unique Visitors</div><div class="kpi-value">7,895</div><div class="kpi-delta down">↓ 10.3% WoW</div></div>
+      <div class="kpi orange"><div class="kpi-label">Sessions</div><div class="kpi-value">9,406</div><div class="kpi-delta down">↓ 8.8% WoW</div></div>
+      <div class="kpi green"><div class="kpi-label">Pages / Session</div><div class="kpi-value">1.46</div><div class="kpi-delta up">↑ 5.0% WoW</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">📊 Core Traffic Metrics — Weekly</div>
+        <table class="data-table">
+          <thead><tr><th>Metric</th><th>Feb W3</th><th>Feb W4</th><th>Mar W1</th><th>WoW Δ</th></tr></thead>
+          <tbody>
+            <tr><td>Pageviews</td><td>12,797</td><td>14,347</td><td><strong>13,727</strong></td><td><span class="tag orange">↓ 4.3%</span></td></tr>
+            <tr><td>Unique Visitors</td><td>7,745</td><td>8,801</td><td><strong>7,895</strong></td><td><span class="tag red">↓ 10.3%</span></td></tr>
+            <tr><td>Sessions</td><td>8,630</td><td>10,313</td><td><strong>9,406</strong></td><td><span class="tag orange">↓ 8.8%</span></td></tr>
+            <tr><td>Pages / Session</td><td>1.48</td><td>1.39</td><td><strong>1.46</strong></td><td><span class="tag green">↑ 5.0%</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">🗂️ Traffic Sources — Mar W1</div>
+        <div class="spend-platform">
+          <div class="spend-name" style="font-size:13px">Direct / None</div>
+          <div class="spend-bar-wrap"><div class="spend-bar" style="width:73%;background:#1b3a5c"></div></div>
+          <div class="spend-amt">~10,000</div>
+          <div class="spend-conv" style="color:var(--gray)">73%</div>
+        </div>
+        <div class="spend-platform">
+          <div class="spend-name" style="font-size:13px">LinkedIn Paid</div>
+          <div class="spend-bar-wrap"><div class="spend-bar" style="width:14%;background:#0077b5"></div></div>
+          <div class="spend-amt">7,290</div>
+          <div class="spend-conv" style="color:var(--gray)">~14%</div>
+        </div>
+        <div class="spend-platform">
+          <div class="spend-name" style="font-size:13px">Google</div>
+          <div class="spend-bar-wrap"><div class="spend-bar" style="width:9%;background:#4285f4"></div></div>
+          <div class="spend-amt">~1,235</div>
+          <div class="spend-conv" style="color:var(--gray)">~9%</div>
+        </div>
+        <div class="spend-platform">
+          <div class="spend-name" style="font-size:13px">Newsletters</div>
+          <div class="spend-bar-wrap"><div class="spend-bar" style="width:3%;background:#27ae60"></div></div>
+          <div class="spend-amt">380</div>
+          <div class="spend-conv" style="color:var(--gray)">~3%</div>
+        </div>
+        <div class="spend-platform">
+          <div class="spend-name" style="font-size:13px">ProductHunt</div>
+          <div class="spend-bar-wrap"><div class="spend-bar" style="width:1%;background:#da552f"></div></div>
+          <div class="spend-amt">minimal</div>
+          <div class="spend-conv" style="color:var(--gray)">&lt;1%</div>
+        </div>
+        <div class="alert info" style="margin-top:14px;margin-bottom:0">
+          <span class="alert-icon" style="font-size:14px">ℹ️</span>
+          <div style="font-size:12px">Direct traffic dominance (~73%) suggests brand awareness, but source attribution needs improvement. Feb W4 spike was LinkedIn paid scale-up. ProductHunt effect has faded.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENGAGEMENT -->
+  <div class="section" id="engagement">
+    <div class="section-header">
+      <div class="section-icon">🔥</div>
+      <div>
+        <div class="section-title">Layer 2: Engagement</div>
+        <div class="section-sub">Are visitors taking meaningful actions?</div>
+      </div>
+    </div>
+
+    <div class="alert warning">
+      <span class="alert-icon">⚠️</span>
+      <div><strong>CTA Click Rate: 3-week continuous decline</strong> 1.68% → 1.11% → 0.99%. LinkedIn paid scale-up is bringing traffic volume but lower-intent visitors who don't engage.</div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="kpi red"><div class="kpi-label">CTA Clicks</div><div class="kpi-value">78</div><div class="kpi-delta down">↓ 20.4% WoW</div></div>
+      <div class="kpi red"><div class="kpi-label">CTA Click Rate</div><div class="kpi-value red">0.99%</div><div class="kpi-delta down">↓ 0.12pp WoW</div></div>
+      <div class="kpi green"><div class="kpi-label">Install Views</div><div class="kpi-value">227</div><div class="kpi-delta up">↑ 8.6% WoW</div></div>
+      <div class="kpi orange"><div class="kpi-label">Pricing Selections</div><div class="kpi-value">16</div><div class="kpi-delta down">↓ 5.9% WoW</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📉 Engagement Metrics — Weekly Trend</div>
+      <table class="data-table">
+        <thead><tr><th>Metric</th><th>Feb W3</th><th>Feb W4</th><th>Mar W1</th><th>WoW Δ</th><th>Trend</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>CTA Clicks</td><td>130</td><td>98</td><td><strong>78</strong></td>
+            <td><span class="tag red">↓ 20.4%</span></td>
+            <td>
+              <div style="display:flex;align-items:flex-end;gap:3px;height:24px">
+                <div style="width:16px;height:24px;background:#2e75b6;border-radius:2px 2px 0 0;opacity:0.8"></div>
+                <div style="width:16px;height:18px;background:#2e75b6;border-radius:2px 2px 0 0;opacity:0.6"></div>
+                <div style="width:16px;height:14px;background:#c00000;border-radius:2px 2px 0 0"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>CTA Click Rate</td><td>1.68%</td><td>1.11%</td><td><strong style="color:var(--red)">0.99%</strong></td>
+            <td><span class="tag red">↓ 0.12pp</span></td>
+            <td>
+              <div style="display:flex;align-items:flex-end;gap:3px;height:24px">
+                <div style="width:16px;height:24px;background:#2e75b6;border-radius:2px 2px 0 0;opacity:0.8"></div>
+                <div style="width:16px;height:16px;background:#2e75b6;border-radius:2px 2px 0 0;opacity:0.6"></div>
+                <div style="width:16px;height:14px;background:#c00000;border-radius:2px 2px 0 0"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Install Views</td><td>450</td><td>209</td><td><strong>227</strong></td>
+            <td><span class="tag green">↑ 8.6%</span></td>
+            <td>
+              <div style="display:flex;align-items:flex-end;gap:3px;height:24px">
+                <div style="width:16px;height:24px;background:#27ae60;border-radius:2px 2px 0 0"></div>
+                <div style="width:16px;height:11px;background:#27ae60;border-radius:2px 2px 0 0;opacity:0.6"></div>
+                <div style="width:16px;height:12px;background:#27ae60;border-radius:2px 2px 0 0;opacity:0.8"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Pricing Selections</td><td>27</td><td>17</td><td><strong>16</strong></td>
+            <td><span class="tag orange">↓ 5.9%</span></td>
+            <td>
+              <div style="display:flex;align-items:flex-end;gap:3px;height:24px">
+                <div style="width:16px;height:24px;background:#e67e22;border-radius:2px 2px 0 0"></div>
+                <div style="width:16px;height:15px;background:#e67e22;border-radius:2px 2px 0 0;opacity:0.7"></div>
+                <div style="width:16px;height:14px;background:#e67e22;border-radius:2px 2px 0 0;opacity:0.6"></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- LEADS -->
+  <div class="section" id="leads">
+    <div class="section-header">
+      <div class="section-icon">🎯</div>
+      <div>
+        <div class="section-title">Layer 3: Lead Capture</div>
+        <div class="section-sub">Visitor → Lead conversion</div>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:20px">
+      <div class="kpi orange"><div class="kpi-label">Total Form Submissions</div><div class="kpi-value">120</div><div class="kpi-delta down">↓ 12.4% WoW</div></div>
+      <div class="kpi orange"><div class="kpi-label">Visitor → Lead CVR</div><div class="kpi-value">1.52%</div><div class="kpi-delta down">↓ 0.04pp WoW</div></div>
+      <div class="kpi blue"><div class="kpi-label">Demo Leads (Mar W1)</div><div class="kpi-value">~16</div><div class="kpi-delta neutral">NEW (event restructured)</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">📋 Form Submissions by Type — Mar W1</div>
+        <table class="data-table">
+          <thead><tr><th>form_type</th><th>Feb W3</th><th>Feb W4</th><th>Mar W1</th><th>WoW Δ</th></tr></thead>
+          <tbody>
+            <tr><td>sign_up_lead_email</td><td>47</td><td>80</td><td><strong>65</strong></td><td><span class="tag orange">↓ 18.8%</span></td></tr>
+            <tr><td>sign_up</td><td>75</td><td>45</td><td><strong>39</strong></td><td><span class="tag orange">↓ 13.3%</span></td></tr>
+            <tr><td>waiting_list</td><td>4</td><td>7</td><td><strong>5</strong></td><td><span class="tag red">↓ 28.6%</span></td></tr>
+            <tr><td>newsletter</td><td>7</td><td>5</td><td><strong>3</strong></td><td><span class="tag red">↓ 40.0%</span></td></tr>
+            <tr><td>demo_lead</td><td>0</td><td>0</td><td><strong>4*</strong></td><td><span class="tag blue">NEW</span></td></tr>
+            <tr><td>callback</td><td>0</td><td>0</td><td><strong>4*</strong></td><td><span class="tag blue">NEW</span></td></tr>
+          </tbody>
+        </table>
+        <div class="info-box" style="margin-top:12px">
+          * demo_lead and callback were previously separate events (be_form_submit_demo_lead etc.) consolidated into form_submit mid-Mar W1. Old event captured 12 more submissions. <strong>Combined demo leads: ~16.</strong>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 Lead Mix Breakdown — Mar W1</div>
+        <div style="padding: 8px 0">
+          <div class="spend-platform">
+            <div class="spend-name" style="font-size:13px">Email Lead</div>
+            <div class="spend-bar-wrap"><div class="spend-bar" style="width:54%;background:#2e75b6"></div></div>
+            <div class="spend-amt">65</div>
+            <div class="spend-conv" style="color:var(--gray)">54%</div>
+          </div>
+          <div class="spend-platform">
+            <div class="spend-name" style="font-size:13px">Sign Up</div>
+            <div class="spend-bar-wrap"><div class="spend-bar" style="width:33%;background:#1b3a5c"></div></div>
+            <div class="spend-amt">39</div>
+            <div class="spend-conv" style="color:var(--gray)">33%</div>
+          </div>
+          <div class="spend-platform">
+            <div class="spend-name" style="font-size:13px">Demo Lead</div>
+            <div class="spend-bar-wrap"><div class="spend-bar" style="width:13%;background:#e67e22"></div></div>
+            <div class="spend-amt">~16*</div>
+            <div class="spend-conv" style="color:var(--orange)">~13%</div>
+          </div>
+          <div class="spend-platform">
+            <div class="spend-name" style="font-size:13px">Waiting List</div>
+            <div class="spend-bar-wrap"><div class="spend-bar" style="width:4%;background:#95a5a6"></div></div>
+            <div class="spend-amt">5</div>
+            <div class="spend-conv" style="color:var(--gray)">4%</div>
+          </div>
+          <div class="spend-platform">
+            <div class="spend-name" style="font-size:13px">Newsletter</div>
+            <div class="spend-bar-wrap"><div class="spend-bar" style="width:3%;background:#bdc3c7"></div></div>
+            <div class="spend-amt">3</div>
+            <div class="spend-conv" style="color:var(--gray)">3%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MQL -->
+  <div class="section" id="mql">
+    <div class="section-header">
+      <div class="section-icon">💰</div>
+      <div>
+        <div class="section-title">Layer 4: MQL Conversion</div>
+        <div class="section-sub">Lead → Marketing Qualified Lead → Sales pipeline</div>
+      </div>
+    </div>
+
+    <div class="alert critical">
+      <span class="alert-icon pulse">🛑</span>
+      <div>
+        <strong>DEMO MEETINGS BOOKED = 0 — March W1</strong>
+        Dropped 24 (Feb W3) → 11 (Feb W4) → 0 (Mar W1). ~16 demo lead forms submitted but ZERO converted. MQL target was 8/week. Result: 0 booked meetings. Even counting demo forms: 0% booking conversion rate.
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:20px">
+      <div class="kpi red"><div class="kpi-label">Meetings Booked Mar W1</div><div class="kpi-value red">0</div><div class="kpi-delta down pulse">↓ 100% WoW</div></div>
+      <div class="kpi blue"><div class="kpi-label">Demo Lead Forms</div><div class="kpi-value">~16</div><div class="kpi-delta neutral">combined (old+new events)</div></div>
+      <div class="kpi orange"><div class="kpi-label">Leady New Leads</div><div class="kpi-value">4</div><div class="kpi-delta neutral">started Mar 8 only</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔍 Root Cause Analysis</div>
+      <div class="alert warning" style="margin-bottom:12px">
+        <span class="alert-icon">🔎</span>
+        <div>
+          <strong>Most likely culprits (to investigate):</strong>
+          <ol style="margin-top:6px;padding-left:18px;font-size:13px;line-height:2">
+            <li>demo_meeting_booked event <strong>stopped firing</strong> during the event rename/restructuring</li>
+            <li>Booking flow or calendar integration <strong>is broken</strong> (e.g. Calendly/HubSpot disconnect)</li>
+            <li>Downstream automation <strong>trigger broken</strong> after event rename</li>
+          </ol>
+        </div>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>Metric</th><th>Feb W3</th><th>Feb W4</th><th>Mar W1</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Demo Lead Forms (combined)</td><td>0</td><td>0</td><td><strong>~16</strong></td><td><span class="tag blue">NEW</span></td></tr>
+          <tr><td>└ form_submit/demo_lead (new)</td><td>—</td><td>—</td><td>4</td><td><span class="tag blue">after rename</span></td></tr>
+          <tr><td>└ be_form_submit_demo_lead (old)</td><td>—</td><td>—</td><td>12</td><td><span class="tag gray">deprecated</span></td></tr>
+          <tr><td>Callback Forms (combined)</td><td>0</td><td>0</td><td>4</td><td><span class="tag blue">NEW</span></td></tr>
+          <tr><td>Demo Meetings Booked</td><td style="color:var(--green)"><strong>24</strong></td><td style="color:var(--orange)"><strong>11</strong></td><td style="color:var(--red)"><strong>0 🛑</strong></td><td><span class="tag red">CRITICAL</span></td></tr>
+          <tr><td>Leady New Leads</td><td>—</td><td>—</td><td>4</td><td><span class="tag gray">started Mar 8</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PAID -->
+  <div class="section" id="paid">
+    <div class="section-header">
+      <div class="section-icon">💵</div>
+      <div>
+        <div class="section-title">Paid Channel Performance</div>
+        <div class="section-sub">LinkedIn Ads synced 11:00 AM · Google Ads synced 12:45 PM (Mar 10, 2026)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔵 LinkedIn Ads — Weekly Summary (USD)</div>
+      <table class="data-table">
+        <thead><tr><th>Week</th><th>Impressions</th><th>Clicks</th><th>LP Clicks</th><th>Spend</th><th>CTR</th><th>CPC</th><th>Conv.</th></tr></thead>
+        <tbody>
+          <tr><td>Feb W1</td><td>155,834</td><td>1,735</td><td>1,019</td><td>$2,856</td><td>1.11%</td><td>$1.65</td><td><span class="tag red">0</span></td></tr>
+          <tr><td>Feb W2</td><td>337,097</td><td>2,747</td><td>1,376</td><td>$8,961</td><td>0.81%</td><td>$3.26</td><td><span class="tag red">0</span></td></tr>
+          <tr><td>Feb W3</td><td>357,713</td><td>4,225</td><td>1,827</td><td>$6,119</td><td>1.18%</td><td>$1.45</td><td><span class="tag green">3</span></td></tr>
+          <tr class="highlight"><td><strong>Feb W4</strong></td><td><strong>1,245,371</strong></td><td>10,331</td><td>2,753</td><td>$4,534</td><td>0.83%</td><td><strong>$0.44</strong></td><td><span class="tag red">0</span></td></tr>
+          <tr><td><strong>Mar W1</strong></td><td>816,455</td><td><strong>7,862</strong></td><td>2,232</td><td><strong>$4,062</strong></td><td>0.96%</td><td>$0.52</td><td><span class="tag red">0</span></td></tr>
+          <tr><td>Mar W2*</td><td>15,778</td><td>480</td><td>204</td><td>$396</td><td>3.04%</td><td>$0.82</td><td><span class="tag red">0</span></td></tr>
+        </tbody>
+      </table>
+      <div class="alert warning" style="margin-top:14px;margin-bottom:0">
+        <span class="alert-icon">⚠️</span>
+        <div style="font-size:12px">Zero external_website_conversions across ALL weeks. LinkedIn conversion pixel likely not configured or tracking wrong events.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔵 LinkedIn Ads — Top Campaigns Mar W1 (by spend)</div>
+      <table class="data-table">
+        <thead><tr><th>Campaign</th><th>Impressions</th><th>Clicks</th><th>Spend</th><th>CTR</th><th>CPC</th></tr></thead>
+        <tbody>
+          <tr><td>Engagement - Mar 2</td><td>14,660</td><td>419</td><td>$426</td><td><strong>2.86%</strong> 🏆</td><td>$1.02</td></tr>
+          <tr><td>TOFU | UKI | Website visit</td><td>86,299</td><td>946</td><td>$423</td><td>1.10%</td><td>$0.45</td></tr>
+          <tr><td>TOFU | DACH | Website visit</td><td>83,684</td><td>906</td><td>$406</td><td>1.08%</td><td>$0.45</td></tr>
+          <tr><td>MOFU Event 19.3. | USA</td><td>30,539</td><td>378</td><td>$388</td><td>1.24%</td><td>$1.03</td></tr>
+          <tr><td>BOFU leadgen UKI/DACH</td><td>67,263</td><td>795</td><td>$335</td><td>1.18%</td><td>$0.42</td></tr>
+          <tr><td>TOFU | India Generic</td><td>183,637</td><td>1,395</td><td>$294</td><td>0.76%</td><td>$0.21</td></tr>
+          <tr><td>TOFU | America Generic</td><td>71,028</td><td>805</td><td>$270</td><td>1.13%</td><td>$0.34</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔴 Google Ads — Weekly Summary (CZK, ≈25 CZK/USD)</div>
+      <table class="data-table">
+        <thead><tr><th>Week</th><th>Impressions</th><th>Clicks</th><th>Spend CZK</th><th>CTR</th><th>CPC CZK</th><th>Conv.</th></tr></thead>
+        <tbody>
+          <tr><td>Feb W4</td><td>1,644</td><td>169</td><td>3,521</td><td>10.28%</td><td>20.83</td><td><span class="tag green">16</span></td></tr>
+          <tr class="highlight"><td><strong>Mar W1</strong></td><td>21,622</td><td>903</td><td><strong>30,242</strong></td><td>4.18%</td><td>33.49</td><td><span class="tag orange">8</span></td></tr>
+          <tr><td>Mar W2*</td><td>2,598</td><td>74</td><td>3,734</td><td>2.85%</td><td>50.45</td><td><span class="tag red">0</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔴 Google Ads — Top Campaigns Mar W1 (by spend)</div>
+      <table class="data-table">
+        <thead><tr><th>Campaign</th><th>Impressions</th><th>Clicks</th><th>Spend CZK</th><th>Conv.</th><th>CTR</th></tr></thead>
+        <tbody>
+          <tr><td>Search - Database for Make</td><td>10,819</td><td>280</td><td>11,877</td><td><span class="tag red">0 ⚠️</span></td><td>2.59%</td></tr>
+          <tr class="highlight"><td><strong>Search | Use Cases | UKI+DACH</strong></td><td>4,996</td><td>335</td><td>9,216</td><td><span class="tag green">8 🏆</span></td><td><strong>6.71%</strong></td></tr>
+          <tr><td>Search | Technology | EN</td><td>5,807</td><td>288</td><td>9,148</td><td><span class="tag red">0</span></td><td>4.96%</td></tr>
+        </tbody>
+      </table>
+      <div class="alert warning" style="margin-top:14px;margin-bottom:0">
+        <span class="alert-icon">⚠️</span>
+        <div style="font-size:12px">"Search - Database for Make" is the biggest spender but 0 conversions. Review keyword/landing page match. All 8 conversions came from "Use Cases | UKI+DACH" only.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FUNNEL -->
+  <div class="section" id="funnel">
+    <div class="section-header">
+      <div class="section-icon">🔍</div>
+      <div>
+        <div class="section-title">Full Funnel Overview — March W1</div>
+        <div class="section-sub">End-to-end conversion flow</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Conversion Funnel</div>
+      <div class="funnel">
+        <div class="funnel-step">
+          <div class="funnel-status">⚠️</div>
+          <div class="funnel-label">Unique Visitors</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:#2e75b6"></div></div>
+          <div class="funnel-vol">7,895</div>
+          <div class="funnel-cvr">—</div>
+        </div>
+        <div class="funnel-step">
+          <div class="funnel-status">🛑</div>
+          <div class="funnel-label">CTA Clicks</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0.99%;background:#e67e22"></div></div>
+          <div class="funnel-vol">78</div>
+          <div class="funnel-cvr" style="color:var(--red)">0.99%</div>
+        </div>
+        <div class="funnel-step">
+          <div class="funnel-status">⚠️</div>
+          <div class="funnel-label">Form Submissions</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:1.52%;background:#f39c12"></div></div>
+          <div class="funnel-vol">120</div>
+          <div class="funnel-cvr">1.52%</div>
+        </div>
+        <div class="funnel-step">
+          <div class="funnel-status">✅</div>
+          <div class="funnel-label">Demo Lead Forms</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:13%;background:#27ae60"></div></div>
+          <div class="funnel-vol">~16*</div>
+          <div class="funnel-cvr">~13%</div>
+        </div>
+        <div class="funnel-step">
+          <div class="funnel-status pulse">🛑</div>
+          <div class="funnel-label">Meetings Booked</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0%;background:#c00000"></div></div>
+          <div class="funnel-vol" style="color:var(--red)">0</div>
+          <div class="funnel-cvr" style="color:var(--red)">0%</div>
+        </div>
+      </div>
+      <div class="info-box" style="margin-top:16px">
+        * Demo lead forms (layer 4) show ~13% of total leads = demand exists. But 0% convert to meetings. <strong>The break is between demo lead form → meeting booking.</strong>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">❓ Open Questions for Next Meeting</div>
+      <div class="question">
+        <div class="q-num">1</div>
+        <div class="q-text">
+          <strong>demo_meeting_booked = 0 in March:</strong> Is this a tracking issue (event stopped firing during rename) or a real conversion failure (booking flow broken)?
+          <div class="q-priority" style="color:var(--red)">🛑 HIGHEST PRIORITY</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="q-num">2</div>
+        <div class="q-text">
+          <strong>MQL definition:</strong> Should we count demo lead form submissions (~16) as MQLs, or only booked meetings (0)?
+          <div class="q-priority" style="color:var(--orange)">⚠️ HIGH PRIORITY</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="q-num">3</div>
+        <div class="q-text">
+          <strong>Leady integration:</strong> What is the expected lead volume from Leady? Only 4 events since Mar 8 — is this normal ramp?
+          <div class="q-priority" style="color:var(--yellow)">📋 MEDIUM</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="q-num">4</div>
+        <div class="q-text">
+          <strong>LinkedIn paid optimization:</strong> We scaled spend but CTA click rate is declining. Are we optimizing for reach or intent? Is the LinkedIn conversion pixel configured?
+          <div class="q-priority" style="color:var(--yellow)">📋 MEDIUM</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="q-num">5</div>
+        <div class="q-text">
+          <strong>Ad spend optimization:</strong> LinkedIn $4,062/week with 0 tracked conversions. Are we measuring the right conversion events in LinkedIn Campaign Manager?
+          <div class="q-priority" style="color:var(--yellow)">📋 MEDIUM</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="q-num">6</div>
+        <div class="q-text">
+          <strong>Sales TOFU activities:</strong> What data source should we use for outbound/sales-sourced pipeline tracking?
+          <div class="q-priority" style="color:var(--gray)">📋 LOW</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATUS -->
+  <div class="section" id="status">
+    <div class="section-header">
+      <div class="section-icon">✅</div>
+      <div>
+        <div class="section-title">Honest Status Check</div>
+        <div class="section-sub">DONE or NOT DONE — no excuses</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Initiative Status</div>
+      <div class="initiative-row">
+        <div class="status-dot done">✅</div>
+        <div class="initiative-name">PostHog tracking setup</div>
+        <div class="initiative-notes">Core events tracked. Gaps in MQL tracking remain.</div>
+      </div>
+      <div class="initiative-row">
+        <div class="status-dot done">✅</div>
+        <div class="initiative-name">Weekly TOFU Report</div>
+        <div class="initiative-notes">First report with real PostHog numbers.</div>
+      </div>
+      <div class="initiative-row">
+        <div class="status-dot done">✅</div>
+        <div class="initiative-name">Demo lead form tracking</div>
+        <div class="initiative-notes">Consolidated into form_submit (form_type=demo_lead). ~16 combined captures in Mar W1.</div>
+      </div>
+      <div class="initiative-row">
+        <div class="status-dot done">✅</div>
+        <div class="initiative-name">Leady / RB2B integration</div>
+        <div class="initiative-notes">Started firing Mar 8. Only 4 events — needs validation.</div>
+      </div>
+      <div class="initiative-row">
+        <div class="status-dot done">✅</div>
+        <div class="initiative-name">Cost metrics (CPL / CPA)</div>
+        <div class="initiative-notes">Mar W1: ~$5,272 combined. CPL $44, cost/demo lead $329, CPA = ∞ (0 meetings).</div>
+      </div>
+      <div class="initiative-row">
+        <div class="status-dot fail">❌</div>
+        <div class="initiative-name">MQL target (8/week)</div>
+        <div class="initiative-notes" style="color:var(--red)">NOT MET. 0 booked meetings. Even counting demo forms (~16), booking rate = 0%.</div>
+      </div>
+      <div class="initiative-row">
+        <div class="status-dot wip">🔄</div>
+        <div class="initiative-name">Hunting Grounds (UKI)</div>
+        <div class="initiative-notes">WIP — launching leadership content this week for UKI.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚠️ Data Notes & Limitations</div>
+      <div style="font-size:13px;line-height:2;color:#444">
+        <div>• All data from PostHog (project: Boost.space, ID: 100634, EU instance)</div>
+        <div>• Mar W2 is partial (Mar 8–10 only, 3 days) — excluded from trend analysis</div>
+        <div>• <strong>be_form_submit_demo_lead</strong> renamed to <strong>form_submit (form_type=demo_lead)</strong> mid-Mar W1 — data split across old + new events</div>
+        <div>• <strong>leady_new_lead</strong> is new — no historical baseline</div>
+        <div>• Traffic source percentages are approximate due to high direct/none attribution</div>
+        <div>• Google Ads costs in CZK (≈25 CZK/USD), LinkedIn in USD</div>
+        <div>• CRM/sales pipeline data NOT in PostHog</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById(id).classList.add('animate-in');
+  event.target.classList.add('active');
+  setTimeout(() => document.getElementById(id).classList.remove('animate-in'), 400);
+}
+</script>
+</body>
+</html>
