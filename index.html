@@ -369,7 +369,7 @@
 <div class="header">
   <h1>BOOST.SPACE</h1>
   <h2>TOFU Marketing Report</h2>
-  <div class="meta">Reporting Period: Feb 17 – Mar 9, 2026 &nbsp;|&nbsp; Data: PostHog + Google Ads + LinkedIn Ads</div>
+  <div class="meta">Reporting Period: Feb 17 – Mar 14, 2026 &nbsp;|&nbsp; Data: PostHog + Google Ads + LinkedIn Ads &nbsp;|&nbsp; Updated Mar 16, 2026</div>
 </div>
 
 <div class="nav-tabs">
@@ -391,82 +391,83 @@
       <div class="section-icon">📊</div>
       <div>
         <div class="section-title">Executive Summary</div>
-        <div class="section-sub">Mar W1 (Mar 2–9, 2026) vs Feb W3–W4</div>
+        <div class="section-sub">Mar W2 (Mar 8–14, 2026) vs Mar W1 — 4-week view</div>
       </div>
     </div>
 
     <div class="alert critical">
       <span class="alert-icon">🛑</span>
       <div>
-        <strong>CRITICAL: Demo Meetings Booked = 0 in March W1</strong>
-        Dropped from 24 (Feb W3) → 11 (Feb W4) → 0 (Mar W1). ~16 demo lead forms submitted but NONE converted to a booked meeting. Calendar integration broken or tracking event stopped firing?
+        <strong>CRITICAL: Demo Meetings Booked = 0 in March — Second Week Confirms</strong>
+        24 (Feb W3) → 11 (Feb W4) → 0 (Mar W1) → 0 (Mar W2). Two consecutive zero weeks. 7 demo lead forms submitted in Mar W2 with ZERO bookings. Calendar integration or tracking is definitively broken.
       </div>
     </div>
 
-    <div class="alert warning">
-      <span class="alert-icon">⚠️</span>
+    <div class="alert success">
+      <span class="alert-icon">✅</span>
       <div>
-        <strong>CTA Click Rate Declining 3 Weeks Straight</strong>
-        1.68% → 1.11% → 0.99%. LinkedIn paid scale-up is driving volume but lower-intent visitors.
+        <strong>CTA Click Rate Recovered: 0.99% → 1.45% (+0.46pp WoW)</strong>
+        Mar W2 reversed the 3-week decline. Traffic dropped (LinkedIn spend ↓44%) but remaining visitors show higher engagement quality. CVR also up: 1.52% → 2.08%.
       </div>
     </div>
 
     <div class="alert info">
       <span class="alert-icon">ℹ️</span>
       <div>
-        <strong>Event Rename Mid-Mar W1</strong>
-        be_form_submit_demo_lead consolidated into form_submit (form_type=demo_lead). 12 captures on old event + 4 on new = ~16 total demo leads. Possible overlap — verify with analytics.
+        <strong>Leady Ramping: 4 leads (Mar W1) → 30 leads (Mar W2)</strong>
+        leady_new_lead jumped 7.5× WoW. First meaningful data from the integration. Still needs baseline validation vs form_submit volumes.
       </div>
     </div>
 
     <div class="grid-4" style="margin-bottom:20px">
-      <div class="kpi blue">
-        <div class="kpi-label">Pageviews / Week</div>
-        <div class="kpi-value">13.7K</div>
-        <div class="kpi-delta down">↓ 4.3% WoW</div>
+      <div class="kpi red">
+        <div class="kpi-label">Pageviews — Mar W2</div>
+        <div class="kpi-value">6,141</div>
+        <div class="kpi-delta down">↓ 55.3% WoW</div>
       </div>
-      <div class="kpi orange">
+      <div class="kpi green">
         <div class="kpi-label">CTA Click Rate</div>
-        <div class="kpi-value orange">0.99%</div>
-        <div class="kpi-delta down">↓ 3wk decline</div>
+        <div class="kpi-value green">1.45%</div>
+        <div class="kpi-delta up">↑ +0.46pp WoW</div>
       </div>
       <div class="kpi orange">
         <div class="kpi-label">Form Submissions</div>
-        <div class="kpi-value">120</div>
-        <div class="kpi-delta down">↓ 12.4% WoW</div>
+        <div class="kpi-value">76</div>
+        <div class="kpi-delta down">↓ 36.7% WoW</div>
       </div>
       <div class="kpi red">
         <div class="kpi-label">Meetings Booked</div>
         <div class="kpi-value red">0</div>
-        <div class="kpi-delta down pulse">↓ 100% WoW 🛑</div>
+        <div class="kpi-delta down pulse">2nd week = 0 🛑</div>
       </div>
     </div>
 
     <div class="grid-2">
       <div class="card">
-        <div class="card-title">💵 Combined Paid Spend — Mar W1</div>
+        <div class="card-title">💵 Combined Paid Spend — Mar W2</div>
         <table class="data-table">
-          <thead><tr><th>Platform</th><th>Spend</th><th>Clicks</th><th>Conversions</th></tr></thead>
+          <thead><tr><th>Platform</th><th>Spend</th><th>Clicks</th><th>Conversions</th><th>WoW Δ</th></tr></thead>
           <tbody>
-            <tr><td>LinkedIn Ads</td><td>$4,062</td><td>7,862</td><td><span class="tag red">0</span></td></tr>
-            <tr><td>Google Ads</td><td>~$1,210</td><td>903</td><td><span class="tag green">8</span></td></tr>
-            <tr class="highlight"><td><strong>TOTAL</strong></td><td><strong>~$5,272</strong></td><td><strong>8,765</strong></td><td><span class="tag orange">8</span></td></tr>
+            <tr><td>LinkedIn Ads</td><td>$2,355</td><td>1,419</td><td><span class="tag red">0</span></td><td><span class="tag red">↓ 42% spend</span></td></tr>
+            <tr><td>Google Ads</td><td>~$1,126</td><td>536</td><td><span class="tag orange">2</span></td><td><span class="tag green">stable spend</span></td></tr>
+            <tr class="highlight"><td><strong>TOTAL</strong></td><td><strong>~$3,481</strong></td><td><strong>1,955</strong></td><td><span class="tag orange">2</span></td><td><span class="tag red">↓ 34% WoW</span></td></tr>
           </tbody>
         </table>
         <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border); display:flex; gap:20px; flex-wrap:wrap;">
-          <div style="text-align:center"><div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.5px">CPL (all forms)</div><div style="font-size:20px;font-weight:700;color:var(--navy)">$44</div></div>
-          <div style="text-align:center"><div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.5px">Cost / Demo Lead</div><div style="font-size:20px;font-weight:700;color:var(--orange)">$329</div></div>
+          <div style="text-align:center"><div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.5px">CPL (all forms)</div><div style="font-size:20px;font-weight:700;color:var(--navy)">$46</div></div>
+          <div style="text-align:center"><div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.5px">Cost / Demo Lead</div><div style="font-size:20px;font-weight:700;color:var(--orange)">$497</div></div>
           <div style="text-align:center"><div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.5px">CPA (meetings)</div><div style="font-size:20px;font-weight:700;color:var(--red)">∞</div></div>
         </div>
       </div>
       <div class="card">
-        <div class="card-title">📉 3-Week Trend Snapshot</div>
+        <div class="card-title">📉 4-Week Trend Snapshot</div>
         <div class="trend-row">
           <div class="trend-label">Pageviews</div>
           <div class="trend-vals">
             <div class="trend-val"><div class="wk">Feb W3</div><div class="n">12,797</div></div>
             <div class="trend-val"><div class="wk">Feb W4</div><div class="n">14,347</div></div>
             <div class="trend-val"><div class="wk">Mar W1</div><div class="n" style="color:var(--orange)">13,727</div></div>
+            <div class="trend-val"><div class="wk">Mar W2</div><div class="n" style="color:var(--red)">6,141</div></div>
           </div>
         </div>
         <div class="trend-row">
@@ -475,6 +476,7 @@
             <div class="trend-val"><div class="wk">Feb W3</div><div class="n">1.68%</div></div>
             <div class="trend-val"><div class="wk">Feb W4</div><div class="n">1.11%</div></div>
             <div class="trend-val"><div class="wk">Mar W1</div><div class="n" style="color:var(--red)">0.99%</div></div>
+            <div class="trend-val"><div class="wk">Mar W2</div><div class="n" style="color:var(--green)">1.45% ↑</div></div>
           </div>
         </div>
         <div class="trend-row">
@@ -483,6 +485,7 @@
             <div class="trend-val"><div class="wk">Feb W3</div><div class="n">133</div></div>
             <div class="trend-val"><div class="wk">Feb W4</div><div class="n">137</div></div>
             <div class="trend-val"><div class="wk">Mar W1</div><div class="n" style="color:var(--orange)">120</div></div>
+            <div class="trend-val"><div class="wk">Mar W2</div><div class="n" style="color:var(--red)">76</div></div>
           </div>
         </div>
         <div class="trend-row">
@@ -490,7 +493,17 @@
           <div class="trend-vals">
             <div class="trend-val"><div class="wk">Feb W3</div><div class="n" style="color:var(--green)">24</div></div>
             <div class="trend-val"><div class="wk">Feb W4</div><div class="n" style="color:var(--orange)">11</div></div>
-            <div class="trend-val"><div class="wk">Mar W1</div><div class="n" style="color:var(--red)" class="pulse">0 🛑</div></div>
+            <div class="trend-val"><div class="wk">Mar W1</div><div class="n" style="color:var(--red)">0 🛑</div></div>
+            <div class="trend-val"><div class="wk">Mar W2</div><div class="n" style="color:var(--red)">0 🛑</div></div>
+          </div>
+        </div>
+        <div class="trend-row">
+          <div class="trend-label">Leady Leads</div>
+          <div class="trend-vals">
+            <div class="trend-val"><div class="wk">Feb W3</div><div class="n" style="color:var(--gray)">—</div></div>
+            <div class="trend-val"><div class="wk">Feb W4</div><div class="n" style="color:var(--gray)">—</div></div>
+            <div class="trend-val"><div class="wk">Mar W1</div><div class="n" style="color:var(--orange)">4</div></div>
+            <div class="trend-val"><div class="wk">Mar W2</div><div class="n" style="color:var(--green)">30 ↑</div></div>
           </div>
         </div>
       </div>
@@ -508,60 +521,60 @@
     </div>
 
     <div class="grid-4" style="margin-bottom:20px">
-      <div class="kpi blue"><div class="kpi-label">Pageviews</div><div class="kpi-value">13,727</div><div class="kpi-delta down">↓ 4.3% WoW</div></div>
-      <div class="kpi orange"><div class="kpi-label">Unique Visitors</div><div class="kpi-value">7,895</div><div class="kpi-delta down">↓ 10.3% WoW</div></div>
-      <div class="kpi orange"><div class="kpi-label">Sessions</div><div class="kpi-value">9,406</div><div class="kpi-delta down">↓ 8.8% WoW</div></div>
-      <div class="kpi green"><div class="kpi-label">Pages / Session</div><div class="kpi-value">1.46</div><div class="kpi-delta up">↑ 5.0% WoW</div></div>
+      <div class="kpi red"><div class="kpi-label">Pageviews — Mar W2</div><div class="kpi-value">6,141</div><div class="kpi-delta down">↓ 55.3% WoW</div></div>
+      <div class="kpi red"><div class="kpi-label">Unique Visitors</div><div class="kpi-value">3,655</div><div class="kpi-delta down">↓ 53.7% WoW</div></div>
+      <div class="kpi red"><div class="kpi-label">Sessions</div><div class="kpi-value">4,096</div><div class="kpi-delta down">↓ 56.5% WoW</div></div>
+      <div class="kpi green"><div class="kpi-label">Pages / Session</div><div class="kpi-value">1.50</div><div class="kpi-delta up">↑ 2.7% WoW</div></div>
+    </div>
+
+    <div class="alert warning" style="margin-bottom:20px">
+      <span class="alert-icon">⚠️</span>
+      <div><strong>Traffic dropped ~55% WoW — LinkedIn spend cut is main driver</strong>
+      LinkedIn spend fell from $4,062 → $2,355 (↓42%). LP clicks: 9,011 → 1,267 (↓86%). Despite lower volume, pages/session and CVR both improved — organic quality is intact.</div>
     </div>
 
     <div class="grid-2">
       <div class="card">
         <div class="card-title">📊 Core Traffic Metrics — Weekly</div>
         <table class="data-table">
-          <thead><tr><th>Metric</th><th>Feb W3</th><th>Feb W4</th><th>Mar W1</th><th>WoW Δ</th></tr></thead>
+          <thead><tr><th>Metric</th><th>Feb W3</th><th>Feb W4</th><th>Mar W1</th><th>Mar W2</th><th>WoW Δ</th></tr></thead>
           <tbody>
-            <tr><td>Pageviews</td><td>12,797</td><td>14,347</td><td><strong>13,727</strong></td><td><span class="tag orange">↓ 4.3%</span></td></tr>
-            <tr><td>Unique Visitors</td><td>7,745</td><td>8,801</td><td><strong>7,895</strong></td><td><span class="tag red">↓ 10.3%</span></td></tr>
-            <tr><td>Sessions</td><td>8,630</td><td>10,313</td><td><strong>9,406</strong></td><td><span class="tag orange">↓ 8.8%</span></td></tr>
-            <tr><td>Pages / Session</td><td>1.48</td><td>1.39</td><td><strong>1.46</strong></td><td><span class="tag green">↑ 5.0%</span></td></tr>
+            <tr><td>Pageviews</td><td>12,797</td><td>14,347</td><td>13,727</td><td><strong>6,141</strong></td><td><span class="tag red">↓ 55.3%</span></td></tr>
+            <tr><td>Unique Visitors</td><td>7,745</td><td>8,801</td><td>7,895</td><td><strong>3,655</strong></td><td><span class="tag red">↓ 53.7%</span></td></tr>
+            <tr><td>Sessions</td><td>8,630</td><td>10,313</td><td>9,406</td><td><strong>4,096</strong></td><td><span class="tag red">↓ 56.5%</span></td></tr>
+            <tr><td>Pages / Session</td><td>1.48</td><td>1.39</td><td>1.46</td><td><strong>1.50</strong></td><td><span class="tag green">↑ 2.7%</span></td></tr>
           </tbody>
         </table>
       </div>
       <div class="card">
-        <div class="card-title">🗂️ Traffic Sources — Mar W1</div>
+        <div class="card-title">🗂️ Traffic Sources — Mar W2 (est.)</div>
         <div class="spend-platform">
           <div class="spend-name" style="font-size:13px">Direct / None</div>
-          <div class="spend-bar-wrap"><div class="spend-bar" style="width:73%;background:#1b3a5c"></div></div>
-          <div class="spend-amt">~10,000</div>
-          <div class="spend-conv" style="color:var(--gray)">73%</div>
+          <div class="spend-bar-wrap"><div class="spend-bar" style="width:82%;background:#1b3a5c"></div></div>
+          <div class="spend-amt">~5,035</div>
+          <div class="spend-conv" style="color:var(--gray)">~82%</div>
         </div>
         <div class="spend-platform">
           <div class="spend-name" style="font-size:13px">LinkedIn Paid</div>
-          <div class="spend-bar-wrap"><div class="spend-bar" style="width:14%;background:#0077b5"></div></div>
-          <div class="spend-amt">7,290</div>
-          <div class="spend-conv" style="color:var(--gray)">~14%</div>
+          <div class="spend-bar-wrap"><div class="spend-bar" style="width:10%;background:#0077b5"></div></div>
+          <div class="spend-amt">~1,267</div>
+          <div class="spend-conv" style="color:var(--gray)">~10%</div>
         </div>
         <div class="spend-platform">
           <div class="spend-name" style="font-size:13px">Google</div>
-          <div class="spend-bar-wrap"><div class="spend-bar" style="width:9%;background:#4285f4"></div></div>
-          <div class="spend-amt">~1,235</div>
-          <div class="spend-conv" style="color:var(--gray)">~9%</div>
+          <div class="spend-bar-wrap"><div class="spend-bar" style="width:6%;background:#4285f4"></div></div>
+          <div class="spend-amt">~536</div>
+          <div class="spend-conv" style="color:var(--gray)">~6%</div>
         </div>
         <div class="spend-platform">
-          <div class="spend-name" style="font-size:13px">Newsletters</div>
-          <div class="spend-bar-wrap"><div class="spend-bar" style="width:3%;background:#27ae60"></div></div>
-          <div class="spend-amt">380</div>
-          <div class="spend-conv" style="color:var(--gray)">~3%</div>
+          <div class="spend-name" style="font-size:13px">Other / Organic</div>
+          <div class="spend-bar-wrap"><div class="spend-bar" style="width:2%;background:#27ae60"></div></div>
+          <div class="spend-amt">~303</div>
+          <div class="spend-conv" style="color:var(--gray)">~2%</div>
         </div>
-        <div class="spend-platform">
-          <div class="spend-name" style="font-size:13px">ProductHunt</div>
-          <div class="spend-bar-wrap"><div class="spend-bar" style="width:1%;background:#da552f"></div></div>
-          <div class="spend-amt">minimal</div>
-          <div class="spend-conv" style="color:var(--gray)">&lt;1%</div>
-        </div>
-        <div class="alert info" style="margin-top:14px;margin-bottom:0">
-          <span class="alert-icon" style="font-size:14px">ℹ️</span>
-          <div style="font-size:12px">Direct traffic dominance (~73%) suggests brand awareness, but source attribution needs improvement. Feb W4 spike was LinkedIn paid scale-up. ProductHunt effect has faded.</div>
+        <div class="alert warning" style="margin-top:14px;margin-bottom:0">
+          <span class="alert-icon" style="font-size:14px">⚠️</span>
+          <div style="font-size:12px">LinkedIn LP clicks fell from 9,011 → 1,267 (↓86%). Campaign structure shifted toward Post Engagement + UKI targeting in Mar W2. Source % estimates based on paid click data from DW.</div>
         </div>
       </div>
     </div>
@@ -577,64 +590,68 @@
       </div>
     </div>
 
-    <div class="alert warning">
-      <span class="alert-icon">⚠️</span>
-      <div><strong>CTA Click Rate: 3-week continuous decline</strong> 1.68% → 1.11% → 0.99%. LinkedIn paid scale-up is bringing traffic volume but lower-intent visitors who don't engage.</div>
+    <div class="alert success">
+      <span class="alert-icon">✅</span>
+      <div><strong>CTA Click Rate Reversed: 0.99% → 1.45% (+0.46pp)</strong> Decline interrupted in Mar W2. Lower LinkedIn volume removed low-intent paid traffic — organic visitors engage at a higher rate. CVR also improved: 1.52% → 2.08%.</div>
     </div>
 
     <div class="grid-4" style="margin-bottom:20px">
-      <div class="kpi red"><div class="kpi-label">CTA Clicks</div><div class="kpi-value">78</div><div class="kpi-delta down">↓ 20.4% WoW</div></div>
-      <div class="kpi red"><div class="kpi-label">CTA Click Rate</div><div class="kpi-value red">0.99%</div><div class="kpi-delta down">↓ 0.12pp WoW</div></div>
-      <div class="kpi green"><div class="kpi-label">Install Views</div><div class="kpi-value">227</div><div class="kpi-delta up">↑ 8.6% WoW</div></div>
-      <div class="kpi orange"><div class="kpi-label">Pricing Selections</div><div class="kpi-value">16</div><div class="kpi-delta down">↓ 5.9% WoW</div></div>
+      <div class="kpi orange"><div class="kpi-label">CTA Clicks — Mar W2</div><div class="kpi-value">53</div><div class="kpi-delta down">↓ 32.1% WoW</div></div>
+      <div class="kpi green"><div class="kpi-label">CTA Click Rate</div><div class="kpi-value green">1.45%</div><div class="kpi-delta up">↑ +0.46pp WoW</div></div>
+      <div class="kpi red"><div class="kpi-label">Install Views</div><div class="kpi-value">111</div><div class="kpi-delta down">↓ 51.1% WoW</div></div>
+      <div class="kpi red"><div class="kpi-label">Pricing Selections</div><div class="kpi-value">6</div><div class="kpi-delta down">↓ 62.5% WoW</div></div>
     </div>
 
     <div class="card">
       <div class="card-title">📉 Engagement Metrics — Weekly Trend</div>
       <table class="data-table">
-        <thead><tr><th>Metric</th><th>Feb W3</th><th>Feb W4</th><th>Mar W1</th><th>WoW Δ</th><th>Trend</th></tr></thead>
+        <thead><tr><th>Metric</th><th>Feb W3</th><th>Feb W4</th><th>Mar W1</th><th>Mar W2</th><th>WoW Δ</th><th>Trend</th></tr></thead>
         <tbody>
           <tr>
-            <td>CTA Clicks</td><td>130</td><td>98</td><td><strong>78</strong></td>
-            <td><span class="tag red">↓ 20.4%</span></td>
+            <td>CTA Clicks</td><td>130</td><td>98</td><td>78</td><td><strong>53</strong></td>
+            <td><span class="tag red">↓ 32.1%</span></td>
             <td>
               <div style="display:flex;align-items:flex-end;gap:3px;height:24px">
-                <div style="width:16px;height:24px;background:#2e75b6;border-radius:2px 2px 0 0;opacity:0.8"></div>
-                <div style="width:16px;height:18px;background:#2e75b6;border-radius:2px 2px 0 0;opacity:0.6"></div>
-                <div style="width:16px;height:14px;background:#c00000;border-radius:2px 2px 0 0"></div>
+                <div style="width:14px;height:24px;background:#2e75b6;border-radius:2px 2px 0 0;opacity:0.8"></div>
+                <div style="width:14px;height:18px;background:#2e75b6;border-radius:2px 2px 0 0;opacity:0.6"></div>
+                <div style="width:14px;height:14px;background:#e67e22;border-radius:2px 2px 0 0;opacity:0.8"></div>
+                <div style="width:14px;height:9px;background:#c00000;border-radius:2px 2px 0 0"></div>
               </div>
             </td>
           </tr>
           <tr>
-            <td>CTA Click Rate</td><td>1.68%</td><td>1.11%</td><td><strong style="color:var(--red)">0.99%</strong></td>
-            <td><span class="tag red">↓ 0.12pp</span></td>
+            <td>CTA Click Rate</td><td>1.68%</td><td>1.11%</td><td>0.99%</td><td><strong style="color:var(--green)">1.45%</strong></td>
+            <td><span class="tag green">↑ +0.46pp</span></td>
             <td>
               <div style="display:flex;align-items:flex-end;gap:3px;height:24px">
-                <div style="width:16px;height:24px;background:#2e75b6;border-radius:2px 2px 0 0;opacity:0.8"></div>
-                <div style="width:16px;height:16px;background:#2e75b6;border-radius:2px 2px 0 0;opacity:0.6"></div>
-                <div style="width:16px;height:14px;background:#c00000;border-radius:2px 2px 0 0"></div>
+                <div style="width:14px;height:24px;background:#2e75b6;border-radius:2px 2px 0 0;opacity:0.8"></div>
+                <div style="width:14px;height:16px;background:#2e75b6;border-radius:2px 2px 0 0;opacity:0.6"></div>
+                <div style="width:14px;height:14px;background:#c00000;border-radius:2px 2px 0 0"></div>
+                <div style="width:14px;height:20px;background:#27ae60;border-radius:2px 2px 0 0"></div>
               </div>
             </td>
           </tr>
           <tr>
-            <td>Install Views</td><td>450</td><td>209</td><td><strong>227</strong></td>
-            <td><span class="tag green">↑ 8.6%</span></td>
+            <td>Install Views</td><td>450</td><td>209</td><td>227</td><td><strong>111</strong></td>
+            <td><span class="tag red">↓ 51.1%</span></td>
             <td>
               <div style="display:flex;align-items:flex-end;gap:3px;height:24px">
-                <div style="width:16px;height:24px;background:#27ae60;border-radius:2px 2px 0 0"></div>
-                <div style="width:16px;height:11px;background:#27ae60;border-radius:2px 2px 0 0;opacity:0.6"></div>
-                <div style="width:16px;height:12px;background:#27ae60;border-radius:2px 2px 0 0;opacity:0.8"></div>
+                <div style="width:14px;height:24px;background:#27ae60;border-radius:2px 2px 0 0"></div>
+                <div style="width:14px;height:11px;background:#27ae60;border-radius:2px 2px 0 0;opacity:0.6"></div>
+                <div style="width:14px;height:12px;background:#27ae60;border-radius:2px 2px 0 0;opacity:0.8"></div>
+                <div style="width:14px;height:6px;background:#c00000;border-radius:2px 2px 0 0"></div>
               </div>
             </td>
           </tr>
           <tr>
-            <td>Pricing Selections</td><td>27</td><td>17</td><td><strong>16</strong></td>
-            <td><span class="tag orange">↓ 5.9%</span></td>
+            <td>Pricing Selections</td><td>27</td><td>17</td><td>16</td><td><strong>6</strong></td>
+            <td><span class="tag red">↓ 62.5%</span></td>
             <td>
               <div style="display:flex;align-items:flex-end;gap:3px;height:24px">
-                <div style="width:16px;height:24px;background:#e67e22;border-radius:2px 2px 0 0"></div>
-                <div style="width:16px;height:15px;background:#e67e22;border-radius:2px 2px 0 0;opacity:0.7"></div>
-                <div style="width:16px;height:14px;background:#e67e22;border-radius:2px 2px 0 0;opacity:0.6"></div>
+                <div style="width:14px;height:24px;background:#e67e22;border-radius:2px 2px 0 0"></div>
+                <div style="width:14px;height:15px;background:#e67e22;border-radius:2px 2px 0 0;opacity:0.7"></div>
+                <div style="width:14px;height:14px;background:#e67e22;border-radius:2px 2px 0 0;opacity:0.6"></div>
+                <div style="width:14px;height:5px;background:#c00000;border-radius:2px 2px 0 0"></div>
               </div>
             </td>
           </tr>
@@ -654,62 +671,67 @@
     </div>
 
     <div class="grid-3" style="margin-bottom:20px">
-      <div class="kpi orange"><div class="kpi-label">Total Form Submissions</div><div class="kpi-value">120</div><div class="kpi-delta down">↓ 12.4% WoW</div></div>
-      <div class="kpi orange"><div class="kpi-label">Visitor → Lead CVR</div><div class="kpi-value">1.52%</div><div class="kpi-delta down">↓ 0.04pp WoW</div></div>
-      <div class="kpi blue"><div class="kpi-label">Demo Leads (Mar W1)</div><div class="kpi-value">~16</div><div class="kpi-delta neutral">NEW (event restructured)</div></div>
+      <div class="kpi red"><div class="kpi-label">Total Form Submissions — Mar W2</div><div class="kpi-value">76</div><div class="kpi-delta down">↓ 36.7% WoW</div></div>
+      <div class="kpi green"><div class="kpi-label">Visitor → Lead CVR</div><div class="kpi-value green">2.08%</div><div class="kpi-delta up">↑ +0.56pp WoW</div></div>
+      <div class="kpi orange"><div class="kpi-label">Demo Leads (Mar W2)</div><div class="kpi-value">7</div><div class="kpi-delta neutral">3 new + 4 old event</div></div>
     </div>
 
     <div class="grid-2">
       <div class="card">
-        <div class="card-title">📋 Form Submissions by Type — Mar W1</div>
+        <div class="card-title">📋 Form Submissions by Type — Weekly</div>
         <table class="data-table">
-          <thead><tr><th>form_type</th><th>Feb W3</th><th>Feb W4</th><th>Mar W1</th><th>WoW Δ</th></tr></thead>
+          <thead><tr><th>form_type</th><th>Feb W3</th><th>Feb W4</th><th>Mar W1</th><th>Mar W2</th><th>WoW Δ</th></tr></thead>
           <tbody>
-            <tr><td>sign_up_lead_email</td><td>47</td><td>80</td><td><strong>65</strong></td><td><span class="tag orange">↓ 18.8%</span></td></tr>
-            <tr><td>sign_up</td><td>75</td><td>45</td><td><strong>39</strong></td><td><span class="tag orange">↓ 13.3%</span></td></tr>
-            <tr><td>waiting_list</td><td>4</td><td>7</td><td><strong>5</strong></td><td><span class="tag red">↓ 28.6%</span></td></tr>
-            <tr><td>newsletter</td><td>7</td><td>5</td><td><strong>3</strong></td><td><span class="tag red">↓ 40.0%</span></td></tr>
-            <tr><td>demo_lead</td><td>0</td><td>0</td><td><strong>4*</strong></td><td><span class="tag blue">NEW</span></td></tr>
-            <tr><td>callback</td><td>0</td><td>0</td><td><strong>4*</strong></td><td><span class="tag blue">NEW</span></td></tr>
+            <tr><td>sign_up_lead_email</td><td>47</td><td>80</td><td>65</td><td><strong>47</strong></td><td><span class="tag orange">↓ 27.7%</span></td></tr>
+            <tr><td>sign_up</td><td>75</td><td>45</td><td>39</td><td><strong>22</strong></td><td><span class="tag red">↓ 43.6%</span></td></tr>
+            <tr><td>demo_lead (new)</td><td>0</td><td>0</td><td>4</td><td><strong>3</strong></td><td><span class="tag orange">↓ 25%</span></td></tr>
+            <tr><td>callback</td><td>0</td><td>0</td><td>4</td><td><strong>2</strong></td><td><span class="tag orange">↓ 50%</span></td></tr>
+            <tr><td>waiting_list</td><td>4</td><td>7</td><td>5</td><td><strong>1</strong></td><td><span class="tag red">↓ 80%</span></td></tr>
+            <tr><td>newsletter</td><td>7</td><td>5</td><td>3</td><td><strong>1</strong></td><td><span class="tag red">↓ 66.7%</span></td></tr>
+            <tr class="highlight"><td><strong>TOTAL (form_submit)</strong></td><td><strong>133</strong></td><td><strong>137</strong></td><td><strong>120</strong></td><td><strong>76</strong></td><td><span class="tag red">↓ 36.7%</span></td></tr>
+            <tr><td>be_form_submit_demo_lead (old)</td><td>—</td><td>—</td><td>12</td><td>4</td><td><span class="tag gray">deprecated</span></td></tr>
           </tbody>
         </table>
         <div class="info-box" style="margin-top:12px">
-          * demo_lead and callback were previously separate events (be_form_submit_demo_lead etc.) consolidated into form_submit mid-Mar W1. Old event captured 12 more submissions. <strong>Combined demo leads: ~16.</strong>
+          CVR improved: 76 forms / 3,655 unique visitors = <strong>2.08%</strong> (vs 1.52% in Mar W1). Despite lower volume, higher proportion of visitors are converting.
         </div>
       </div>
       <div class="card">
-        <div class="card-title">📊 Lead Mix Breakdown — Mar W1</div>
+        <div class="card-title">📊 Lead Mix Breakdown — Mar W2</div>
         <div style="padding: 8px 0">
           <div class="spend-platform">
             <div class="spend-name" style="font-size:13px">Email Lead</div>
-            <div class="spend-bar-wrap"><div class="spend-bar" style="width:54%;background:#2e75b6"></div></div>
-            <div class="spend-amt">65</div>
-            <div class="spend-conv" style="color:var(--gray)">54%</div>
+            <div class="spend-bar-wrap"><div class="spend-bar" style="width:62%;background:#2e75b6"></div></div>
+            <div class="spend-amt">47</div>
+            <div class="spend-conv" style="color:var(--gray)">62%</div>
           </div>
           <div class="spend-platform">
             <div class="spend-name" style="font-size:13px">Sign Up</div>
-            <div class="spend-bar-wrap"><div class="spend-bar" style="width:33%;background:#1b3a5c"></div></div>
-            <div class="spend-amt">39</div>
-            <div class="spend-conv" style="color:var(--gray)">33%</div>
+            <div class="spend-bar-wrap"><div class="spend-bar" style="width:29%;background:#1b3a5c"></div></div>
+            <div class="spend-amt">22</div>
+            <div class="spend-conv" style="color:var(--gray)">29%</div>
           </div>
           <div class="spend-platform">
             <div class="spend-name" style="font-size:13px">Demo Lead</div>
-            <div class="spend-bar-wrap"><div class="spend-bar" style="width:13%;background:#e67e22"></div></div>
-            <div class="spend-amt">~16*</div>
-            <div class="spend-conv" style="color:var(--orange)">~13%</div>
+            <div class="spend-bar-wrap"><div class="spend-bar" style="width:9%;background:#e67e22"></div></div>
+            <div class="spend-amt">7*</div>
+            <div class="spend-conv" style="color:var(--orange)">9%</div>
           </div>
           <div class="spend-platform">
-            <div class="spend-name" style="font-size:13px">Waiting List</div>
-            <div class="spend-bar-wrap"><div class="spend-bar" style="width:4%;background:#95a5a6"></div></div>
-            <div class="spend-amt">5</div>
-            <div class="spend-conv" style="color:var(--gray)">4%</div>
-          </div>
-          <div class="spend-platform">
-            <div class="spend-name" style="font-size:13px">Newsletter</div>
-            <div class="spend-bar-wrap"><div class="spend-bar" style="width:3%;background:#bdc3c7"></div></div>
-            <div class="spend-amt">3</div>
+            <div class="spend-name" style="font-size:13px">Callback</div>
+            <div class="spend-bar-wrap"><div class="spend-bar" style="width:3%;background:#95a5a6"></div></div>
+            <div class="spend-amt">2</div>
             <div class="spend-conv" style="color:var(--gray)">3%</div>
           </div>
+          <div class="spend-platform">
+            <div class="spend-name" style="font-size:13px">WL + NL</div>
+            <div class="spend-bar-wrap"><div class="spend-bar" style="width:3%;background:#bdc3c7"></div></div>
+            <div class="spend-amt">2</div>
+            <div class="spend-conv" style="color:var(--gray)">3%</div>
+          </div>
+        </div>
+        <div class="info-box" style="margin-top:12px">
+          * 3 via form_submit/demo_lead + 4 via old be_form_submit_demo_lead event still firing.
         </div>
       </div>
     </div>
@@ -728,39 +750,38 @@
     <div class="alert critical">
       <span class="alert-icon pulse">🛑</span>
       <div>
-        <strong>DEMO MEETINGS BOOKED = 0 — March W1</strong>
-        Dropped 24 (Feb W3) → 11 (Feb W4) → 0 (Mar W1). ~16 demo lead forms submitted but ZERO converted. MQL target was 8/week. Result: 0 booked meetings. Even counting demo forms: 0% booking conversion rate.
+        <strong>DEMO MEETINGS BOOKED = 0 — Second Consecutive Week (Mar W1 + Mar W2)</strong>
+        24 (Feb W3) → 11 (Feb W4) → 0 (Mar W1) → 0 (Mar W2). Two weeks of zero. 7 demo lead forms in Mar W2 with 0% booking rate. This is definitively a broken booking flow — not a low-demand week.
       </div>
     </div>
 
     <div class="grid-3" style="margin-bottom:20px">
-      <div class="kpi red"><div class="kpi-label">Meetings Booked Mar W1</div><div class="kpi-value red">0</div><div class="kpi-delta down pulse">↓ 100% WoW</div></div>
-      <div class="kpi blue"><div class="kpi-label">Demo Lead Forms</div><div class="kpi-value">~16</div><div class="kpi-delta neutral">combined (old+new events)</div></div>
-      <div class="kpi orange"><div class="kpi-label">Leady New Leads</div><div class="kpi-value">4</div><div class="kpi-delta neutral">started Mar 8 only</div></div>
+      <div class="kpi red"><div class="kpi-label">Meetings Booked Mar W2</div><div class="kpi-value red">0</div><div class="kpi-delta down pulse">2nd straight zero 🛑</div></div>
+      <div class="kpi orange"><div class="kpi-label">Demo Lead Forms — W2</div><div class="kpi-value">7</div><div class="kpi-delta neutral">3 new + 4 old event</div></div>
+      <div class="kpi green"><div class="kpi-label">Leady New Leads — W2</div><div class="kpi-value green">30</div><div class="kpi-delta up">↑ 7.5× WoW (from 4)</div></div>
     </div>
 
     <div class="card">
       <div class="card-title">🔍 Root Cause Analysis</div>
-      <div class="alert warning" style="margin-bottom:12px">
-        <span class="alert-icon">🔎</span>
+      <div class="alert critical" style="margin-bottom:12px">
+        <span class="alert-icon">🛑</span>
         <div>
-          <strong>Most likely culprits (to investigate):</strong>
+          <strong>Two weeks of zero bookings confirms the booking flow is broken — not a traffic issue.</strong>
           <ol style="margin-top:6px;padding-left:18px;font-size:13px;line-height:2">
-            <li>demo_meeting_booked event <strong>stopped firing</strong> during the event rename/restructuring</li>
-            <li>Booking flow or calendar integration <strong>is broken</strong> (e.g. Calendly/HubSpot disconnect)</li>
+            <li>demo_meeting_booked event <strong>stopped firing</strong> — most likely cause (event rename side-effect)</li>
+            <li>Booking flow / calendar integration <strong>is broken</strong> (Calendly/HubSpot disconnect)</li>
             <li>Downstream automation <strong>trigger broken</strong> after event rename</li>
           </ol>
         </div>
       </div>
       <table class="data-table">
-        <thead><tr><th>Metric</th><th>Feb W3</th><th>Feb W4</th><th>Mar W1</th><th>Status</th></tr></thead>
+        <thead><tr><th>Metric</th><th>Feb W3</th><th>Feb W4</th><th>Mar W1</th><th>Mar W2</th><th>Status</th></tr></thead>
         <tbody>
-          <tr><td>Demo Lead Forms (combined)</td><td>0</td><td>0</td><td><strong>~16</strong></td><td><span class="tag blue">NEW</span></td></tr>
-          <tr><td>└ form_submit/demo_lead (new)</td><td>—</td><td>—</td><td>4</td><td><span class="tag blue">after rename</span></td></tr>
-          <tr><td>└ be_form_submit_demo_lead (old)</td><td>—</td><td>—</td><td>12</td><td><span class="tag gray">deprecated</span></td></tr>
-          <tr><td>Callback Forms (combined)</td><td>0</td><td>0</td><td>4</td><td><span class="tag blue">NEW</span></td></tr>
-          <tr><td>Demo Meetings Booked</td><td style="color:var(--green)"><strong>24</strong></td><td style="color:var(--orange)"><strong>11</strong></td><td style="color:var(--red)"><strong>0 🛑</strong></td><td><span class="tag red">CRITICAL</span></td></tr>
-          <tr><td>Leady New Leads</td><td>—</td><td>—</td><td>4</td><td><span class="tag gray">started Mar 8</span></td></tr>
+          <tr><td>Demo Lead Forms (new event)</td><td>0</td><td>0</td><td>4</td><td><strong>3</strong></td><td><span class="tag blue">active</span></td></tr>
+          <tr><td>Demo Lead Forms (old event)</td><td>—</td><td>—</td><td>12</td><td><strong>4</strong></td><td><span class="tag gray">still firing</span></td></tr>
+          <tr><td>Callback Forms</td><td>0</td><td>0</td><td>4</td><td><strong>2</strong></td><td><span class="tag blue">active</span></td></tr>
+          <tr><td>Demo Meetings Booked</td><td style="color:var(--green)"><strong>24</strong></td><td style="color:var(--orange)"><strong>11</strong></td><td style="color:var(--red)"><strong>0 🛑</strong></td><td style="color:var(--red)"><strong>0 🛑</strong></td><td><span class="tag red">CRITICAL</span></td></tr>
+          <tr><td>Leady New Leads</td><td>—</td><td>—</td><td>4</td><td><strong style="color:var(--green)">30</strong></td><td><span class="tag green">ramping</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -772,7 +793,7 @@
       <div class="section-icon">💵</div>
       <div>
         <div class="section-title">Paid Channel Performance</div>
-        <div class="section-sub">LinkedIn Ads synced 11:00 AM · Google Ads synced 12:45 PM (Mar 10, 2026)</div>
+        <div class="section-sub">LinkedIn Ads synced · Google Ads synced (Mar 16, 2026) — Data Warehouse via PostHog</div>
       </div>
     </div>
 
@@ -784,31 +805,34 @@
           <tr><td>Feb W1</td><td>155,834</td><td>1,735</td><td>1,019</td><td>$2,856</td><td>1.11%</td><td>$1.65</td><td><span class="tag red">0</span></td></tr>
           <tr><td>Feb W2</td><td>337,097</td><td>2,747</td><td>1,376</td><td>$8,961</td><td>0.81%</td><td>$3.26</td><td><span class="tag red">0</span></td></tr>
           <tr><td>Feb W3</td><td>357,713</td><td>4,225</td><td>1,827</td><td>$6,119</td><td>1.18%</td><td>$1.45</td><td><span class="tag green">3</span></td></tr>
-          <tr class="highlight"><td><strong>Feb W4</strong></td><td><strong>1,245,371</strong></td><td>10,331</td><td>2,753</td><td>$4,534</td><td>0.83%</td><td><strong>$0.44</strong></td><td><span class="tag red">0</span></td></tr>
-          <tr><td><strong>Mar W1</strong></td><td>816,455</td><td><strong>7,862</strong></td><td>2,232</td><td><strong>$4,062</strong></td><td>0.96%</td><td>$0.52</td><td><span class="tag red">0</span></td></tr>
-          <tr><td>Mar W2*</td><td>15,778</td><td>480</td><td>204</td><td>$396</td><td>3.04%</td><td>$0.82</td><td><span class="tag red">0</span></td></tr>
+          <tr><td>Feb W4</td><td>1,245,371</td><td>10,331</td><td>2,753</td><td>$4,534</td><td>0.83%</td><td>$0.44</td><td><span class="tag red">0</span></td></tr>
+          <tr><td>Mar W1</td><td>955,168</td><td>9,740</td><td>9,011</td><td><strong>$4,189</strong></td><td>1.02%</td><td>$0.43</td><td><span class="tag red">0</span></td></tr>
+          <tr class="highlight"><td><strong>Mar W2</strong></td><td><strong>71,927</strong></td><td><strong>1,419</strong></td><td><strong>1,267</strong></td><td><strong>$2,355</strong></td><td><strong>1.97%</strong></td><td><strong>$1.66</strong></td><td><span class="tag red">0</span></td></tr>
         </tbody>
       </table>
       <div class="alert warning" style="margin-top:14px;margin-bottom:0">
         <span class="alert-icon">⚠️</span>
-        <div style="font-size:12px">Zero external_website_conversions across ALL weeks. LinkedIn conversion pixel likely not configured or tracking wrong events.</div>
+        <div style="font-size:12px"><strong>Spend ↓44% WoW</strong> ($4,189 → $2,355). LP clicks dropped 86% (9,011 → 1,267) — campaign mix shifted from high-volume TOFU Website Visit to Post Engagement + UKI Hunting Grounds. Zero external_website_conversions across all weeks — LinkedIn pixel still not tracking conversions.</div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-title">🔵 LinkedIn Ads — Top Campaigns Mar W1 (by spend)</div>
+      <div class="card-title">🔵 LinkedIn Ads — Top Campaigns Mar W2 (by spend)</div>
       <table class="data-table">
         <thead><tr><th>Campaign</th><th>Impressions</th><th>Clicks</th><th>Spend</th><th>CTR</th><th>CPC</th></tr></thead>
         <tbody>
-          <tr><td>Engagement - Mar 2</td><td>14,660</td><td>419</td><td>$426</td><td><strong>2.86%</strong> 🏆</td><td>$1.02</td></tr>
-          <tr><td>TOFU | UKI | Website visit</td><td>86,299</td><td>946</td><td>$423</td><td>1.10%</td><td>$0.45</td></tr>
-          <tr><td>TOFU | DACH | Website visit</td><td>83,684</td><td>906</td><td>$406</td><td>1.08%</td><td>$0.45</td></tr>
-          <tr><td>MOFU Event 19.3. | USA</td><td>30,539</td><td>378</td><td>$388</td><td>1.24%</td><td>$1.03</td></tr>
-          <tr><td>BOFU leadgen UKI/DACH</td><td>67,263</td><td>795</td><td>$335</td><td>1.18%</td><td>$0.42</td></tr>
-          <tr><td>TOFU | India Generic</td><td>183,637</td><td>1,395</td><td>$294</td><td>0.76%</td><td>$0.21</td></tr>
-          <tr><td>TOFU | America Generic</td><td>71,028</td><td>805</td><td>$270</td><td>1.13%</td><td>$0.34</td></tr>
+          <tr class="highlight"><td><strong>BOFU | Remarketing | Post Engagement</strong></td><td>18,615</td><td>438</td><td><strong>$354</strong></td><td><strong>2.35%</strong></td><td>$0.81</td></tr>
+          <tr><td>TOFU | DACH | Website visit</td><td>1,154</td><td>11</td><td>$264</td><td>0.95%</td><td>$24.0</td></tr>
+          <tr><td>Engagement - Mar 2, 2026</td><td>9,423</td><td>359</td><td>$254</td><td>3.81% 🏆</td><td>$0.71</td></tr>
+          <tr><td>UKI | Supplier Updates Without Chaos</td><td>6,596</td><td>96</td><td>$224</td><td>1.46%</td><td>$2.33</td></tr>
+          <tr><td>UKI | GEO — AI-Discoverable Catalog</td><td>8,676</td><td>88</td><td>$222</td><td>1.01%</td><td>$2.52</td></tr>
+          <tr><td>UKI | Marketplace Expansion</td><td>8,198</td><td>100</td><td>$221</td><td>1.22%</td><td>$2.21</td></tr>
+          <tr><td>UKI | AI Enrichment at Scale</td><td>6,460</td><td>69</td><td>$215</td><td>1.07%</td><td>$3.12</td></tr>
         </tbody>
       </table>
+      <div class="info-box" style="margin-top:12px">
+        Mar W2 structure shifted to UKI Hunting Grounds content + BOFU remarketing. DACH website visit campaign near-zero (budget cut?). Engagement campaign again top CTR performer.
+      </div>
     </div>
 
     <div class="card">
@@ -817,25 +841,31 @@
         <thead><tr><th>Week</th><th>Impressions</th><th>Clicks</th><th>Spend CZK</th><th>CTR</th><th>CPC CZK</th><th>Conv.</th></tr></thead>
         <tbody>
           <tr><td>Feb W4</td><td>1,644</td><td>169</td><td>3,521</td><td>10.28%</td><td>20.83</td><td><span class="tag green">16</span></td></tr>
-          <tr class="highlight"><td><strong>Mar W1</strong></td><td>21,622</td><td>903</td><td><strong>30,242</strong></td><td>4.18%</td><td>33.49</td><td><span class="tag orange">8</span></td></tr>
-          <tr><td>Mar W2*</td><td>2,598</td><td>74</td><td>3,734</td><td>2.85%</td><td>50.45</td><td><span class="tag red">0</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🔴 Google Ads — Top Campaigns Mar W1 (by spend)</div>
-      <table class="data-table">
-        <thead><tr><th>Campaign</th><th>Impressions</th><th>Clicks</th><th>Spend CZK</th><th>Conv.</th><th>CTR</th></tr></thead>
-        <tbody>
-          <tr><td>Search - Database for Make</td><td>10,819</td><td>280</td><td>11,877</td><td><span class="tag red">0 ⚠️</span></td><td>2.59%</td></tr>
-          <tr class="highlight"><td><strong>Search | Use Cases | UKI+DACH</strong></td><td>4,996</td><td>335</td><td>9,216</td><td><span class="tag green">8 🏆</span></td><td><strong>6.71%</strong></td></tr>
-          <tr><td>Search | Technology | EN</td><td>5,807</td><td>288</td><td>9,148</td><td><span class="tag red">0</span></td><td>4.96%</td></tr>
+          <tr><td>Mar W1</td><td>20,166</td><td>870</td><td>28,792</td><td>4.31%</td><td>33.09</td><td><span class="tag orange">8</span></td></tr>
+          <tr class="highlight"><td><strong>Mar W2</strong></td><td><strong>11,576</strong></td><td><strong>536</strong></td><td><strong>28,147</strong></td><td><strong>4.63%</strong></td><td><strong>52.51</strong></td><td><span class="tag orange">2</span></td></tr>
         </tbody>
       </table>
       <div class="alert warning" style="margin-top:14px;margin-bottom:0">
         <span class="alert-icon">⚠️</span>
-        <div style="font-size:12px">"Search - Database for Make" is the biggest spender but 0 conversions. Review keyword/landing page match. All 8 conversions came from "Use Cases | UKI+DACH" only.</div>
+        <div style="font-size:12px">Mar W2: Spend held stable (↓2.2%) but impressions halved. CPC rose significantly: 33 → 53 CZK (+59%). Only 2 conversions vs 8 in Mar W1 — efficiency drop. New BSP Commerce campaigns dominating spend.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔴 Google Ads — Top Campaigns Mar W2 (by spend)</div>
+      <table class="data-table">
+        <thead><tr><th>Campaign</th><th>Impressions</th><th>Clicks</th><th>Spend CZK</th><th>Conv.</th><th>CTR</th></tr></thead>
+        <tbody>
+          <tr class="highlight"><td><strong>BSP | Commerce - GEO Catalog</strong></td><td>4,221</td><td>338</td><td><strong>15,999</strong></td><td><span class="tag orange">2 🏆</span></td><td><strong>10.61%</strong></td></tr>
+          <tr><td>BSP | Commerce - Marketplace Expansion</td><td>1,509</td><td>47</td><td>4,775</td><td><span class="tag red">0</span></td><td>3.57%</td></tr>
+          <tr><td>Search - Database for Make</td><td>4,933</td><td>93</td><td>4,158</td><td><span class="tag red">0 ⚠️</span></td><td>1.32%</td></tr>
+          <tr><td>BSP | Commerce - Dynamic Pricing</td><td>810</td><td>51</td><td>2,728</td><td><span class="tag red">0</span></td><td>11.67%</td></tr>
+          <tr><td>BSP | Commerce - AI Enrichment</td><td>88</td><td>6</td><td>417</td><td><span class="tag red">0</span></td><td>6.18%</td></tr>
+        </tbody>
+      </table>
+      <div class="alert info" style="margin-top:14px;margin-bottom:0">
+        <span class="alert-icon">ℹ️</span>
+        <div style="font-size:12px">Campaign structure changed significantly in Mar W2 — all new BSP Commerce campaigns replaced previous Search Use Cases campaigns. "BSP | Commerce - GEO Catalog" delivers both clicks and conversions (2). "Database for Make" still spending with 0 conversions.</div>
       </div>
     </div>
   </div>
@@ -845,7 +875,7 @@
     <div class="section-header">
       <div class="section-icon">🔍</div>
       <div>
-        <div class="section-title">Full Funnel Overview — March W1</div>
+        <div class="section-title">Full Funnel Overview — March W2</div>
         <div class="section-sub">End-to-end conversion flow</div>
       </div>
     </div>
@@ -854,32 +884,32 @@
       <div class="card-title">Conversion Funnel</div>
       <div class="funnel">
         <div class="funnel-step">
-          <div class="funnel-status">⚠️</div>
+          <div class="funnel-status">✅</div>
           <div class="funnel-label">Unique Visitors</div>
           <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:#2e75b6"></div></div>
-          <div class="funnel-vol">7,895</div>
+          <div class="funnel-vol">3,655</div>
           <div class="funnel-cvr">—</div>
         </div>
         <div class="funnel-step">
-          <div class="funnel-status">🛑</div>
-          <div class="funnel-label">CTA Clicks</div>
-          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0.99%;background:#e67e22"></div></div>
-          <div class="funnel-vol">78</div>
-          <div class="funnel-cvr" style="color:var(--red)">0.99%</div>
-        </div>
-        <div class="funnel-step">
           <div class="funnel-status">⚠️</div>
-          <div class="funnel-label">Form Submissions</div>
-          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:1.52%;background:#f39c12"></div></div>
-          <div class="funnel-vol">120</div>
-          <div class="funnel-cvr">1.52%</div>
+          <div class="funnel-label">CTA Clicks</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:1.45%;background:#27ae60"></div></div>
+          <div class="funnel-vol">53</div>
+          <div class="funnel-cvr" style="color:var(--green)">1.45%</div>
         </div>
         <div class="funnel-step">
           <div class="funnel-status">✅</div>
+          <div class="funnel-label">Form Submissions</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:2.08%;background:#f39c12"></div></div>
+          <div class="funnel-vol">76</div>
+          <div class="funnel-cvr" style="color:var(--green)">2.08% ↑</div>
+        </div>
+        <div class="funnel-step">
+          <div class="funnel-status">⚠️</div>
           <div class="funnel-label">Demo Lead Forms</div>
-          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:13%;background:#27ae60"></div></div>
-          <div class="funnel-vol">~16*</div>
-          <div class="funnel-cvr">~13%</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:9%;background:#27ae60"></div></div>
+          <div class="funnel-vol">7*</div>
+          <div class="funnel-cvr">9%</div>
         </div>
         <div class="funnel-step">
           <div class="funnel-status pulse">🛑</div>
@@ -890,7 +920,7 @@
         </div>
       </div>
       <div class="info-box" style="margin-top:16px">
-        * Demo lead forms (layer 4) show ~13% of total leads = demand exists. But 0% convert to meetings. <strong>The break is between demo lead form → meeting booking.</strong>
+        CVR improved to 2.08% — best rate in 4 weeks. Demo lead forms: 7 total (3 new event + 4 old). <strong>Break confirmed: demo lead form → meeting booking is definitively broken. Two consecutive zero weeks.</strong>
       </div>
     </div>
 
@@ -899,42 +929,42 @@
       <div class="question">
         <div class="q-num">1</div>
         <div class="q-text">
-          <strong>demo_meeting_booked = 0 in March:</strong> Is this a tracking issue (event stopped firing during rename) or a real conversion failure (booking flow broken)?
-          <div class="q-priority" style="color:var(--red)">🛑 HIGHEST PRIORITY</div>
+          <strong>demo_meeting_booked = 0 for TWO consecutive weeks:</strong> Two weeks confirms this is definitively broken — not a fluke. Has the booking flow been checked? Is Calendly/HubSpot calendar still connected?
+          <div class="q-priority" style="color:var(--red)">🛑 HIGHEST PRIORITY — ESCALATE NOW</div>
         </div>
       </div>
       <div class="question">
         <div class="q-num">2</div>
         <div class="q-text">
-          <strong>MQL definition:</strong> Should we count demo lead form submissions (~16) as MQLs, or only booked meetings (0)?
+          <strong>Leady 30 leads in Mar W2 — quality check:</strong> What is the company size / ICP match on these 30 leads? Are they routing to sales pipeline? How does 30 compare to the historical average of booked meetings (~11-24/week)?
           <div class="q-priority" style="color:var(--orange)">⚠️ HIGH PRIORITY</div>
         </div>
       </div>
       <div class="question">
         <div class="q-num">3</div>
         <div class="q-text">
-          <strong>Leady integration:</strong> What is the expected lead volume from Leady? Only 4 events since Mar 8 — is this normal ramp?
-          <div class="q-priority" style="color:var(--yellow)">📋 MEDIUM</div>
+          <strong>Traffic drop 55% WoW — intentional LinkedIn budget cut?</strong> LinkedIn spend fell from $4,189 → $2,355 (↓44%). Was this intentional? Impressions dropped from 955K → 72K. LP clicks: 9,011 → 1,267.
+          <div class="q-priority" style="color:var(--orange)">⚠️ HIGH PRIORITY</div>
         </div>
       </div>
       <div class="question">
         <div class="q-num">4</div>
         <div class="q-text">
-          <strong>LinkedIn paid optimization:</strong> We scaled spend but CTA click rate is declining. Are we optimizing for reach or intent? Is the LinkedIn conversion pixel configured?
+          <strong>Google Ads CPC surge:</strong> CPC jumped 33 → 53 CZK (+59%) in Mar W2. New BSP Commerce campaigns are running with limited data. Should conversion-less campaigns (Marketplace Expansion, Dynamic Pricing) be paused?
           <div class="q-priority" style="color:var(--yellow)">📋 MEDIUM</div>
         </div>
       </div>
       <div class="question">
         <div class="q-num">5</div>
         <div class="q-text">
-          <strong>Ad spend optimization:</strong> LinkedIn $4,062/week with 0 tracked conversions. Are we measuring the right conversion events in LinkedIn Campaign Manager?
+          <strong>LinkedIn conversion pixel:</strong> Still 0 external_website_conversions across all weeks. This needs to be fixed to properly optimize LinkedIn campaigns for lead generation.
           <div class="q-priority" style="color:var(--yellow)">📋 MEDIUM</div>
         </div>
       </div>
       <div class="question">
         <div class="q-num">6</div>
         <div class="q-text">
-          <strong>Sales TOFU activities:</strong> What data source should we use for outbound/sales-sourced pipeline tracking?
+          <strong>MQL definition clarity:</strong> With demo_meeting_booked = 0, should leady_new_lead (30 in W2) be our interim MQL proxy? Need clear definition before next report.
           <div class="q-priority" style="color:var(--gray)">📋 LOW</div>
         </div>
       </div>
@@ -971,34 +1001,35 @@
       <div class="initiative-row">
         <div class="status-dot done">✅</div>
         <div class="initiative-name">Leady / RB2B integration</div>
-        <div class="initiative-notes">Started firing Mar 8. Only 4 events — needs validation.</div>
+        <div class="initiative-notes">Mar W1: 4 events. Mar W2: 30 events (7.5× jump). Ramping — needs ICP quality validation.</div>
       </div>
       <div class="initiative-row">
         <div class="status-dot done">✅</div>
         <div class="initiative-name">Cost metrics (CPL / CPA)</div>
-        <div class="initiative-notes">Mar W1: ~$5,272 combined. CPL $44, cost/demo lead $329, CPA = ∞ (0 meetings).</div>
+        <div class="initiative-notes">Mar W2: ~$3,481 combined. CPL $46, cost/demo lead $497, CPA = ∞ (0 meetings).</div>
       </div>
       <div class="initiative-row">
         <div class="status-dot fail">❌</div>
         <div class="initiative-name">MQL target (8/week)</div>
-        <div class="initiative-notes" style="color:var(--red)">NOT MET. 0 booked meetings. Even counting demo forms (~16), booking rate = 0%.</div>
+        <div class="initiative-notes" style="color:var(--red)">NOT MET — 2nd week. 0 booked meetings. Booking flow definitively broken. Leady 30 leads = partial signal.</div>
       </div>
       <div class="initiative-row">
-        <div class="status-dot wip">🔄</div>
+        <div class="status-dot done">✅</div>
         <div class="initiative-name">Hunting Grounds (UKI)</div>
-        <div class="initiative-notes">WIP — launching leadership content this week for UKI.</div>
+        <div class="initiative-notes">Live in Mar W2. UKI campaigns active: Supplier Updates, AI-Discoverable Catalog, Marketplace Expansion, AI Enrichment, Dynamic Pricing.</div>
       </div>
     </div>
 
     <div class="card">
       <div class="card-title">⚠️ Data Notes & Limitations</div>
       <div style="font-size:13px;line-height:2;color:#444">
-        <div>• All data from PostHog (project: Boost.space, ID: 100634, EU instance)</div>
-        <div>• Mar W2 is partial (Mar 8–10 only, 3 days) — excluded from trend analysis</div>
-        <div>• <strong>be_form_submit_demo_lead</strong> renamed to <strong>form_submit (form_type=demo_lead)</strong> mid-Mar W1 — data split across old + new events</div>
-        <div>• <strong>leady_new_lead</strong> is new — no historical baseline</div>
-        <div>• Traffic source percentages are approximate due to high direct/none attribution</div>
+        <div>• All data from PostHog (project: Boost.space, ID: 100634, EU instance) — fetched Mar 16, 2026</div>
+        <div>• Mar W1 = Mar 1–7, 2026 &nbsp;|&nbsp; Mar W2 = Mar 8–14, 2026 (full 7-day weeks)</div>
+        <div>• <strong>be_form_submit_demo_lead</strong> renamed to <strong>form_submit (form_type=demo_lead)</strong> mid-Mar W1 — old event still firing in Mar W2 (4 events)</div>
+        <div>• <strong>leady_new_lead</strong> started Mar 8 — Mar W2 is first full week baseline (30 leads)</div>
+        <div>• Traffic source % in Mar W2 are estimated from paid LP click data (DW) + direct/none residual</div>
         <div>• Google Ads costs in CZK (≈25 CZK/USD), LinkedIn in USD</div>
+        <div>• LinkedIn DW: impression/click data via linkedinads_campaign_stats; Google DW: googleads_campaign_stats</div>
         <div>• CRM/sales pipeline data NOT in PostHog</div>
       </div>
     </div>
