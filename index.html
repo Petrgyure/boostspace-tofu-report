@@ -398,8 +398,10 @@
   <div class="nav-tab" onclick="showTab('paid')">💵 Paid Channels</div>
   <div class="nav-tab" onclick="showTab('funnel')">🔍 Full Funnel</div>
   <div class="nav-tab" onclick="showTab('status')">✅ Status Check</div>
-  <button id="fetch-btn" onclick="fetchLastWeek()" style="margin-left:auto;margin-top:6px;margin-bottom:6px;padding:8px 18px;background:#2e75b6;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s" onmouseover="this.style.background='#1b3a5c'" onmouseout="this.style.background='#2e75b6'">⟳ Fetch Last Week</button>
 </div>
+
+<!-- Fixed floating fetch button — always visible -->
+<button id="fetch-btn" onclick="fetchLastWeek()" style="position:fixed;bottom:28px;right:28px;z-index:8888;padding:13px 22px;background:#2e75b6;color:#fff;border:none;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(46,117,182,0.5);letter-spacing:.4px;transition:background .2s,transform .1s" onmouseover="this.style.background='#1b3a5c'" onmouseout="this.style.background='#2e75b6'" onmousedown="this.style.transform='scale(0.96)'" onmouseup="this.style.transform='scale(1)'">⟳ Fetch Last Week</button>
 
 <div class="main">
 
@@ -1066,7 +1068,7 @@ function showTab(id) {
 }
 
 /* ── FETCH LAST WEEK ── */
-const PH_KEY = 'phx_R1E6QMDfDUNB8fu7jCjEJ4rgtwHGse2DQaEED88KUaB0mY';
+const PH_KEY = 'phx_LfVNRjYgMKgiHbxnlGTy8XcGRyhCfV5cvtkHxMXjGcQndXX';
 const PH_PROJECT = '100634';
 const PH_BASE = 'https://eu.posthog.com/api/projects/' + PH_PROJECT + '/query';
 
@@ -1094,7 +1096,7 @@ async function phQuery(sql) {
     body: JSON.stringify({ query: { kind: 'HogQLQuery', query: sql } })
   });
   const d = await r.json();
-  return d.results;
+  return d.results || [];
 }
 
 function n(v, fallback = 0) { return Number(v) || fallback; }
@@ -1128,19 +1130,20 @@ async function fetchLastWeek() {
       phQuery(`SELECT sum(impressions), sum(clicks), sum(landing_page_clicks), sum(cost_in_usd), sum(external_website_conversions) FROM linkedinads_campaign_stats WHERE toDate(date_start)>='${start}' AND toDate(date_start)<'${end}'`)
     ]);
 
-    const pv = n(traffic[0][0]), uv = n(traffic[0][1]), sess = n(traffic[0][2]);
+    const s = (res, i, j) => (res && res[i] && res[i][j] !== undefined) ? res[i][j] : null;
+    const pv = n(s(traffic,0,0)), uv = n(s(traffic,0,1)), sess = n(s(traffic,0,2));
     const pps = sess ? (pv / sess).toFixed(2) : '—';
-    const ctaClicks = n(cta[0][0]);
+    const ctaClicks = n(s(cta,0,0));
     const ctrVal = uv ? (ctaClicks / uv * 100).toFixed(2) : '—';
-    const installV = n(install[0][0]);
-    const pricingV = n(pricing[0][0]);
-    const totalForms = forms.reduce((s, r) => s + n(r[1]), 0);
+    const installV = n(s(install,0,0));
+    const pricingV = n(s(pricing,0,0));
+    const totalForms = (forms||[]).reduce((acc, r) => acc + n(r[1]), 0);
     const cvr = uv ? (totalForms / uv * 100).toFixed(2) : '—';
-    const oldDemoV = n(oldDemo[0][0]);
-    const bookedV = n(booked[0][0]);
-    const leadyV = n(leady[0][0]);
-    const gaImpr = n(ga[0][0]), gaClicks = n(ga[0][1]), gaSpend = n(ga[0][2]).toFixed(0), gaConv = n(ga[0][3]).toFixed(0);
-    const liImpr = n(li[0][0]), liClicks = n(li[0][1]), liLp = n(li[0][2]), liSpend = n(li[0][3]).toFixed(0), liConv = n(li[0][4]);
+    const oldDemoV = n(s(oldDemo,0,0));
+    const bookedV = n(s(booked,0,0));
+    const leadyV = n(s(leady,0,0));
+    const gaImpr = n(s(ga,0,0)), gaClicks = n(s(ga,0,1)), gaSpend = n(s(ga,0,2)||0).toFixed(0), gaConv = n(s(ga,0,3)||0).toFixed(0);
+    const liImpr = n(s(li,0,0)), liClicks = n(s(li,0,1)), liLp = n(s(li,0,2)), liSpend = n(s(li,0,3)||0).toFixed(0), liConv = n(s(li,0,4));
 
     _lastFetch = { pv, uv, sess, pps, ctaClicks, ctrVal, installV, pricingV, forms, totalForms, cvr, oldDemoV, bookedV, leadyV, gaImpr, gaClicks, gaSpend, gaConv, liImpr, liClicks, liLp, liSpend, liConv };
 
