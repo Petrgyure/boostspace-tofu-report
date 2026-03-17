@@ -362,6 +362,23 @@
   /* SCROLL ANIMATION */
   @keyframes slideIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
   .animate-in { animation: slideIn 0.4s ease forwards; }
+
+  /* PRINT — only show modal content */
+  @media print {
+    body > *:not(#fw-modal) { display: none !important; }
+    #fw-modal {
+      display: block !important;
+      position: static !important;
+      background: none !important;
+      padding: 0 !important;
+    }
+    #fw-modal > div {
+      box-shadow: none !important;
+      max-height: none !important;
+      border-radius: 0 !important;
+    }
+    #fw-print-bar, #fw-modal button { display: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -1127,6 +1144,8 @@ async function fetchLastWeek() {
     const gaImpr = n(ga[0][0]), gaClicks = n(ga[0][1]), gaSpend = n(ga[0][2]).toFixed(0), gaConv = n(ga[0][3]).toFixed(0);
     const liImpr = n(li[0][0]), liClicks = n(li[0][1]), liLp = n(li[0][2]), liSpend = n(li[0][3]).toFixed(0), liConv = n(li[0][4]);
 
+    _lastFetch = { pv, uv, sess, pps, ctaClicks, ctrVal, installV, pricingV, forms, totalForms, cvr, oldDemoV, bookedV, leadyV, gaImpr, gaClicks, gaSpend, gaConv, liImpr, liClicks, liLp, liSpend, liConv };
+
     const formRows = forms.map(r => `<tr><td>${r[0] || '(none)'}</td><td style="font-weight:700">${n(r[1])}</td></tr>`).join('');
 
     const bookedColor = bookedV === 0 ? '#c00000' : '#27ae60';
@@ -1180,6 +1199,8 @@ async function fetchLastWeek() {
   btn.disabled = false;
 }
 
+let _lastFetch = null; // stores raw data for export
+
 function showFetchModal(label, html) {
   document.getElementById('fw-period').textContent = label;
   document.getElementById('fw-body').innerHTML = html;
@@ -1187,6 +1208,65 @@ function showFetchModal(label, html) {
 }
 function closeFetchModal() {
   document.getElementById('fw-modal').style.display = 'none';
+}
+
+function exportFetchPDF() {
+  window.print();
+}
+
+function exportFetchCSV() {
+  if (!_lastFetch) return;
+  const d = _lastFetch;
+  const label = document.getElementById('fw-period').textContent;
+
+  const rows = [
+    ['Metric', 'Value', 'Period'],
+    ['Period', label, ''],
+    ['', '', ''],
+    ['--- REACH ---', '', ''],
+    ['Pageviews', d.pv, label],
+    ['Unique Visitors', d.uv, label],
+    ['Sessions', d.sess, label],
+    ['Pages / Session', d.pps, label],
+    ['', '', ''],
+    ['--- ENGAGEMENT ---', '', ''],
+    ['CTA Clicks', d.ctaClicks, label],
+    ['CTA Click Rate (%)', d.ctrVal, label],
+    ['Install Views', d.installV, label],
+    ['Pricing Selections', d.pricingV, label],
+    ['', '', ''],
+    ['--- LEAD CAPTURE ---', '', ''],
+    ['Total Form Submissions', d.totalForms, label],
+    ['CVR (%)', d.cvr, label],
+    ...d.forms.map(r => ['form_submit: ' + (r[0] || 'none'), n(r[1]), label]),
+    ['be_form_submit_demo_lead (old)', d.oldDemoV, label],
+    ['', '', ''],
+    ['--- MQL ---', '', ''],
+    ['demo_meeting_booked', d.bookedV, label],
+    ['leady_new_lead', d.leadyV, label],
+    ['', '', ''],
+    ['--- GOOGLE ADS ---', '', ''],
+    ['Google Ads Impressions', d.gaImpr, label],
+    ['Google Ads Clicks', d.gaClicks, label],
+    ['Google Ads Spend (CZK)', d.gaSpend, label],
+    ['Google Ads Conversions', d.gaConv, label],
+    ['', '', ''],
+    ['--- LINKEDIN ADS ---', '', ''],
+    ['LinkedIn Impressions', d.liImpr, label],
+    ['LinkedIn Clicks', d.liClicks, label],
+    ['LinkedIn LP Clicks', d.liLp, label],
+    ['LinkedIn Spend (USD)', d.liSpend, label],
+    ['LinkedIn Conversions', d.liConv, label],
+  ];
+
+  const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'boostspace_tofu_' + label.replace(/\s/g, '_').replace(/[^a-zA-Z0-9_-]/g, '') + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
 }
 </script>
 
@@ -1200,7 +1280,11 @@ function closeFetchModal() {
       </div>
       <button onclick="closeFetchModal()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center">&times;</button>
     </div>
-    <div id="fw-body" style="padding:24px 28px"></div>
+    <div id="fw-body" style="padding:24px 28px 8px"></div>
+    <div id="fw-print-bar" style="padding:12px 28px 20px;display:flex;gap:10px;justify-content:flex-end;border-top:1px solid #eee;margin-top:4px">
+      <button onclick="exportFetchCSV()" style="padding:9px 20px;background:#27ae60;color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.3px" onmouseover="this.style.background='#1e8449'" onmouseout="this.style.background='#27ae60'">⬇ Export CSV</button>
+      <button onclick="exportFetchPDF()" style="padding:9px 20px;background:#2e75b6;color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.3px" onmouseover="this.style.background='#1b3a5c'" onmouseout="this.style.background='#2e75b6'">⬇ Export PDF</button>
+    </div>
   </div>
 </div>
 
