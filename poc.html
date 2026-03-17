@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Boost.space TOFU — Make Automation POC</title>
+<style>
+  :root {
+    --navy: #1b3a5c; --blue: #2e75b6; --green: #27ae60;
+    --orange: #e67e22; --red: #c00000; --light: #f5f7fa; --border: #dde3ec;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--light); color: #222; font-size: 14px; line-height: 1.6; }
+  .header { background: var(--navy); color: #fff; padding: 32px 48px; text-align: center; }
+  .header h1 { font-size: 26px; letter-spacing: 2px; }
+  .header .sub { color: #aac4de; margin-top: 6px; font-size: 14px; }
+  .header .badge { display: inline-block; background: var(--green); color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-top: 12px; }
+  .main { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
+  h2 { color: var(--navy); font-size: 17px; margin: 32px 0 10px; border-left: 4px solid var(--blue); padding-left: 12px; }
+  h3 { color: var(--blue); font-size: 14px; margin: 20px 0 8px; }
+  p  { margin-bottom: 10px; color: #444; }
+  .card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin-bottom: 16px; }
+  .card-title { font-weight: 700; color: var(--navy); font-size: 14px; margin-bottom: 12px; }
+  .step { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 14px; }
+  .step-num { background: var(--blue); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; margin-top: 2px; }
+  .step-body { flex: 1; }
+  .step-title { font-weight: 700; color: var(--navy); }
+  .step-desc  { color: #555; font-size: 13px; margin-top: 3px; }
+  code { background: #eef2f7; border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-family: 'Courier New', monospace; font-size: 12px; color: #c00060; }
+  pre  { background: #1e2d3d; color: #e8f4ff; border-radius: 8px; padding: 16px 20px; overflow-x: auto; font-size: 12px; line-height: 1.7; margin: 10px 0 16px; }
+  pre .comment { color: #6a9fb5; }
+  pre .key     { color: #88c0d0; }
+  pre .val     { color: #a3be8c; }
+  pre .str     { color: #ebcb8b; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 12px; }
+  th { background: var(--navy); color: #fff; padding: 8px 12px; text-align: left; }
+  td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  tr:nth-child(even) td { background: var(--light); }
+  .tag { display: inline-block; padding: 2px 9px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+  .tag.green  { background: #d5f5e3; color: #1e8449; }
+  .tag.blue   { background: #d6eaf8; color: #1a5276; }
+  .tag.orange { background: #fef0d0; color: #935116; }
+  .tag.red    { background: #fadbd8; color: #922b21; }
+  .alert { display: flex; gap: 12px; padding: 12px 16px; border-radius: 8px; margin-bottom: 14px; }
+  .alert.info  { background: #eaf4fb; border-left: 4px solid var(--blue); }
+  .alert.warn  { background: #fef9e7; border-left: 4px solid var(--orange); }
+  .alert.good  { background: #eafaf1; border-left: 4px solid var(--green); }
+  .arch { display: flex; align-items: center; gap: 0; flex-wrap: wrap; margin: 16px 0; }
+  .arch-box { background: #fff; border: 2px solid var(--border); border-radius: 8px; padding: 10px 16px; text-align: center; font-size: 12px; font-weight: 700; min-width: 120px; }
+  .arch-box.posthog { border-color: #e67e22; background: #fef9f0; }
+  .arch-box.make    { border-color: #8e44ad; background: #f5eef8; color: #6c3483; }
+  .arch-box.github  { border-color: #2c3e50; background: #eaecee; }
+  .arch-box.pages   { border-color: var(--blue); background: #eaf2fb; color: var(--navy); }
+  .arch-arrow { font-size: 20px; color: #888; margin: 0 6px; }
+  .links { display: flex; gap: 12px; flex-wrap: wrap; margin: 12px 0; }
+  .link-btn { display: inline-block; padding: 9px 18px; border-radius: 7px; font-size: 13px; font-weight: 700; text-decoration: none; color: #fff; }
+  .link-btn.blue  { background: var(--blue); }
+  .link-btn.green { background: var(--green); }
+  .link-btn.dark  { background: var(--navy); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } .arch { flex-direction: column; } }
+  .toc { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin-bottom: 24px; }
+  .toc a { color: var(--blue); text-decoration: none; display: block; padding: 3px 0; font-size: 13px; }
+  .toc a:hover { color: var(--navy); }
+  .module-row { display: flex; gap: 10px; align-items: flex-start; padding: 10px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; background: #fff; }
+  .module-id { background: #8e44ad; color: #fff; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .module-type { font-size: 11px; color: #888; }
+  .module-name { font-weight: 700; font-size: 13px; color: var(--navy); }
+  .module-note { font-size: 12px; color: #555; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>BOOST.SPACE — TOFU Report</h1>
+  <div class="sub">Make Automation Proof of Concept &nbsp;|&nbsp; PostHog → GitHub → Dashboard</div>
+  <div class="badge">📋 Shareable Brief for Gemini / AI Planning</div>
+</div>
+
+<div class="main">
+
+  <!-- TOC -->
+  <div class="toc">
+    <strong style="color:var(--navy);display:block;margin-bottom:8px">Contents</strong>
+    <a href="#overview">1. Overview & Goal</a>
+    <a href="#current">2. Current State</a>
+    <a href="#architecture">3. Target Architecture</a>
+    <a href="#make">4. Make Scenario — Step by Step</a>
+    <a href="#data">5. Data Structure (weekly.json)</a>
+    <a href="#dashboard">6. Dashboard Integration</a>
+    <a href="#checklist">7. Implementation Checklist</a>
+    <a href="#resources">8. Resources & Credentials</a>
+  </div>
+
+  <!-- SECTION 1 -->
+  <h2 id="overview">1. Overview & Goal</h2>
+  <div class="card">
+    <p>Build a fully automated weekly data pipeline that:</p>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Fetches TOFU marketing data from PostHog</div>
+        <div class="step-desc">9 HogQL queries covering Reach, Engagement, Leads, MQL, Google Ads (DW), LinkedIn Ads (DW)</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Assembles a structured JSON file</div>
+        <div class="step-desc">One week object appended to <code>data/weekly.json</code> in the GitHub repo</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Pushes to GitHub via API</div>
+        <div class="step-desc">GitHub Pages auto-rebuilds → dashboard reflects new data within ~60s</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Dashboard reads from weekly.json on load</div>
+        <div class="step-desc">Dynamically adds new week column to all tables — no HTML editing needed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <h2 id="current">2. Current State</h2>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">✅ What exists</div>
+      <table>
+        <tr><td><span class="tag green">DONE</span></td><td>Dashboard HTML on GitHub Pages</td></tr>
+        <tr><td><span class="tag green">DONE</span></td><td>PostHog EU project (ID: 100634)</td></tr>
+        <tr><td><span class="tag green">DONE</span></td><td>Google Ads DW synced to PostHog</td></tr>
+        <tr><td><span class="tag green">DONE</span></td><td>LinkedIn Ads DW synced to PostHog</td></tr>
+        <tr><td><span class="tag green">DONE</span></td><td>All 9 PostHog queries tested & working</td></tr>
+        <tr><td><span class="tag green">DONE</span></td><td>data/weekly.json schema created</td></tr>
+        <tr><td><span class="tag green">DONE</span></td><td>Make blueprint JSON designed</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">⏳ What needs building</div>
+      <table>
+        <tr><td><span class="tag orange">TODO</span></td><td>Import Make blueprint into Make.com</td></tr>
+        <tr><td><span class="tag orange">TODO</span></td><td>Set connections (PostHog key, GitHub token)</td></tr>
+        <tr><td><span class="tag orange">TODO</span></td><td>Generate GitHub PAT with repo write scope</td></tr>
+        <tr><td><span class="tag orange">TODO</span></td><td>Dashboard JS: load from weekly.json on startup</td></tr>
+        <tr><td><span class="tag orange">TODO</span></td><td>Test Make scenario with manual run</td></tr>
+        <tr><td><span class="tag orange">TODO</span></td><td>Activate weekly schedule (Monday 09:00)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <h2 id="architecture">3. Target Architecture</h2>
+  <div class="card">
+    <div class="arch">
+      <div class="arch-box posthog">PostHog EU<br><small>9 HogQL queries</small></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box make">Make.com<br><small>Scheduled weekly</small></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box github">GitHub API<br><small>PUT data/weekly.json</small></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box pages">GitHub Pages<br><small>Auto-rebuild ~60s</small></div>
+    </div>
+    <div class="arch" style="margin-top:0">
+      <div class="arch-box pages" style="min-width:200px">Dashboard (index.html)<br><small>fetch('./data/weekly.json') on load</small></div>
+      <div class="arch-arrow">←</div>
+      <div class="arch-box github" style="min-width:180px">weekly.json<br><small>Petrgyure/boostspace-tofu-report</small></div>
+    </div>
+
+    <div class="alert info" style="margin-top:16px">
+      <span>ℹ️</span>
+      <div><strong>Why GitHub as the data store?</strong> No extra hosting. weekly.json lives in the same repo as the dashboard. GitHub Pages serves it as a static file. Make pushes updates via GitHub Contents API. Zero infrastructure cost.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <h2 id="make">4. Make Scenario — Step by Step</h2>
+
+  <div class="alert warn">
+    <span>⚠️</span>
+    <div><strong>Blueprint file:</strong> <code>make_blueprint.json</code> is in the repo root — importable directly into Make.com via <em>Scenario → Import Blueprint</em></div>
+  </div>
+
+  <h3>Module Flow (15 modules)</h3>
+
+  <div class="module-row">
+    <div class="module-id">1</div>
+    <div>
+      <div class="module-type">Trigger</div>
+      <div class="module-name">Schedule — Every Monday 09:00</div>
+      <div class="module-note">Interval: 10080 minutes (1 week). Set start time to Monday 09:00 in Make scheduler.</div>
+    </div>
+  </div>
+  <div class="module-row">
+    <div class="module-id">2</div>
+    <div>
+      <div class="module-type">HTTP → POST</div>
+      <div class="module-name">PostHog: Reach — Pageviews, Unique Visitors, Sessions</div>
+      <div class="module-note">HogQL: <code>SELECT count(), count(DISTINCT person_id), count(DISTINCT $session_id) FROM events WHERE event='$pageview' AND date range</code></div>
+    </div>
+  </div>
+  <div class="module-row">
+    <div class="module-id">3</div>
+    <div>
+      <div class="module-type">HTTP → POST</div>
+      <div class="module-name">PostHog: CTA Clicks</div>
+      <div class="module-note">Event: <code>cta_click</code></div>
+    </div>
+  </div>
+  <div class="module-row">
+    <div class="module-id">4</div>
+    <div>
+      <div class="module-type">HTTP → POST</div>
+      <div class="module-name">PostHog: Install Views</div>
+      <div class="module-note">Event: <code>install_view</code></div>
+    </div>
+  </div>
+  <div class="module-row">
+    <div class="module-id">5</div>
+    <div>
+      <div class="module-type">HTTP → POST</div>
+      <div class="module-name">PostHog: Pricing Selections</div>
+      <div class="module-note">Event: <code>select_pricing_plan</code></div>
+    </div>
+  </div>
+  <div class="module-row">
+    <div class="module-id">6</div>
+    <div>
+      <div class="module-type">HTTP → POST</div>
+      <div class="module-name">PostHog: Form Submissions by Type</div>
+      <div class="module-note">HogQL GROUP BY <code>properties.form_type</code> — returns rows for sign_up_lead_email, sign_up, demo_lead, callback, waiting_list, newsletter</div>
+    </div>
+  </div>
+  <div class="module-row">
+    <div class="module-id">7</div>
+    <div>
+      <div class="module-type">HTTP → POST</div>
+      <div class="module-name">PostHog: demo_meeting_booked (MQL)</div>
+      <div class="module-note">Critical: if result = 0 for 2+ weeks → alert needed</div>
+    </div>
+  </div>
+  <div class="module-row">
+    <div class="module-id">8</div>
+    <div>
+      <div class="module-type">HTTP → POST</div>
+      <div class="module-name">PostHog: leady_new_lead</div>
+      <div class="module-note">Event: <code>leady_new_lead</code></div>
+    </div>
+  </div>
+  <div class="module-row">
+    <div class="module-id">9</div>
+    <div>
+      <div class="module-type">HTTP → POST</div>
+      <div class="module-name">PostHog DW: Google Ads Campaign Stats</div>
+      <div class="module-note">Table: <code>googleads_campaign_stats</code> — SUM impressions, clicks, cost_micros/1M, conversions</div>
+    </div>
+  </div>
+  <div class="module-row">
+    <div class="module-id">10</div>
+    <div>
+      <div class="module-type">HTTP → POST</div>
+      <div class="module-name">PostHog DW: LinkedIn Ads Campaign Stats</div>
+      <div class="module-note">Table: <code>linkedinads_campaign_stats</code> — SUM impressions, clicks, landing_page_clicks, cost_in_usd, conversions</div>
+    </div>
+  </div>
+  <div class="module-row">
+    <div class="module-id">11</div>
+    <div>
+      <div class="module-type">Set Variable</div>
+      <div class="module-name">Assemble weekly_payload JSON</div>
+      <div class="module-note">Maps all query results into one week object. Calculates derived metrics (CTA rate, CVR, pages/session).</div>
+    </div>
+  </div>
+  <div class="module-row">
+    <div class="module-id">12</div>
+    <div>
+      <div class="module-type">HTTP → GET</div>
+      <div class="module-name">GitHub: GET current weekly.json (for SHA)</div>
+      <div class="module-note">Required: GitHub API requires current file SHA for update requests. URL: <code>https://api.github.com/repos/Petrgyure/boostspace-tofu-report/contents/data/weekly.json</code></div>
+    </div>
+  </div>
+  <div class="module-row">
+    <div class="module-id">13</div>
+    <div>
+      <div class="module-type">Set Variable</div>
+      <div class="module-name">Decode existing weekly.json from base64</div>
+      <div class="module-note">GitHub returns file content as base64. Decode → parse JSON → access <code>.weeks</code> array.</div>
+    </div>
+  </div>
+  <div class="module-row">
+    <div class="module-id">14</div>
+    <div>
+      <div class="module-type">Set Variable</div>
+      <div class="module-name">Append new week + update _meta</div>
+      <div class="module-note">New JSON = existing weeks array + new week object. Update <code>_meta.updated_at</code> and <code>next_update</code>.</div>
+    </div>
+  </div>
+  <div class="module-row">
+    <div class="module-id">15</div>
+    <div>
+      <div class="module-type">HTTP → PUT</div>
+      <div class="module-name">GitHub: PUT updated weekly.json</div>
+      <div class="module-note">Base64-encode the new JSON, PUT with SHA from module 12. GitHub Pages auto-rebuilds within ~60 seconds.</div>
+    </div>
+  </div>
+
+  <h3>Key Make Formulas</h3>
+  <pre><span class="comment">// Date range: last 7 days</span>
+<span class="key">start_date</span>: <span class="str">{{formatDate(addDays(now; -7); "YYYY-MM-DD")}}</span>
+<span class="key">end_date</span>:   <span class="str">{{formatDate(now; "YYYY-MM-DD")}}</span>
+
+<span class="comment">// Decode GitHub file content</span>
+<span class="str">{{parseJSON(base64ToString(12.data.content))}}</span>
+
+<span class="comment">// Append to array</span>
+<span class="str">{{append(current_data.weeks; parseJSON(weekly_payload))}}</span>
+
+<span class="comment">// Re-encode for PUT</span>
+<span class="str">{{toBase64(toString(updated_json))}}</span>
+
+<span class="comment">// CTA click rate</span>
+<span class="str">{{round(multiply(divide(cta_clicks; unique_visitors); 100); 2)}}</span></pre>
+
+  <!-- SECTION 5 -->
+  <h2 id="data">5. Data Structure (weekly.json)</h2>
+  <p>Located at <code>data/weekly.json</code> in the repo. Dashboard reads this on page load.</p>
+  <pre>{
+  <span class="key">"_meta"</span>: {
+    <span class="key">"source"</span>:      <span class="str">"PostHog EU — project 100634"</span>,
+    <span class="key">"updated_at"</span>:  <span class="str">"2026-03-17T09:00:00Z"</span>,
+    <span class="key">"updated_by"</span>:  <span class="str">"make_automation"</span>,
+    <span class="key">"next_update"</span>: <span class="str">"2026-03-23T09:00:00Z"</span>
+  },
+  <span class="key">"weeks"</span>: [
+    {
+      <span class="key">"label"</span>:  <span class="str">"Mar W2"</span>,
+      <span class="key">"range"</span>:  <span class="str">"2026-03-08 – 2026-03-14"</span>,
+      <span class="key">"start"</span>:  <span class="str">"2026-03-08"</span>,
+      <span class="key">"end"</span>:    <span class="str">"2026-03-14"</span>,
+      <span class="key">"reach"</span>: {
+        <span class="key">"pageviews"</span>: 6141,  <span class="key">"unique_visitors"</span>: 3655,
+        <span class="key">"sessions"</span>: 4096,  <span class="key">"pages_per_session"</span>: 1.50
+      },
+      <span class="key">"engagement"</span>: {
+        <span class="key">"cta_clicks"</span>: 53,  <span class="key">"cta_click_rate"</span>: 1.45,
+        <span class="key">"install_views"</span>: 111,  <span class="key">"pricing_selections"</span>: 6
+      },
+      <span class="key">"leads"</span>: {
+        <span class="key">"total_forms"</span>: 76,  <span class="key">"cvr"</span>: 2.08,
+        <span class="key">"sign_up_lead_email"</span>: 47,  <span class="key">"sign_up"</span>: 22,
+        <span class="key">"demo_lead"</span>: 3,  <span class="key">"callback"</span>: 2,
+        <span class="key">"waiting_list"</span>: 1,  <span class="key">"newsletter"</span>: 1,
+        <span class="key">"old_demo_event"</span>: 4
+      },
+      <span class="key">"mql"</span>: {
+        <span class="key">"demo_meeting_booked"</span>: 0,
+        <span class="key">"leady_new_lead"</span>: 30
+      },
+      <span class="key">"paid"</span>: {
+        <span class="key">"google"</span>:   { <span class="key">"impressions"</span>: 11576, <span class="key">"clicks"</span>: 536, <span class="key">"spend_czk"</span>: 28147, <span class="key">"conversions"</span>: 2 },
+        <span class="key">"linkedin"</span>: { <span class="key">"impressions"</span>: 71927, <span class="key">"clicks"</span>: 1419, <span class="key">"lp_clicks"</span>: 1267, <span class="key">"spend_usd"</span>: 2355, <span class="key">"conversions"</span>: 0 }
+      }
+    }
+  ]
+}</pre>
+
+  <!-- SECTION 6 -->
+  <h2 id="dashboard">6. Dashboard Integration</h2>
+  <div class="card">
+    <div class="card-title">How the dashboard reads weekly.json</div>
+    <p>On page load, the dashboard fetches <code>./data/weekly.json</code>. If successful, it uses the latest week as the "current" column, dynamically updating all KPI cards, table columns and WoW deltas. If fetch fails (offline, CORS), it falls back to hardcoded data.</p>
+    <pre><span class="comment">// On DOMContentLoaded:</span>
+fetch(<span class="str">'./data/weekly.json'</span>)
+  .then(r => r.json())
+  .then(data => {
+    const latest = data.weeks[data.weeks.length - 1];
+    <span class="comment">// Update KPI cards</span>
+    document.getElementById(<span class="str">'kpi-pageviews'</span>).textContent =
+      latest.reach.pageviews.toLocaleString();
+    <span class="comment">// Update _meta badge</span>
+    document.getElementById(<span class="str">'last-updated'</span>).textContent =
+      data._meta.updated_at.substring(0,10);
+    <span class="comment">// Add new column to all tables...</span>
+  })
+  .catch(() => console.log(<span class="str">'Using hardcoded data'</span>));</pre>
+    <div class="alert good">
+      <span>✅</span>
+      <div><strong>Result:</strong> Every Monday after Make runs, the dashboard automatically shows the new week without any manual HTML edits. The report stays current with zero effort.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 7 -->
+  <h2 id="checklist">7. Implementation Checklist</h2>
+  <div class="card">
+    <table>
+      <thead><tr><th>#</th><th>Step</th><th>Owner</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Generate GitHub Personal Access Token (Settings → Developer → PAT → repo scope)</td><td>Petr</td><td><span class="tag orange">TODO</span></td></tr>
+        <tr><td>2</td><td>Import <code>make_blueprint.json</code> into Make.com (Create Scenario → Import)</td><td>Petr</td><td><span class="tag orange">TODO</span></td></tr>
+        <tr><td>3</td><td>Add PostHog API key connection in Make: <code>phx_LfVNRjYgMKgiHbxnlGTy8XcGRyhCfV5cvtkHxMXjGcQndXX</code></td><td>Petr</td><td><span class="tag orange">TODO</span></td></tr>
+        <tr><td>4</td><td>Add GitHub token connection in Make</td><td>Petr</td><td><span class="tag orange">TODO</span></td></tr>
+        <tr><td>5</td><td>Run Make scenario manually (once) to verify all 15 modules succeed</td><td>Petr</td><td><span class="tag orange">TODO</span></td></tr>
+        <tr><td>6</td><td>Verify <code>data/weekly.json</code> updated on GitHub after test run</td><td>Petr</td><td><span class="tag orange">TODO</span></td></tr>
+        <tr><td>7</td><td>Update dashboard JS to load from weekly.json on startup</td><td>Claude Code</td><td><span class="tag orange">TODO</span></td></tr>
+        <tr><td>8</td><td>Activate Make schedule: every Monday 09:00</td><td>Petr</td><td><span class="tag orange">TODO</span></td></tr>
+        <tr><td>9</td><td>(Optional) Add Make → Slack/Email notification on completion or on booked=0</td><td>Petr</td><td><span class="tag blue">OPTIONAL</span></td></tr>
+        <tr><td>10</td><td>(Optional) Add error handler route in Make → send alert on API failure</td><td>Petr</td><td><span class="tag blue">OPTIONAL</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 8 -->
+  <h2 id="resources">8. Resources & Credentials</h2>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">🔗 Key URLs</div>
+      <table>
+        <tr><td>Dashboard</td><td><a href="https://petrgyure.github.io/boostspace-tofu-report/" target="_blank" style="color:var(--blue)">GitHub Pages</a></td></tr>
+        <tr><td>GitHub Repo</td><td><a href="https://github.com/Petrgyure/boostspace-tofu-report" target="_blank" style="color:var(--blue)">boostspace-tofu-report</a></td></tr>
+        <tr><td>weekly.json</td><td><a href="./data/weekly.json" target="_blank" style="color:var(--blue)">data/weekly.json</a></td></tr>
+        <tr><td>Make Blueprint</td><td><a href="./make_blueprint.json" target="_blank" style="color:var(--blue)">make_blueprint.json</a></td></tr>
+        <tr><td>PostHog</td><td><a href="https://eu.posthog.com/project/100634" target="_blank" style="color:var(--blue)">Project 100634 (EU)</a></td></tr>
+        <tr><td>GitHub PAT</td><td><a href="https://github.com/settings/tokens" target="_blank" style="color:var(--blue)">Generate token</a></td></tr>
+        <tr><td>Make.com</td><td><a href="https://www.make.com/en/integrations/http" target="_blank" style="color:var(--blue)">HTTP module docs</a></td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">🔑 PostHog API (HTTP module config)</div>
+      <table>
+        <tr><td>Endpoint</td><td><code>https://eu.posthog.com/api/projects/100634/query</code></td></tr>
+        <tr><td>Method</td><td><code>POST</code></td></tr>
+        <tr><td>Header</td><td><code>Authorization: Bearer [api_key]</code></td></tr>
+        <tr><td>Content-Type</td><td><code>application/json</code></td></tr>
+        <tr><td>Body</td><td><code>{"query":{"kind":"HogQLQuery","query":"..."}}</code></td></tr>
+        <tr><td>Parse response</td><td><code>Yes</code> — access via <code>results[0][0]</code></td></tr>
+      </table>
+      <div class="card-title" style="margin-top:14px">🔑 GitHub API (PUT file)</div>
+      <table>
+        <tr><td>Endpoint</td><td><code>PUT /repos/Petrgyure/boostspace-tofu-report/contents/data/weekly.json</code></td></tr>
+        <tr><td>Header</td><td><code>Authorization: Bearer [github_pat]</code></td></tr>
+        <tr><td>Body</td><td><code>{"message":"...", "content":"[base64]", "sha":"[current_sha]"}</code></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="links">
+    <a href="https://petrgyure.github.io/boostspace-tofu-report/" class="link-btn blue" target="_blank">📊 Open Dashboard</a>
+    <a href="./data/weekly.json" class="link-btn dark" target="_blank">📄 View weekly.json</a>
+    <a href="./make_blueprint.json" class="link-btn green" target="_blank">⬇ Download Make Blueprint</a>
+  </div>
+
+  <div class="alert info" style="margin-top:24px">
+    <span>🤖</span>
+    <div>
+      <strong>For Gemini:</strong> All PostHog queries are tested and working. The Make blueprint JSON is at <code>make_blueprint.json</code>. The data schema is at <code>data/weekly.json</code>.
+      The main task is: (1) set up connections in Make, (2) adjust date formulas if needed, (3) update dashboard JS to read from weekly.json on load.
+      PostHog HogQL reference: <a href="https://posthog.com/docs/hogql" style="color:var(--blue)">posthog.com/docs/hogql</a>
+    </div>
+  </div>
+
+  <p style="text-align:center;color:#aaa;margin-top:40px;font-size:12px">Boost.space TOFU POC · Generated by Claude Code · 2026-03-17</p>
+</div>
+</body>
+</html>
