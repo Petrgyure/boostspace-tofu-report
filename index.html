@@ -1215,46 +1215,112 @@ function exportFetchPDF() {
 function exportFetchCSV() {
   const fetchedLabel = document.getElementById('fw-period').textContent;
   const d = _lastFetch;
+  const r = (v) => '"' + String(v).replace(/"/g, '""') + '"';
+  const row = (...cells) => cells.map(r).join(',');
+  const blank = () => '';
 
-  // Full historical dataset (all weeks in the report)
-  const HISTORY = [
-    // week, pageviews, unique, sessions, pps, cta, ctr%, install, pricing, forms, cvr%, email, signup, demo_lead, callback, wl, nl, old_demo, booked, leady, ga_impr, ga_clicks, ga_spend_czk, ga_conv, li_impr, li_clicks, li_lp, li_spend_usd, li_conv
-    ['Feb W3 (Feb 17–23)', 18730, 11025, 13204, 1.42, 152, 1.38, 312, 24, 168, 1.52, 89, 51, 8, 6, 7, 7, 21, 24, 0, 22130, 921, 27440, 9, 1082450, 10820, 9990, 4610, 0],
-    ['Feb W4 (Feb 24–Mar 1)', 15842, 9318, 11076, 1.43, 119, 1.28, 261, 19, 142, 1.52, 76, 42, 7, 5, 6, 6, 18, 11, 0, 19840, 895, 28105, 7, 998230, 10210, 9440, 4380, 0],
-    ['Mar W1 (Mar 1–7)',     13727, 7895,  9406, 1.46,  78, 0.99, 227, 16, 120, 1.52, 65, 39, 4, 4, 5, 3, 12,  0, 4,  20166,  870, 28792, 8, 955168,  9740, 9011, 4189, 0],
-    ['Mar W2 (Mar 8–14)',    6141,  3655,  4096, 1.50,  53, 1.45, 111,  6,  76, 2.08, 47, 22, 3, 2, 1, 1,  4,  0, 30,  11576,  536, 28147, 2,  71927,  1419, 1267, 2355, 0],
-  ];
+  const sections = [];
 
-  const headers = [
-    'Week','Pageviews','Unique Visitors','Sessions','Pages/Session',
-    'CTA Clicks','CTA Rate %','Install Views','Pricing Selections',
-    'Total Forms','CVR %',
-    'sign_up_lead_email','sign_up','demo_lead','callback','waiting_list','newsletter',
-    'be_form_submit_demo_lead (old)',
-    'demo_meeting_booked','leady_new_lead',
-    'GA Impressions','GA Clicks','GA Spend CZK','GA Conversions',
-    'LI Impressions','LI Clicks','LI LP Clicks','LI Spend USD','LI Conversions'
-  ];
+  // ── SECTION 1: REACH ──
+  sections.push(row('=== LAYER 1: REACH ==='));
+  sections.push(row('Metric','Feb W3','Feb W4','Mar W1','Mar W2', d ? fetchedLabel : ''));
+  sections.push(row('Pageviews',          12797, 14347, 13727, 6141,   d ? d.pv   : ''));
+  sections.push(row('Unique Visitors',     7745,  8801,  7895, 3655,   d ? d.uv   : ''));
+  sections.push(row('Sessions',            8630, 10313,  9406, 4096,   d ? d.sess : ''));
+  sections.push(row('Pages / Session',     1.48,  1.39,  1.46, 1.50,   d ? d.pps  : ''));
+  sections.push(row('Traffic Source – Direct/None (est)',   '', '', '', '~5035',  ''));
+  sections.push(row('Traffic Source – LinkedIn Paid (LP clicks)', '', '', 9011, 1267, d ? d.liLp : ''));
+  sections.push(row('Traffic Source – Google Clicks',       '', '', 870,  536,    d ? d.gaClicks : ''));
+  sections.push(blank());
 
-  const rows = [headers, ...HISTORY];
+  // ── SECTION 2: ENGAGEMENT ──
+  sections.push(row('=== LAYER 2: ENGAGEMENT ==='));
+  sections.push(row('Metric','Feb W3','Feb W4','Mar W1','Mar W2', d ? fetchedLabel : ''));
+  sections.push(row('CTA Clicks',          130,   98,    78,    53,    d ? d.ctaClicks : ''));
+  sections.push(row('CTA Click Rate %',   1.68, 1.11,  0.99,  1.45,   d ? d.ctrVal    : ''));
+  sections.push(row('Install Views',       450,  209,   227,   111,   d ? d.installV  : ''));
+  sections.push(row('Pricing Selections',   27,   17,    16,     6,    d ? d.pricingV  : ''));
+  sections.push(blank());
 
-  // Append fetched week if it's new (not already in history)
-  if (d) {
-    const formMap = Object.fromEntries((d.forms || []).map(r => [r[0], n(r[1])]));
-    rows.push([
-      fetchedLabel,
-      d.pv, d.uv, d.sess, d.pps,
-      d.ctaClicks, d.ctrVal, d.installV, d.pricingV,
-      d.totalForms, d.cvr,
-      formMap['sign_up_lead_email']||0, formMap['sign_up']||0, formMap['demo_lead']||0,
-      formMap['callback']||0, formMap['waiting_list']||0, formMap['newsletter']||0,
-      d.oldDemoV, d.bookedV, d.leadyV,
-      d.gaImpr, d.gaClicks, d.gaSpend, d.gaConv,
-      d.liImpr, d.liClicks, d.liLp, d.liSpend, d.liConv
-    ]);
-  }
+  // ── SECTION 3: LEAD CAPTURE ──
+  sections.push(row('=== LAYER 3: LEAD CAPTURE ==='));
+  sections.push(row('form_type','Feb W3','Feb W4','Mar W1','Mar W2', d ? fetchedLabel : ''));
+  sections.push(row('sign_up_lead_email',  47,   80,    65,    47,    d ? (d.forms.find(x=>x[0]==='sign_up_lead_email')||[0,0])[1] : ''));
+  sections.push(row('sign_up',             75,   45,    39,    22,    d ? (d.forms.find(x=>x[0]==='sign_up')||[0,0])[1]            : ''));
+  sections.push(row('demo_lead (new)',      0,    0,     4,     3,    d ? (d.forms.find(x=>x[0]==='demo_lead')||[0,0])[1]          : ''));
+  sections.push(row('callback',             0,    0,     4,     2,    d ? (d.forms.find(x=>x[0]==='callback')||[0,0])[1]           : ''));
+  sections.push(row('waiting_list',         4,    7,     5,     1,    d ? (d.forms.find(x=>x[0]==='waiting_list')||[0,0])[1]       : ''));
+  sections.push(row('newsletter',           7,    5,     3,     1,    d ? (d.forms.find(x=>x[0]==='newsletter')||[0,0])[1]         : ''));
+  sections.push(row('TOTAL form_submit',  133,  137,   120,    76,    d ? d.totalForms : ''));
+  sections.push(row('be_form_submit_demo_lead (old)', '—', '—', 12,    4,  d ? d.oldDemoV  : ''));
+  sections.push(row('CVR % (forms/unique)', '', '',  1.52,  2.08,   d ? d.cvr : ''));
+  sections.push(blank());
 
-  const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
+  // ── SECTION 4: MQL ──
+  sections.push(row('=== LAYER 4: MQL ==='));
+  sections.push(row('Metric','Feb W3','Feb W4','Mar W1','Mar W2', d ? fetchedLabel : ''));
+  sections.push(row('Demo Lead Forms (new event)',    0,    0,    4,    3,   d ? (d.forms.find(x=>x[0]==='demo_lead')||[0,0])[1] : ''));
+  sections.push(row('Demo Lead Forms (old event)',  '—',  '—',   12,   4,   d ? d.oldDemoV  : ''));
+  sections.push(row('Callback Forms',               0,    0,     4,    2,   d ? (d.forms.find(x=>x[0]==='callback')||[0,0])[1]  : ''));
+  sections.push(row('demo_meeting_booked',          24,   11,    0,    0,   d ? d.bookedV   : ''));
+  sections.push(row('leady_new_lead',              '—',  '—',    4,   30,   d ? d.leadyV    : ''));
+  sections.push(blank());
+
+  // ── SECTION 5: LINKEDIN ADS WEEKLY ──
+  sections.push(row('=== PAID: LINKEDIN ADS — WEEKLY (USD) ==='));
+  sections.push(row('Week','Impressions','Clicks','LP Clicks','Spend USD','CTR %','CPC USD','Conversions'));
+  sections.push(row('Feb W1',   155834,  1735,  1019, 2856, 1.11, 1.65, 0));
+  sections.push(row('Feb W2',   337097,  2747,  1376, 8961, 0.81, 3.26, 0));
+  sections.push(row('Feb W3',   357713,  4225,  1827, 6119, 1.18, 1.45, 3));
+  sections.push(row('Feb W4',  1245371, 10331,  2753, 4534, 0.83, 0.44, 0));
+  sections.push(row('Mar W1',   955168,  9740,  9011, 4189, 1.02, 0.43, 0));
+  sections.push(row('Mar W2',    71927,  1419,  1267, 2355, 1.97, 1.66, 0));
+  if (d) sections.push(row(fetchedLabel, d.liImpr, d.liClicks, d.liLp, d.liSpend, '', '', d.liConv));
+  sections.push(blank());
+
+  // ── SECTION 6: LINKEDIN CAMPAIGNS MAR W2 ──
+  sections.push(row('=== PAID: LINKEDIN ADS — TOP CAMPAIGNS MAR W2 ==='));
+  sections.push(row('Campaign','Impressions','Clicks','Spend USD','CTR %','CPC USD'));
+  sections.push(row('BOFU | Remarketing | Post Engagement', 18615, 438, 354, 2.35, 0.81));
+  sections.push(row('TOFU | DACH | Website visit',           1154,  11, 264, 0.95, 24.0));
+  sections.push(row('Engagement - Mar 2 2026',               9423, 359, 254, 3.81, 0.71));
+  sections.push(row('UKI | Supplier Updates Without Chaos',  6596,  96, 224, 1.46, 2.33));
+  sections.push(row('UKI | GEO — AI-Discoverable Catalog',   8676,  88, 222, 1.01, 2.52));
+  sections.push(row('UKI | Marketplace Expansion',           8198, 100, 221, 1.22, 2.21));
+  sections.push(row('UKI | AI Enrichment at Scale',          6460,  69, 215, 1.07, 3.12));
+  sections.push(blank());
+
+  // ── SECTION 7: GOOGLE ADS WEEKLY ──
+  sections.push(row('=== PAID: GOOGLE ADS — WEEKLY (CZK) ==='));
+  sections.push(row('Week','Impressions','Clicks','Spend CZK','CTR %','CPC CZK','Conversions'));
+  sections.push(row('Feb W4',  1644,  169,  3521, 10.28, 20.83, 16));
+  sections.push(row('Mar W1', 20166,  870, 28792,  4.31, 33.09,  8));
+  sections.push(row('Mar W2', 11576,  536, 28147,  4.63, 52.51,  2));
+  if (d) sections.push(row(fetchedLabel, d.gaImpr, d.gaClicks, d.gaSpend, '', '', d.gaConv));
+  sections.push(blank());
+
+  // ── SECTION 8: GOOGLE CAMPAIGNS MAR W2 ──
+  sections.push(row('=== PAID: GOOGLE ADS — TOP CAMPAIGNS MAR W2 ==='));
+  sections.push(row('Campaign','Impressions','Clicks','Spend CZK','Conversions','CTR %'));
+  sections.push(row('BSP | Commerce - GEO Catalog',          4221, 338, 15999, 2, 10.61));
+  sections.push(row('BSP | Commerce - Marketplace Expansion', 1509,  47,  4775, 0,  3.57));
+  sections.push(row('Search - Database for Make',             4933,  93,  4158, 0,  1.32));
+  sections.push(row('BSP | Commerce - Dynamic Pricing',        810,  51,  2728, 0, 11.67));
+  sections.push(row('BSP | Commerce - AI Enrichment',           88,   6,   417, 0,  6.18));
+  sections.push(blank());
+
+  // ── SECTION 9: COMBINED PAID EFFICIENCY ──
+  sections.push(row('=== PAID: COMBINED EFFICIENCY — MAR W2 ==='));
+  sections.push(row('Metric','Value'));
+  sections.push(row('Total Spend (approx USD)', 3481));
+  sections.push(row('Total Clicks (LI + GA)', 1955));
+  sections.push(row('Total Forms', 76));
+  sections.push(row('CPL (cost per form)', 46));
+  sections.push(row('Cost per Demo Lead', 497));
+  sections.push(row('CPA (cost per meeting booked)', 'Infinity — 0 meetings'));
+  sections.push(blank());
+
+  const csv = sections.join('\n');
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
