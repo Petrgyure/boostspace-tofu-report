@@ -387,9 +387,6 @@
   <h1>BOOST.SPACE</h1>
   <h2>TOFU Marketing Report</h2>
   <div class="meta">Reporting Period: Feb 17 – Mar 14, 2026 &nbsp;|&nbsp; Data: PostHog + Google Ads + LinkedIn Ads &nbsp;|&nbsp; Updated Mar 16, 2026</div>
-  <button id="fetch-btn" onclick="fetchLastWeek()" style="margin-top:14px;padding:10px 22px;background:#2e75b6;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;transition:background .2s" onmouseover="this.style.background='#1b3a5c'" onmouseout="this.style.background='#2e75b6'">
-    ⟳ Fetch Last Week Data
-  </button>
 </div>
 
 <div class="nav-tabs">
@@ -401,6 +398,7 @@
   <div class="nav-tab" onclick="showTab('paid')">💵 Paid Channels</div>
   <div class="nav-tab" onclick="showTab('funnel')">🔍 Full Funnel</div>
   <div class="nav-tab" onclick="showTab('status')">✅ Status Check</div>
+  <button id="fetch-btn" onclick="fetchLastWeek()" style="margin-left:auto;margin-top:6px;margin-bottom:6px;padding:8px 18px;background:#2e75b6;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s" onmouseover="this.style.background='#1b3a5c'" onmouseout="this.style.background='#2e75b6'">⟳ Fetch Last Week</button>
 </div>
 
 <div class="main">
@@ -1215,56 +1213,53 @@ function exportFetchPDF() {
 }
 
 function exportFetchCSV() {
-  if (!_lastFetch) return;
+  const fetchedLabel = document.getElementById('fw-period').textContent;
   const d = _lastFetch;
-  const label = document.getElementById('fw-period').textContent;
 
-  const rows = [
-    ['Metric', 'Value', 'Period'],
-    ['Period', label, ''],
-    ['', '', ''],
-    ['--- REACH ---', '', ''],
-    ['Pageviews', d.pv, label],
-    ['Unique Visitors', d.uv, label],
-    ['Sessions', d.sess, label],
-    ['Pages / Session', d.pps, label],
-    ['', '', ''],
-    ['--- ENGAGEMENT ---', '', ''],
-    ['CTA Clicks', d.ctaClicks, label],
-    ['CTA Click Rate (%)', d.ctrVal, label],
-    ['Install Views', d.installV, label],
-    ['Pricing Selections', d.pricingV, label],
-    ['', '', ''],
-    ['--- LEAD CAPTURE ---', '', ''],
-    ['Total Form Submissions', d.totalForms, label],
-    ['CVR (%)', d.cvr, label],
-    ...d.forms.map(r => ['form_submit: ' + (r[0] || 'none'), n(r[1]), label]),
-    ['be_form_submit_demo_lead (old)', d.oldDemoV, label],
-    ['', '', ''],
-    ['--- MQL ---', '', ''],
-    ['demo_meeting_booked', d.bookedV, label],
-    ['leady_new_lead', d.leadyV, label],
-    ['', '', ''],
-    ['--- GOOGLE ADS ---', '', ''],
-    ['Google Ads Impressions', d.gaImpr, label],
-    ['Google Ads Clicks', d.gaClicks, label],
-    ['Google Ads Spend (CZK)', d.gaSpend, label],
-    ['Google Ads Conversions', d.gaConv, label],
-    ['', '', ''],
-    ['--- LINKEDIN ADS ---', '', ''],
-    ['LinkedIn Impressions', d.liImpr, label],
-    ['LinkedIn Clicks', d.liClicks, label],
-    ['LinkedIn LP Clicks', d.liLp, label],
-    ['LinkedIn Spend (USD)', d.liSpend, label],
-    ['LinkedIn Conversions', d.liConv, label],
+  // Full historical dataset (all weeks in the report)
+  const HISTORY = [
+    // week, pageviews, unique, sessions, pps, cta, ctr%, install, pricing, forms, cvr%, email, signup, demo_lead, callback, wl, nl, old_demo, booked, leady, ga_impr, ga_clicks, ga_spend_czk, ga_conv, li_impr, li_clicks, li_lp, li_spend_usd, li_conv
+    ['Feb W3 (Feb 17–23)', 18730, 11025, 13204, 1.42, 152, 1.38, 312, 24, 168, 1.52, 89, 51, 8, 6, 7, 7, 21, 24, 0, 22130, 921, 27440, 9, 1082450, 10820, 9990, 4610, 0],
+    ['Feb W4 (Feb 24–Mar 1)', 15842, 9318, 11076, 1.43, 119, 1.28, 261, 19, 142, 1.52, 76, 42, 7, 5, 6, 6, 18, 11, 0, 19840, 895, 28105, 7, 998230, 10210, 9440, 4380, 0],
+    ['Mar W1 (Mar 1–7)',     13727, 7895,  9406, 1.46,  78, 0.99, 227, 16, 120, 1.52, 65, 39, 4, 4, 5, 3, 12,  0, 4,  20166,  870, 28792, 8, 955168,  9740, 9011, 4189, 0],
+    ['Mar W2 (Mar 8–14)',    6141,  3655,  4096, 1.50,  53, 1.45, 111,  6,  76, 2.08, 47, 22, 3, 2, 1, 1,  4,  0, 30,  11576,  536, 28147, 2,  71927,  1419, 1267, 2355, 0],
   ];
+
+  const headers = [
+    'Week','Pageviews','Unique Visitors','Sessions','Pages/Session',
+    'CTA Clicks','CTA Rate %','Install Views','Pricing Selections',
+    'Total Forms','CVR %',
+    'sign_up_lead_email','sign_up','demo_lead','callback','waiting_list','newsletter',
+    'be_form_submit_demo_lead (old)',
+    'demo_meeting_booked','leady_new_lead',
+    'GA Impressions','GA Clicks','GA Spend CZK','GA Conversions',
+    'LI Impressions','LI Clicks','LI LP Clicks','LI Spend USD','LI Conversions'
+  ];
+
+  const rows = [headers, ...HISTORY];
+
+  // Append fetched week if it's new (not already in history)
+  if (d) {
+    const formMap = Object.fromEntries((d.forms || []).map(r => [r[0], n(r[1])]));
+    rows.push([
+      fetchedLabel,
+      d.pv, d.uv, d.sess, d.pps,
+      d.ctaClicks, d.ctrVal, d.installV, d.pricingV,
+      d.totalForms, d.cvr,
+      formMap['sign_up_lead_email']||0, formMap['sign_up']||0, formMap['demo_lead']||0,
+      formMap['callback']||0, formMap['waiting_list']||0, formMap['newsletter']||0,
+      d.oldDemoV, d.bookedV, d.leadyV,
+      d.gaImpr, d.gaClicks, d.gaSpend, d.gaConv,
+      d.liImpr, d.liClicks, d.liLp, d.liSpend, d.liConv
+    ]);
+  }
 
   const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'boostspace_tofu_' + label.replace(/\s/g, '_').replace(/[^a-zA-Z0-9_-]/g, '') + '.csv';
+  a.download = 'boostspace_tofu_full_dataset.csv';
   a.click();
   URL.revokeObjectURL(url);
 }
