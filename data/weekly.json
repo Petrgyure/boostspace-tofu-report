@@ -1,9 +1,9 @@
 {
   "_meta": {
     "source": "PostHog EU — project 100634",
-    "updated_at": "2026-03-17T09:00:00Z",
-    "updated_by": "manual",
-    "next_update": "2026-03-23T09:00:00Z",
+    "updated_at": "2026-03-18T09:54:42.032Z",
+    "updated_by": "fetch-week-script",
+    "next_update": "2026-03-23T08:00:00.000Z",
     "version": 1
   },
   "weeks": [
@@ -153,48 +153,48 @@
     },
     {
       "label": "Mar W2",
-      "range": "2026-03-08 – 2026-03-14",
-      "start": "2026-03-08",
-      "end": "2026-03-14",
+      "range": "2026-03-09 – 2026-03-15",
+      "start": "2026-03-09",
+      "end": "2026-03-16",
       "reach": {
-        "pageviews": 6141,
-        "unique_visitors": 3655,
-        "sessions": 4096,
-        "pages_per_session": 1.50
+        "pageviews": 5887,
+        "unique_visitors": 3474,
+        "sessions": 3901,
+        "pages_per_session": 1.51
       },
       "engagement": {
-        "cta_clicks": 53,
-        "cta_click_rate": 1.45,
-        "install_views": 111,
-        "pricing_selections": 6
+        "cta_clicks": 43,
+        "cta_click_rate": 1.24,
+        "install_views": 104,
+        "pricing_selections": 9
       },
       "leads": {
         "total_forms": 76,
-        "cvr": 2.08,
-        "sign_up_lead_email": 47,
+        "cvr": 2.19,
+        "sign_up_lead_email": 46,
         "sign_up": 22,
-        "demo_lead": 3,
+        "demo_lead": 4,
         "callback": 2,
         "waiting_list": 1,
         "newsletter": 1,
-        "old_demo_event": 4
+        "old_demo_event": 5
       },
       "mql": {
         "demo_meeting_booked": 0,
-        "leady_new_lead": 30
+        "leady_new_lead": 32
       },
       "paid": {
         "google": {
-          "impressions": 11576,
-          "clicks": 536,
-          "spend_czk": 28147,
-          "conversions": 2
+          "impressions": 11039,
+          "clicks": 526,
+          "spend_czk": 31888,
+          "conversions": 3
         },
         "linkedin": {
-          "impressions": 71927,
-          "clicks": 1419,
-          "lp_clicks": 1267,
-          "spend_usd": 2355,
+          "impressions": 67336,
+          "clicks": 1291,
+          "lp_clicks": 1139,
+          "spend_usd": 2091,
           "conversions": 0
         }
       }

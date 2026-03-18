@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && cp dist/index.html index.html && cp -r dist/assets . && cp dist/data/weekly.json data/weekly.json",
     "preview": "vite preview",
     "fetch": "node scripts/fetch-week.js",
     "schedule": "node scripts/schedule.js"
