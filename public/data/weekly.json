@@ -1,0 +1,203 @@
+{
+  "_meta": {
+    "source": "PostHog EU — project 100634",
+    "updated_at": "2026-03-18T09:54:42.032Z",
+    "updated_by": "fetch-week-script",
+    "next_update": "2026-03-23T08:00:00.000Z",
+    "version": 1
+  },
+  "weeks": [
+    {
+      "label": "Feb W3",
+      "range": "2026-02-17 – 2026-02-23",
+      "start": "2026-02-17",
+      "end": "2026-02-23",
+      "reach": {
+        "pageviews": 12797,
+        "unique_visitors": 7745,
+        "sessions": 8630,
+        "pages_per_session": 1.48
+      },
+      "engagement": {
+        "cta_clicks": 130,
+        "cta_click_rate": 1.68,
+        "install_views": 450,
+        "pricing_selections": 27
+      },
+      "leads": {
+        "total_forms": 133,
+        "cvr": 1.72,
+        "sign_up_lead_email": 47,
+        "sign_up": 75,
+        "demo_lead": 0,
+        "callback": 0,
+        "waiting_list": 4,
+        "newsletter": 7,
+        "old_demo_event": 0
+      },
+      "mql": {
+        "demo_meeting_booked": 24,
+        "leady_new_lead": 0
+      },
+      "paid": {
+        "google": {
+          "impressions": 0,
+          "clicks": 0,
+          "spend_czk": 0,
+          "conversions": 0
+        },
+        "linkedin": {
+          "impressions": 357713,
+          "clicks": 4225,
+          "lp_clicks": 1827,
+          "spend_usd": 6119,
+          "conversions": 3
+        }
+      }
+    },
+    {
+      "label": "Feb W4",
+      "range": "2026-02-24 – 2026-03-01",
+      "start": "2026-02-24",
+      "end": "2026-03-01",
+      "reach": {
+        "pageviews": 14347,
+        "unique_visitors": 8801,
+        "sessions": 10313,
+        "pages_per_session": 1.39
+      },
+      "engagement": {
+        "cta_clicks": 98,
+        "cta_click_rate": 1.11,
+        "install_views": 209,
+        "pricing_selections": 17
+      },
+      "leads": {
+        "total_forms": 137,
+        "cvr": 1.56,
+        "sign_up_lead_email": 80,
+        "sign_up": 45,
+        "demo_lead": 0,
+        "callback": 0,
+        "waiting_list": 7,
+        "newsletter": 5,
+        "old_demo_event": 0
+      },
+      "mql": {
+        "demo_meeting_booked": 11,
+        "leady_new_lead": 0
+      },
+      "paid": {
+        "google": {
+          "impressions": 1644,
+          "clicks": 169,
+          "spend_czk": 3521,
+          "conversions": 16
+        },
+        "linkedin": {
+          "impressions": 1245371,
+          "clicks": 10331,
+          "lp_clicks": 2753,
+          "spend_usd": 4534,
+          "conversions": 0
+        }
+      }
+    },
+    {
+      "label": "Mar W1",
+      "range": "2026-03-01 – 2026-03-07",
+      "start": "2026-03-01",
+      "end": "2026-03-07",
+      "reach": {
+        "pageviews": 13727,
+        "unique_visitors": 7895,
+        "sessions": 9406,
+        "pages_per_session": 1.46
+      },
+      "engagement": {
+        "cta_clicks": 78,
+        "cta_click_rate": 0.99,
+        "install_views": 227,
+        "pricing_selections": 16
+      },
+      "leads": {
+        "total_forms": 120,
+        "cvr": 1.52,
+        "sign_up_lead_email": 65,
+        "sign_up": 39,
+        "demo_lead": 4,
+        "callback": 4,
+        "waiting_list": 5,
+        "newsletter": 3,
+        "old_demo_event": 12
+      },
+      "mql": {
+        "demo_meeting_booked": 0,
+        "leady_new_lead": 4
+      },
+      "paid": {
+        "google": {
+          "impressions": 20166,
+          "clicks": 870,
+          "spend_czk": 28792,
+          "conversions": 8
+        },
+        "linkedin": {
+          "impressions": 955168,
+          "clicks": 9740,
+          "lp_clicks": 9011,
+          "spend_usd": 4189,
+          "conversions": 0
+        }
+      }
+    },
+    {
+      "label": "Mar W2",
+      "range": "2026-03-09 – 2026-03-15",
+      "start": "2026-03-09",
+      "end": "2026-03-16",
+      "reach": {
+        "pageviews": 5887,
+        "unique_visitors": 3474,
+        "sessions": 3901,
+        "pages_per_session": 1.51
+      },
+      "engagement": {
+        "cta_clicks": 43,
+        "cta_click_rate": 1.24,
+        "install_views": 104,
+        "pricing_selections": 9
+      },
+      "leads": {
+        "total_forms": 76,
+        "cvr": 2.19,
+        "sign_up_lead_email": 46,
+        "sign_up": 22,
+        "demo_lead": 4,
+        "callback": 2,
+        "waiting_list": 1,
+        "newsletter": 1,
+        "old_demo_event": 5
+      },
+      "mql": {
+        "demo_meeting_booked": 0,
+        "leady_new_lead": 32
+      },
+      "paid": {
+        "google": {
+          "impressions": 11039,
+          "clicks": 526,
+          "spend_czk": 31888,
+          "conversions": 3
+        },
+        "linkedin": {
+          "impressions": 67336,
+          "clicks": 1291,
+          "lp_clicks": 1139,
+          "spend_usd": 2091,
+          "conversions": 0
+        }
+      }
+    }
+  ]
+}
