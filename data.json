@@ -1,0 +1,452 @@
+[
+  {
+    "event": "$pageview",
+    "count": 555,
+    "date": "2026-03-17"
+  },
+  {
+    "event": "leady_new_lead",
+    "count": 7,
+    "date": "2026-03-17"
+  },
+  {
+    "event": "form_submit",
+    "count": 3,
+    "date": "2026-03-17"
+  },
+  {
+    "event": "form_submit",
+    "count": 6,
+    "date": "2026-03-16"
+  },
+  {
+    "event": "leady_new_lead",
+    "count": 3,
+    "date": "2026-03-16"
+  },
+  {
+    "event": "$pageview",
+    "count": 807,
+    "date": "2026-03-16"
+  },
+  {
+    "event": "form_submit",
+    "count": 7,
+    "date": "2026-03-15"
+  },
+  {
+    "event": "$pageview",
+    "count": 545,
+    "date": "2026-03-15"
+  },
+  {
+    "event": "leady_new_lead",
+    "count": 2,
+    "date": "2026-03-15"
+  },
+  {
+    "event": "leady_new_lead",
+    "count": 1,
+    "date": "2026-03-14"
+  },
+  {
+    "event": "$pageview",
+    "count": 515,
+    "date": "2026-03-14"
+  },
+  {
+    "event": "form_submit",
+    "count": 5,
+    "date": "2026-03-14"
+  },
+  {
+    "event": "leady_new_lead",
+    "count": 5,
+    "date": "2026-03-13"
+  },
+  {
+    "event": "form_submit",
+    "count": 15,
+    "date": "2026-03-13"
+  },
+  {
+    "event": "$pageview",
+    "count": 900,
+    "date": "2026-03-13"
+  },
+  {
+    "event": "cta_click",
+    "count": 4,
+    "date": "2026-03-13"
+  },
+  {
+    "event": "form_submit",
+    "count": 7,
+    "date": "2026-03-12"
+  },
+  {
+    "event": "cta_click",
+    "count": 13,
+    "date": "2026-03-12"
+  },
+  {
+    "event": "$pageview",
+    "count": 942,
+    "date": "2026-03-12"
+  },
+  {
+    "event": "leady_new_lead",
+    "count": 3,
+    "date": "2026-03-12"
+  },
+  {
+    "event": "$pageview",
+    "count": 783,
+    "date": "2026-03-11"
+  },
+  {
+    "event": "leady_new_lead",
+    "count": 11,
+    "date": "2026-03-11"
+  },
+  {
+    "event": "cta_click",
+    "count": 7,
+    "date": "2026-03-11"
+  },
+  {
+    "event": "form_submit",
+    "count": 10,
+    "date": "2026-03-11"
+  },
+  {
+    "event": "form_submit",
+    "count": 20,
+    "date": "2026-03-10"
+  },
+  {
+    "event": "$pageview",
+    "count": 1276,
+    "date": "2026-03-10"
+  },
+  {
+    "event": "leady_new_lead",
+    "count": 10,
+    "date": "2026-03-10"
+  },
+  {
+    "event": "cta_click",
+    "count": 8,
+    "date": "2026-03-10"
+  },
+  {
+    "event": "cta_click",
+    "count": 11,
+    "date": "2026-03-09"
+  },
+  {
+    "event": "form_submit",
+    "count": 12,
+    "date": "2026-03-09"
+  },
+  {
+    "event": "$pageview",
+    "count": 926,
+    "date": "2026-03-09"
+  },
+  {
+    "event": "$pageview",
+    "count": 799,
+    "date": "2026-03-08"
+  },
+  {
+    "event": "form_submit",
+    "count": 7,
+    "date": "2026-03-08"
+  },
+  {
+    "event": "cta_click",
+    "count": 10,
+    "date": "2026-03-08"
+  },
+  {
+    "event": "$pageview",
+    "count": 737,
+    "date": "2026-03-07"
+  },
+  {
+    "event": "form_submit",
+    "count": 14,
+    "date": "2026-03-07"
+  },
+  {
+    "event": "cta_click",
+    "count": 1,
+    "date": "2026-03-07"
+  },
+  {
+    "event": "form_submit",
+    "count": 20,
+    "date": "2026-03-06"
+  },
+  {
+    "event": "$pageview",
+    "count": 1267,
+    "date": "2026-03-06"
+  },
+  {
+    "event": "cta_click",
+    "count": 2,
+    "date": "2026-03-06"
+  },
+  {
+    "event": "$pageview",
+    "count": 2357,
+    "date": "2026-03-05"
+  },
+  {
+    "event": "form_submit",
+    "count": 29,
+    "date": "2026-03-05"
+  },
+  {
+    "event": "cta_click",
+    "count": 20,
+    "date": "2026-03-05"
+  },
+  {
+    "event": "cta_click",
+    "count": 12,
+    "date": "2026-03-04"
+  },
+  {
+    "event": "form_submit",
+    "count": 20,
+    "date": "2026-03-04"
+  },
+  {
+    "event": "$pageview",
+    "count": 2379,
+    "date": "2026-03-04"
+  },
+  {
+    "event": "form_submit",
+    "count": 23,
+    "date": "2026-03-03"
+  },
+  {
+    "event": "cta_click",
+    "count": 16,
+    "date": "2026-03-03"
+  },
+  {
+    "event": "$pageview",
+    "count": 1856,
+    "date": "2026-03-03"
+  },
+  {
+    "event": "form_submit",
+    "count": 14,
+    "date": "2026-03-02"
+  },
+  {
+    "event": "cta_click",
+    "count": 19,
+    "date": "2026-03-02"
+  },
+  {
+    "event": "$pageview",
+    "count": 2518,
+    "date": "2026-03-02"
+  },
+  {
+    "event": "cta_click",
+    "count": 8,
+    "date": "2026-03-01"
+  },
+  {
+    "event": "$pageview",
+    "count": 2613,
+    "date": "2026-03-01"
+  },
+  {
+    "event": "$pageview",
+    "count": 2050,
+    "date": "2026-02-28"
+  },
+  {
+    "event": "form_submit",
+    "count": 8,
+    "date": "2026-02-28"
+  },
+  {
+    "event": "cta_click",
+    "count": 3,
+    "date": "2026-02-28"
+  },
+  {
+    "event": "cta_click",
+    "count": 9,
+    "date": "2026-02-27"
+  },
+  {
+    "event": "$pageview",
+    "count": 2013,
+    "date": "2026-02-27"
+  },
+  {
+    "event": "form_submit",
+    "count": 4,
+    "date": "2026-02-27"
+  },
+  {
+    "event": "form_submit",
+    "count": 33,
+    "date": "2026-02-26"
+  },
+  {
+    "event": "cta_click",
+    "count": 22,
+    "date": "2026-02-26"
+  },
+  {
+    "event": "$pageview",
+    "count": 2129,
+    "date": "2026-02-26"
+  },
+  {
+    "event": "cta_click",
+    "count": 16,
+    "date": "2026-02-25"
+  },
+  {
+    "event": "$pageview",
+    "count": 1893,
+    "date": "2026-02-25"
+  },
+  {
+    "event": "form_submit",
+    "count": 38,
+    "date": "2026-02-25"
+  },
+  {
+    "event": "cta_click",
+    "count": 16,
+    "date": "2026-02-24"
+  },
+  {
+    "event": "form_submit",
+    "count": 9,
+    "date": "2026-02-24"
+  },
+  {
+    "event": "$pageview",
+    "count": 1742,
+    "date": "2026-02-24"
+  },
+  {
+    "event": "$pageview",
+    "count": 3350,
+    "date": "2026-02-23"
+  },
+  {
+    "event": "form_submit",
+    "count": 32,
+    "date": "2026-02-23"
+  },
+  {
+    "event": "cta_click",
+    "count": 23,
+    "date": "2026-02-23"
+  },
+  {
+    "event": "$pageview",
+    "count": 1170,
+    "date": "2026-02-22"
+  },
+  {
+    "event": "form_submit",
+    "count": 13,
+    "date": "2026-02-22"
+  },
+  {
+    "event": "cta_click",
+    "count": 9,
+    "date": "2026-02-22"
+  },
+  {
+    "event": "form_submit",
+    "count": 5,
+    "date": "2026-02-21"
+  },
+  {
+    "event": "$pageview",
+    "count": 1122,
+    "date": "2026-02-21"
+  },
+  {
+    "event": "cta_click",
+    "count": 3,
+    "date": "2026-02-21"
+  },
+  {
+    "event": "form_submit",
+    "count": 11,
+    "date": "2026-02-20"
+  },
+  {
+    "event": "$pageview",
+    "count": 1822,
+    "date": "2026-02-20"
+  },
+  {
+    "event": "cta_click",
+    "count": 9,
+    "date": "2026-02-20"
+  },
+  {
+    "event": "cta_click",
+    "count": 22,
+    "date": "2026-02-19"
+  },
+  {
+    "event": "form_submit",
+    "count": 31,
+    "date": "2026-02-19"
+  },
+  {
+    "event": "$pageview",
+    "count": 2112,
+    "date": "2026-02-19"
+  },
+  {
+    "event": "form_submit",
+    "count": 34,
+    "date": "2026-02-18"
+  },
+  {
+    "event": "cta_click",
+    "count": 29,
+    "date": "2026-02-18"
+  },
+  {
+    "event": "$pageview",
+    "count": 3088,
+    "date": "2026-02-18"
+  },
+  {
+    "event": "$pageview",
+    "count": 3216,
+    "date": "2026-02-17"
+  },
+  {
+    "event": "form_submit",
+    "count": 39,
+    "date": "2026-02-17"
+  },
+  {
+    "event": "cta_click",
+    "count": 46,
+    "date": "2026-02-17"
+  }
+]

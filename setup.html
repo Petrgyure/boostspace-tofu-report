@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Boost.space TOFU — Live Deployment Guide</title>
+<style>
+  :root { --navy:#1b3a5c;--blue:#2e75b6;--green:#27ae60;--orange:#e67e22;--red:#c00000;--purple:#8e44ad;--light:#f5f7fa;--border:#dde3ec; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--light);color:#222;font-size:14px;line-height:1.6}
+  .header{background:var(--navy);color:#fff;padding:32px 48px;text-align:center}
+  .header h1{font-size:24px;letter-spacing:2px}
+  .header .sub{color:#aac4de;margin-top:6px;font-size:13px}
+  .main{max-width:1000px;margin:0 auto;padding:32px 24px 80px}
+  h2{color:var(--navy);font-size:16px;margin:36px 0 12px;border-left:4px solid var(--blue);padding-left:12px;display:flex;align-items:center;gap:8px}
+  h3{color:var(--blue);font-size:13px;font-weight:700;margin:16px 0 8px;text-transform:uppercase;letter-spacing:.5px}
+  p{margin-bottom:10px;color:#444}
+  .card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:16px}
+  code{background:#eef2f7;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:'Courier New',monospace;font-size:12px;color:#c00060}
+  pre{background:#1e2d3d;color:#e8f4ff;border-radius:8px;padding:16px 20px;overflow-x:auto;font-size:12px;line-height:1.8;margin:10px 0 16px;position:relative}
+  pre .c{color:#6a9fb5} pre .k{color:#88c0d0} pre .s{color:#a3be8c} pre .v{color:#ebcb8b}
+  .copy-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,0.1);border:none;color:#aac4de;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:11px}
+  .copy-btn:hover{background:rgba(255,255,255,0.2);color:#fff}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px}
+  th{background:var(--navy);color:#fff;padding:8px 12px;text-align:left;font-size:12px}
+  td{padding:7px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+  tr:nth-child(even) td{background:var(--light)}
+  .tag{display:inline-block;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:700}
+  .tag.green{background:#d5f5e3;color:#1e8449} .tag.blue{background:#d6eaf8;color:#1a5276}
+  .tag.orange{background:#fef0d0;color:#935116} .tag.red{background:#fadbd8;color:#922b21}
+  .tag.purple{background:#f0e6f8;color:#6c3483} .tag.gray{background:#eaecee;color:#444}
+  .alert{display:flex;gap:12px;padding:12px 16px;border-radius:8px;margin-bottom:14px;align-items:flex-start}
+  .alert.info{background:#eaf4fb;border-left:4px solid var(--blue)}
+  .alert.warn{background:#fef9e7;border-left:4px solid var(--orange)}
+  .alert.good{background:#eafaf1;border-left:4px solid var(--green)}
+  .alert.crit{background:#fdf2f2;border-left:4px solid var(--red)}
+  .step{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;padding:14px;background:#fff;border:1px solid var(--border);border-radius:8px}
+  .step-num{background:var(--blue);color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+  .step-title{font-weight:700;color:var(--navy);margin-bottom:4px}
+  .step-time{font-size:11px;color:var(--green);font-weight:700;float:right}
+  .arch{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin:16px 0}
+  .arch-box{background:#fff;border:2px solid var(--border);border-radius:8px;padding:10px 14px;text-align:center;font-size:12px;font-weight:700;min-width:110px}
+  .arch-box.v{border-color:var(--purple);background:#f5eef8;color:var(--purple)}
+  .arch-box.cf{border-color:var(--orange);background:#fef9f0;color:#935116}
+  .arch-box.gh{border-color:#2c3e50;background:#eaecee}
+  .arch-box.gr{border-color:var(--orange);background:#fff4e0;color:#935116}
+  .arch-box.ph{border-color:var(--blue);background:#eaf2fb;color:var(--navy)}
+  .arch-box.make{border-color:var(--purple);background:#f0e6f8;color:var(--purple)}
+  .arch-arrow{font-size:22px;color:#aaa;margin:0 4px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .platform-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .platform-icon{font-size:24px}
+  .platform-title{font-size:16px;font-weight:700;color:var(--navy)}
+  .platform-badge{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:700}
+  .toc{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:28px;display:grid;grid-template-columns:1fr 1fr;gap:4px}
+  .toc a{color:var(--blue);text-decoration:none;font-size:13px;padding:2px 0;display:block}
+  .toc a:hover{color:var(--navy)}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr}.toc{grid-template-columns:1fr}.arch{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>BOOST.SPACE TOFU — Live Deployment Guide</h1>
+  <div class="sub">Vercel + Proxy + Docker Grafana · Step-by-step from zero to live</div>
+</div>
+
+<div class="main">
+
+  <!-- TOC -->
+  <div class="toc">
+    <a href="#arch">Architecture overview</a>
+    <a href="#vercel">Part 1: Vercel deployment</a>
+    <a href="#proxy">Part 2: Proxy (API key security)</a>
+    <a href="#docker">Part 3: Docker + Grafana</a>
+    <a href="#updates">Part 4: Update workflow</a>
+    <a href="#domain">Part 5: Custom domain</a>
+    <a href="#checklist">Final checklist</a>
+    <a href="#files">Files reference</a>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <h2 id="arch">🏗️ Architecture Overview</h2>
+  <div class="card">
+    <div class="arch">
+      <div class="arch-box make">Make.com<br><small>weekly schedule</small></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box ph">PostHog EU<br><small>project 100634</small></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box gh">GitHub<br><small>weekly.json</small></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box v">Vercel<br><small>auto-deploy</small></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box gr">Grafana<br><small>Docker local</small></div>
+    </div>
+    <table style="margin-top:12px">
+      <thead><tr><th>Layer</th><th>Tool</th><th>Role</th><th>Cost</th></tr></thead>
+      <tbody>
+        <tr><td>Hosting</td><td><strong>Vercel</strong></td><td>Serves HTML + API proxy route</td><td><span class="tag green">Free</span></td></tr>
+        <tr><td>Data store</td><td><strong>GitHub</strong></td><td>weekly.json source of truth, already live</td><td><span class="tag green">Free</span></td></tr>
+        <tr><td>Automation</td><td><strong>Make.com</strong></td><td>Fetches PostHog weekly, pushes to GitHub</td><td><span class="tag orange">~$9/mo</span></td></tr>
+        <tr><td>Proxy</td><td><strong>Vercel function</strong></td><td>Hides PostHog API key from browser</td><td><span class="tag green">Free</span></td></tr>
+        <tr><td>Viz (optional)</td><td><strong>Grafana OSS</strong></td><td>Rich charts, local Docker, reads weekly.json</td><td><span class="tag green">Free</span></td></tr>
+      </tbody>
+    </table>
+    <div class="alert good" style="margin-top:4px">
+      <span>✅</span>
+      <div><strong>Total infra cost: €0/month</strong> (Vercel free tier: 100GB bandwidth, 100k serverless invocations/day — more than enough)</div>
+    </div>
+  </div>
+
+  <!-- PART 1: VERCEL -->
+  <h2 id="vercel">🚀 Part 1 — Vercel Deployment <span style="font-size:12px;color:var(--green);font-weight:400">~10 min</span></h2>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div style="flex:1">
+      <div class="step-title">Install Vercel CLI <span class="step-time">1 min</span></div>
+      <pre><button class="copy-btn" onclick="navigator.clipboard.writeText('npm install -g vercel')">copy</button>npm install -g vercel</pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div style="flex:1">
+      <div class="step-title">Login to Vercel <span class="step-time">1 min</span></div>
+      <pre><button class="copy-btn" onclick="navigator.clipboard.writeText('vercel login')">copy</button>vercel login
+<span class="c"># Opens browser → authenticate with GitHub</span></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div style="flex:1">
+      <div class="step-title">Add PostHog API key as secret <span class="step-time">1 min</span></div>
+      <pre><button class="copy-btn" onclick="navigator.clipboard.writeText('vercel secrets add posthog_api_key phx_R1E6QMDfDUNB8fu7jCjEJ4rgtwHGse2DQaEED88KUaB0mY')">copy</button>vercel secrets add posthog_api_key <span class="s">phx_R1E6QMDfDUNB8fu7jCjEJ4rgtwHGse2DQaEED88KUaB0mY</span>
+<span class="c"># This keeps the key server-side — never exposed in browser</span></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div style="flex:1">
+      <div class="step-title">Deploy from the repo directory <span class="step-time">3 min</span></div>
+      <pre><button class="copy-btn" onclick="navigator.clipboard.writeText('cd /Users/petrgyure/Documents/MCP/tofu_report_preview\nvercel --prod')">copy</button>cd /Users/petrgyure/Documents/MCP/tofu_report_preview
+vercel --prod
+<span class="c"># Answer prompts:
+#   Set up and deploy? Y
+#   Which scope? → your account
+#   Link to existing project? N
+#   Project name? boostspace-tofu
+#   Directory? ./
+#   Override settings? N</span>
+
+<span class="c"># Output: ✅ Production: https://boostspace-tofu.vercel.app</span></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div style="flex:1">
+      <div class="step-title">Connect GitHub repo for auto-deploy <span class="step-time">2 min</span></div>
+      <p>Go to <a href="https://vercel.com/dashboard" style="color:var(--blue)">vercel.com/dashboard</a> → your project → Settings → Git → Connect <code>Petrgyure/boostspace-tofu-report</code></p>
+      <div class="alert good"><span>✅</span><div>From now on: <code>git push</code> → Vercel auto-deploys in ~30 seconds</div></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">6</div>
+    <div style="flex:1">
+      <div class="step-title">Update dashboard to use proxy instead of direct PostHog <span class="step-time">30 sec</span></div>
+      <p>In <code>index.html</code> find the PostHog base URL constant and change:</p>
+      <pre><span class="c">// BEFORE — exposes API key in browser</span>
+const PH_BASE = <span class="s">'https://eu.posthog.com/api/projects/100634/query'</span>;
+
+<span class="c">// AFTER — routes through Vercel proxy (key stays server-side)</span>
+const PH_BASE = <span class="s">'/api/posthog'</span>;  <span class="c">// relative path works on both Vercel and local</span></pre>
+    </div>
+  </div>
+
+  <!-- PART 2: PROXY -->
+  <h2 id="proxy">🔒 Part 2 — Proxy API Route</h2>
+  <div class="card">
+    <div class="platform-header">
+      <div class="platform-icon">🔑</div>
+      <div>
+        <div class="platform-title">Why a proxy?</div>
+        <p style="font-size:12px;color:#555;margin-top:2px">Right now the PostHog API key is visible in browser DevTools. The proxy is a Vercel serverless function that receives the HogQL query, attaches the secret key server-side, and forwards to PostHog.</p>
+      </div>
+    </div>
+    <div class="alert info"><span>ℹ️</span><div>File <code>api/posthog.js</code> is already created in the repo. Vercel automatically turns any file in <code>api/</code> into a serverless endpoint.</div></div>
+    <pre><span class="c">// api/posthog.js — already in repo</span>
+export default async function handler(req, res) {
+  const API_KEY = process.env.POSTHOG_API_KEY;  <span class="c">// from Vercel secret</span>
+  const response = await fetch(
+    <span class="s">'https://eu.posthog.com/api/projects/100634/query'</span>,
+    { method: <span class="s">'POST'</span>, headers: { Authorization: <span class="s">`Bearer ${API_KEY}`</span> }, body: JSON.stringify(req.body) }
+  );
+  res.status(response.status).json(await response.json());
+}</pre>
+    <div class="alert good"><span>✅</span><div>Dashboard calls <code>POST /api/posthog</code> → Vercel function → PostHog EU. API key never reaches the browser.</div></div>
+  </div>
+
+  <!-- PART 3: DOCKER + GRAFANA -->
+  <h2 id="docker">🐳 Part 3 — Docker + Grafana (local visualization)</h2>
+
+  <div class="card">
+    <div class="platform-header">
+      <div class="platform-icon">📊</div>
+      <div>
+        <div class="platform-title">Grafana OSS — best free data visualization</div>
+        <p style="font-size:12px;color:#555;margin-top:2px">Runs locally in Docker. Reads <code>weekly.json</code> directly from GitHub raw URL. No database needed. Refresh every hour automatically.</p>
+      </div>
+    </div>
+
+    <div class="alert warn"><span>⚠️</span><div>Requires Docker Desktop installed. Download at <a href="https://docker.com/products/docker-desktop" style="color:var(--blue)">docker.com</a></div></div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div style="flex:1">
+        <div class="step-title">Install Docker Desktop (if not already installed)</div>
+        <pre>brew install --cask docker
+open /Applications/Docker.app</pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div style="flex:1">
+        <div class="step-title">Create .env file with your PostHog key</div>
+        <pre>cd /Users/petrgyure/Documents/MCP/tofu_report_preview
+cp .env.example .env
+<span class="c"># Edit .env and set your actual key:</span>
+echo "POSTHOG_API_KEY=phx_R1E6QMDfDUNB8fu7jCjEJ4rgtwHGse2DQaEED88KUaB0mY" >> .env</pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div style="flex:1">
+        <div class="step-title">Start the stack</div>
+        <pre>docker compose up -d
+<span class="c"># First run downloads images (~500MB). Wait ~60 seconds.
+# Grafana installs the Infinity datasource plugin automatically.</span>
+
+docker compose logs -f grafana  <span class="c"># watch startup</span></pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div style="flex:1">
+        <div class="step-title">Open Grafana</div>
+        <pre>open http://localhost:3000
+<span class="c"># Login:
+#   Username: admin
+#   Password: boostspace</span></pre>
+        <div class="alert good"><span>✅</span><div>Dashboard <strong>Boost.space TOFU — Weekly Overview</strong> is pre-loaded. 6 KPI stat panels + bar charts + full data table. Reads live from GitHub weekly.json.</div></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div style="flex:1">
+        <div class="step-title">Stop / restart the stack</div>
+        <pre>docker compose stop    <span class="c"># pause (data preserved)</span>
+docker compose start   <span class="c"># resume</span>
+docker compose down    <span class="c"># full stop (data preserved in volume)</span>
+docker compose down -v <span class="c"># destroy everything including data</span></pre>
+      </div>
+    </div>
+
+    <h3>What Grafana gives you that the HTML dashboard doesn't</h3>
+    <table>
+      <thead><tr><th>Feature</th><th>HTML Dashboard</th><th>Grafana</th></tr></thead>
+      <tbody>
+        <tr><td>Weekly trend charts</td><td>✅</td><td>✅ More chart types</td></tr>
+        <tr><td>Alerts (email/Slack on 0 meetings)</td><td>❌</td><td>✅</td></tr>
+        <tr><td>Live PostHog queries (any metric)</td><td>✅ button</td><td>✅ auto-refresh</td></tr>
+        <tr><td>Shareable public dashboards</td><td>✅ GitHub Pages</td><td>✅ Public snapshots</td></tr>
+        <tr><td>Annotations (mark incidents)</td><td>❌</td><td>✅</td></tr>
+        <tr><td>Variables / filters</td><td>❌</td><td>✅</td></tr>
+        <tr><td>Export to PDF/PNG</td><td>Button (client-side)</td><td>✅ Server-side PDF</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PART 4: UPDATE WORKFLOW -->
+  <h2 id="updates">🔄 Part 4 — Update Workflow</h2>
+  <div class="card">
+    <h3>To update the HTML dashboard</h3>
+    <pre><span class="c"># Edit files locally, then:</span>
+cd /Users/petrgyure/Documents/MCP/tofu_report_preview
+git add -p          <span class="c"># stage changes</span>
+git commit -m "..."
+git push origin main
+<span class="c"># → Vercel auto-deploys in ~30s
+# → GitHub Pages auto-deploys in ~60s</span></pre>
+
+    <h3>To manually trigger a data fetch (outside Make schedule)</h3>
+    <pre><span class="c"># Option A: use the in-dashboard button
+# Click "⟳ Fetch Last Week" — pulls live from PostHog</span>
+
+<span class="c"># Option B: run the Python script directly</span>
+python3 /Users/petrgyure/Documents/MCP/fetch_weekly.py  <span class="c"># if you create this</span>
+
+<span class="c"># Option C: trigger Make scenario manually
+# make.com → your scenario → Run Once</span></pre>
+
+    <h3>To update data/weekly.json manually</h3>
+    <pre>cd /Users/petrgyure/Documents/MCP/tofu_report_preview
+<span class="c"># Edit data/weekly.json — add a new week object to the "weeks" array</span>
+git add data/weekly.json
+git commit -m "Data: add Mar W3 weekly data"
+git push origin main
+<span class="c"># → Both Vercel and GitHub Pages update automatically
+# → Grafana picks up new data within 1 hour (or immediately on refresh)</span></pre>
+  </div>
+
+  <!-- PART 5: DOMAIN -->
+  <h2 id="domain">🌐 Part 5 — Custom Domain (optional)</h2>
+  <div class="card">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div style="flex:1">
+        <div class="step-title">Add domain in Vercel</div>
+        <p>Vercel dashboard → Project → Settings → Domains → Add <code>tofu.boost.space</code> (or whatever subdomain)</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div style="flex:1">
+        <div class="step-title">Add CNAME in DNS</div>
+        <pre>CNAME  tofu.boost.space  →  cname.vercel-dns.com</pre>
+        <p>Takes ~5 min to propagate. Vercel handles SSL automatically.</p>
+      </div>
+    </div>
+    <div class="alert good"><span>🎉</span><div>Dashboard live at <code>https://tofu.boost.space</code> with auto-SSL, zero maintenance</div></div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <h2 id="checklist">✅ Final Checklist</h2>
+  <div class="card">
+    <table>
+      <thead><tr><th>#</th><th>Action</th><th>Time</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><code>npm install -g vercel</code> + <code>vercel login</code></td><td>2 min</td><td><span class="tag gray">TODO</span></td></tr>
+        <tr><td>2</td><td><code>vercel secrets add posthog_api_key [KEY]</code></td><td>1 min</td><td><span class="tag gray">TODO</span></td></tr>
+        <tr><td>3</td><td><code>vercel --prod</code> in repo directory</td><td>3 min</td><td><span class="tag gray">TODO</span></td></tr>
+        <tr><td>4</td><td>Connect GitHub repo in Vercel dashboard (auto-deploy)</td><td>2 min</td><td><span class="tag gray">TODO</span></td></tr>
+        <tr><td>5</td><td>Update <code>PH_BASE</code> in index.html to <code>'/api/posthog'</code></td><td>1 min</td><td><span class="tag gray">TODO</span></td></tr>
+        <tr><td>6</td><td>Test: open Vercel URL, click "Fetch Last Week", confirm data loads</td><td>2 min</td><td><span class="tag gray">TODO</span></td></tr>
+        <tr><td>7</td><td>Install Docker Desktop (if not installed)</td><td>5 min</td><td><span class="tag gray">TODO</span></td></tr>
+        <tr><td>8</td><td><code>cp .env.example .env</code> + fill in key</td><td>1 min</td><td><span class="tag gray">TODO</span></td></tr>
+        <tr><td>9</td><td><code>docker compose up -d</code> — start Grafana</td><td>2 min</td><td><span class="tag gray">TODO</span></td></tr>
+        <tr><td>10</td><td>Open <code>localhost:3000</code> — verify TOFU dashboard loads</td><td>1 min</td><td><span class="tag gray">TODO</span></td></tr>
+        <tr><td>11</td><td>Import <code>make_blueprint.json</code> into Make.com (see poc.html)</td><td>10 min</td><td><span class="tag gray">TODO</span></td></tr>
+        <tr><td>12</td><td>(Optional) Add custom domain in Vercel</td><td>5 min</td><td><span class="tag blue">OPTIONAL</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FILES REFERENCE -->
+  <h2 id="files">📁 Files Reference</h2>
+  <div class="card">
+    <table>
+      <thead><tr><th>File</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>index.html</code></td><td>Main TOFU marketing dashboard</td></tr>
+        <tr><td><code>poc.html</code></td><td>Make automation POC brief (share with Gemini)</td></tr>
+        <tr><td><code>setup.html</code></td><td>This deployment guide</td></tr>
+        <tr><td><code>data/weekly.json</code></td><td>Live data store — Make updates weekly, dashboard reads on load</td></tr>
+        <tr><td><code>make_blueprint.json</code></td><td>Import-ready Make scenario (15 modules)</td></tr>
+        <tr><td><code>api/posthog.js</code></td><td>Vercel serverless proxy — keeps API key server-side</td></tr>
+        <tr><td><code>vercel.json</code></td><td>Vercel routing + build config</td></tr>
+        <tr><td><code>docker-compose.yml</code></td><td>Grafana + PostHog proxy Docker stack</td></tr>
+        <tr><td><code>grafana/provisioning/datasources/infinity.yml</code></td><td>Auto-configures Grafana Infinity datasource → weekly.json</td></tr>
+        <tr><td><code>grafana/dashboards/tofu_overview.json</code></td><td>Pre-built Grafana dashboard (KPIs + bar charts + table)</td></tr>
+        <tr><td><code>proxy/server.js</code></td><td>Lightweight Node.js proxy (for Grafana → PostHog live queries)</td></tr>
+        <tr><td><code>.env.example</code></td><td>Env var template — copy to .env (gitignored)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="alert info" style="margin-top:12px">
+      <span>🔗</span>
+      <div>
+        <strong>Live URLs:</strong><br>
+        GitHub Pages: <a href="https://petrgyure.github.io/boostspace-tofu-report/" style="color:var(--blue)" target="_blank">petrgyure.github.io/boostspace-tofu-report/</a><br>
+        GitHub Repo: <a href="https://github.com/Petrgyure/boostspace-tofu-report" style="color:var(--blue)" target="_blank">github.com/Petrgyure/boostspace-tofu-report</a><br>
+        weekly.json: <a href="https://raw.githubusercontent.com/Petrgyure/boostspace-tofu-report/main/data/weekly.json" style="color:var(--blue)" target="_blank">raw.githubusercontent.com/.../weekly.json</a>
+      </div>
+    </div>
+  </div>
+
+  <p style="text-align:center;color:#aaa;margin-top:40px;font-size:12px">Boost.space TOFU Deployment Guide · Claude Code · 2026-03-18</p>
+</div>
+</body>
+</html>

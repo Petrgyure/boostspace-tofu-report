@@ -1,0 +1,63 @@
+apiVersion: 1
+
+datasources:
+  - name: TOFU Weekly JSON
+    type: yesoreyeram-infinity-datasource
+    uid: tofu_weekly
+    access: proxy
+    isDefault: true
+    jsonData:
+      # Reads weekly.json directly from GitHub raw URL — no auth needed (public repo)
+      global_queries:
+        - name: weeks
+          id: weeks
+          query:
+            type: json
+            source: url
+            url: "https://raw.githubusercontent.com/Petrgyure/boostspace-tofu-report/main/data/weekly.json"
+            root_selector: "$.weeks[*]"
+            columns:
+              - selector: "label"
+                text: "Week"
+                type: string
+              - selector: "reach.pageviews"
+                text: "Pageviews"
+                type: number
+              - selector: "reach.unique_visitors"
+                text: "Unique Visitors"
+                type: number
+              - selector: "reach.sessions"
+                text: "Sessions"
+                type: number
+              - selector: "engagement.cta_clicks"
+                text: "CTA Clicks"
+                type: number
+              - selector: "engagement.cta_click_rate"
+                text: "CTA Click Rate %"
+                type: number
+              - selector: "leads.total_forms"
+                text: "Form Submissions"
+                type: number
+              - selector: "leads.cvr"
+                text: "CVR %"
+                type: number
+              - selector: "mql.demo_meeting_booked"
+                text: "Meetings Booked"
+                type: number
+              - selector: "mql.leady_new_lead"
+                text: "Leady Leads"
+                type: number
+              - selector: "paid.google.spend_czk"
+                text: "Google Spend CZK"
+                type: number
+              - selector: "paid.linkedin.spend_usd"
+                text: "LinkedIn Spend USD"
+                type: number
+
+  - name: PostHog Live (via proxy)
+    type: yesoreyeram-infinity-datasource
+    uid: posthog_live
+    access: proxy
+    jsonData:
+      # Points to the local proxy container — for live queries
+      base_url: "http://posthog-proxy:4000"

@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "api/posthog.js", "use": "@vercel/node" },
+    { "src": "*.html",         "use": "@vercel/static" },
+    { "src": "data/**",        "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/api/posthog", "dest": "/api/posthog.js" },
+    { "src": "/(.*)",        "dest": "/$1" }
+  ],
+  "headers": [
+    {
+      "source": "/data/(.*)",
+      "headers": [
+        { "key": "Cache-Control",                "value": "public, max-age=3600, stale-while-revalidate=86400" },
+        { "key": "Access-Control-Allow-Origin",  "value": "*" }
+      ]
+    }
+  ],
+  "env": {
+    "POSTHOG_API_KEY": "@posthog_api_key"
+  }
+}
