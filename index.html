@@ -1,15 +1,714 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Boost.space — TOFU Report</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="./assets/index-DTvt-fRD.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-iZIAXpBp.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>boost.space · tofu report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0A0A0A; --card: #09090B; --card2: #111113;
+  --border: rgb(39 39 42); --bw: 1px;
+  --green: #7EE787; --green-ok: #22C55E; --blue: #60A5FA;
+  --accent: #C8E64A; --orange: #F97316; --error: #EF4444;
+  --muted: #71717A; --dim: #3F3F46; --text: #E8E8E8; --sub: #A1A1AA;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+html, body { min-height: 100%; background: var(--bg); color: var(--text); font-family: var(--mono); font-size: 14px; line-height: 1.5; }
+/* TOOLBAR */
+.toolbar {
+  position: sticky; top: 0; z-index: 50;
+  background: #09090B; border-bottom: var(--bw) solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.5rem; height: 2.5rem; gap: 1rem; overflow-x: auto;
+}
+.toolbar-left { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+.toolbar-brand { font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); white-space: nowrap; }
+.page-tabs, .week-tabs { display: flex; }
+.pg-tab, .wk-tab {
+  background: none; border: none; color: var(--dim); font-family: var(--mono);
+  font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 0.3rem 0.55rem; cursor: pointer; border-radius: 3px; white-space: nowrap;
+  transition: color 0.12s, background 0.12s;
+}
+.pg-tab:hover, .wk-tab:hover { color: var(--muted); }
+.pg-tab.active { color: var(--text); background: #18181B; }
+.wk-tab.active { color: var(--accent); background: #18181B; }
+.updated-label { font-size: 0.575rem; color: var(--dim); letter-spacing: 0.04em; white-space: nowrap; flex-shrink: 0; }
+/* PAGES */
+.page { display: none; }
+.page.active { display: block; }
+/* KPI ROW */
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: var(--bw) solid var(--border); }
+.kpi-card {
+  background: var(--card); padding: 1.1rem 1.5rem;
+  border-right: var(--bw) solid var(--border);
+  display: flex; flex-direction: column; gap: 0.25rem;
+}
+.kpi-card:last-child { border-right: none; }
+.kpi-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.kpi-num { font-size: clamp(1.6rem, 3vw, 2.75rem); font-weight: 500; line-height: 1; color: var(--text); }
+.kpi-card.blue .kpi-label, .kpi-card.blue .kpi-num { color: var(--blue); }
+.kpi-card.accent .kpi-label, .kpi-card.accent .kpi-num { color: var(--accent); }
+.kpi-card.orange .kpi-label, .kpi-card.orange .kpi-num { color: var(--orange); }
+.kpi-card.green .kpi-label, .kpi-card.green .kpi-num { color: var(--green); }
+.kpi-card.red .kpi-label, .kpi-card.red .kpi-num { color: var(--error); }
+.kpi-delta { font-size: 0.65rem; color: var(--muted); }
+.kpi-delta .up { color: var(--green); }
+.kpi-delta .dn { color: var(--error); }
+.kpi-delta .flat { color: var(--dim); }
+.kpi-prev { font-size: 0.575rem; color: var(--dim); }
+.badge-crit {
+  display: inline-block; background: var(--error); color: #fff;
+  font-size: 0.47rem; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 0.08rem 0.3rem; border-radius: 2px; vertical-align: middle; margin-left: 0.3rem;
+}
+/* CHART */
+.chart-card { background: var(--card); border-bottom: var(--bw) solid var(--border); }
+.chart-hdr { padding: 0.45rem 1.5rem; border-bottom: var(--bw) solid var(--border); background: #111; font-size: 0.575rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.chart-body { padding: 0.4rem 1rem; height: 170px; }
+.chart-body canvas { width: 100% !important; height: 100% !important; }
+/* SECTIONS */
+.section { border-bottom: var(--bw) solid var(--border); }
+.section-hdr { display: flex; align-items: center; gap: 0.7rem; padding: 0.55rem 1.5rem; background: #111; border-bottom: var(--bw) solid var(--border); }
+.section-tag { font-size: 0.475rem; text-transform: uppercase; letter-spacing: 0.08em; background: var(--dim); color: var(--text); padding: 0.12rem 0.4rem; border-radius: 2px; white-space: nowrap; }
+.section-tag.blue { background: rgba(96,165,250,0.15); color: var(--blue); }
+.section-tag.accent { background: rgba(200,230,74,0.12); color: var(--accent); }
+.section-tag.orange { background: rgba(249,115,22,0.15); color: var(--orange); }
+.section-tag.red { background: rgba(239,68,68,0.15); color: var(--error); }
+.section-tag.green { background: rgba(126,231,135,0.12); color: var(--green); }
+.section-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sub); }
+/* INSIGHT BOXES */
+.insight { margin: 0.55rem 1.5rem; padding: 0.5rem 0.85rem; border-radius: 3px; font-size: 0.725rem; line-height: 1.7; color: var(--sub); border-left: 3px solid var(--dim); }
+.insight.info { border-color: var(--blue); background: rgba(96,165,250,0.05); }
+.insight.warn { border-color: var(--orange); background: rgba(249,115,22,0.05); }
+.insight.critical { border-color: var(--error); background: rgba(239,68,68,0.07); color: var(--text); }
+.insight strong { color: var(--text); }
+/* TABLES */
+.tbl-wrap { padding: 0.55rem 1.5rem; overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.725rem; }
+.data-table th { background: #111; color: var(--muted); font-weight: 400; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.575rem; padding: 0.4rem 0.7rem; text-align: left; border-bottom: var(--bw) solid var(--border); }
+.data-table td { padding: 0.375rem 0.7rem; color: var(--sub); border-bottom: var(--bw) solid var(--border); }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: rgba(255,255,255,0.02); }
+.data-table td.active-col, .data-table th.active-col { color: var(--text); background: rgba(200,230,74,0.05); }
+.data-table td.metric-col { color: var(--sub); font-size: 0.65rem; }
+.data-table td.num { text-align: right; }
+.data-table td.crit { color: var(--error) !important; font-weight: 500; }
+.data-table td.good { color: var(--green); }
+.data-table tbody tr.total-row td { color: var(--text); font-weight: 500; border-top: var(--bw) solid var(--border); }
+.sub-section { padding: 0 1.5rem 0.7rem; }
+.sub-title { font-size: 0.525rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--dim); padding: 0.45rem 0 0.25rem; }
+/* FUNNEL */
+.funnel-row { display: grid; grid-template-columns: repeat(5, 1fr); border-top: var(--bw) solid var(--border); }
+.funnel-cell { padding: 0.7rem 0.75rem; text-align: center; border-right: var(--bw) solid var(--border); }
+.funnel-cell:last-child { border-right: none; }
+.funnel-stage { font-size: 0.475rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--dim); margin-bottom: 0.15rem; }
+.funnel-vol { font-size: 1.1rem; font-weight: 500; color: var(--text); }
+.funnel-vol.crit { color: var(--error); }
+.funnel-cvr { font-size: 0.575rem; color: var(--muted); margin-top: 0.08rem; }
+.funnel-trend { font-size: 0.55rem; color: var(--muted); margin-top: 0.1rem; }
+/* STATUS */
+.status-grid { padding: 0.55rem 1.5rem; display: flex; flex-direction: column; gap: 0.3rem; }
+.status-row { display: flex; align-items: center; gap: 0.7rem; padding: 0.4rem 0.7rem; background: var(--card2); border-radius: 3px; border: var(--bw) solid var(--border); }
+.status-icon { font-size: 0.8rem; flex-shrink: 0; }
+.status-initiative { font-size: 0.7rem; color: var(--text); min-width: 10rem; flex-shrink: 0; }
+.status-badge { font-size: 0.475rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.1rem 0.35rem; border-radius: 2px; flex-shrink: 0; }
+.status-badge.done { background: rgba(126,231,135,0.12); color: var(--green); }
+.status-badge.fail { background: rgba(239,68,68,0.12); color: var(--error); }
+.status-notes { font-size: 0.65rem; color: var(--muted); flex: 1; }
+/* QUESTIONS */
+.questions-list { padding: 0.55rem 1.5rem; display: flex; flex-direction: column; gap: 0.3rem; }
+.question-item { display: flex; gap: 0.7rem; align-items: flex-start; padding: 0.4rem 0.7rem; background: var(--card2); border-radius: 3px; border: var(--bw) solid var(--border); }
+.q-num { font-size: 0.55rem; color: var(--dim); padding-top: 0.1rem; flex-shrink: 0; min-width: 1.5rem; }
+.q-text { font-size: 0.7rem; color: var(--sub); line-height: 1.6; }
+.q-text strong { color: var(--text); }
+/* NOTES */
+.notes-list { padding: 0.55rem 1.5rem 1rem; display: flex; flex-direction: column; gap: 0.2rem; }
+.note-item { font-size: 0.65rem; color: var(--dim); display: flex; gap: 0.5rem; }
+.note-item::before { content: "—"; flex-shrink: 0; }
+/* EXEC */
+.exec-grid { padding: 0.55rem 1.5rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.45rem; }
+.exec-card { padding: 0.65rem 0.9rem; background: var(--card2); border-radius: 3px; border: var(--bw) solid var(--border); font-size: 0.7rem; color: var(--sub); line-height: 1.7; }
+.exec-card.span2 { grid-column: 1 / -1; }
+.exec-card strong { color: var(--text); }
+.exec-card .exec-label { font-size: 0.475rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--dim); margin-bottom: 0.25rem; }
+.exec-card.critical { border-color: rgba(239,68,68,0.35); background: rgba(239,68,68,0.04); }
+/* PAGE 2 */
+.src-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: var(--bw) solid var(--border); }
+.src-section { border-bottom: var(--bw) solid var(--border); }
+/* FOOTER */
+.footer { background: var(--card); border-top: var(--bw) solid var(--border); display: flex; align-items: center; gap: 0.7rem; padding: 0 1.5rem; height: 2.1rem; font-size: 0.575rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.pulse-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-ok); flex-shrink: 0; position: relative; }
+.pulse-dot::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1.5px solid var(--green-ok); animation: pulse 2s ease-out infinite; }
+@keyframes pulse { 0% { transform: scale(0.8); opacity: 0.6; } 100% { transform: scale(2.2); opacity: 0; } }
+.footer-sep { width: 1px; height: 60%; background: var(--border); flex-shrink: 0; }
+.footer-right { margin-left: auto; color: var(--dim); }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 3px; }
+@media (max-width: 768px) {
+  .kpi-row, .src-kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .kpi-card:nth-child(2) { border-right: none; }
+  .funnel-row { grid-template-columns: repeat(2, 1fr); }
+  .funnel-cell:nth-child(even) { border-right: none; }
+  .exec-grid { grid-template-columns: 1fr; }
+  .exec-card.span2 { grid-column: 1; }
+}
+</style>
 </head>
 <body>
-  <div id="app"></div>
+
+<div class="toolbar">
+  <div class="toolbar-left">
+    <span class="toolbar-brand">boost.space · tofu</span>
+    <div class="page-tabs">
+      <button class="pg-tab active" data-page="overview">Overview</button>
+      <button class="pg-tab" data-page="source">Source Analysis</button>
+    </div>
+    <div class="week-tabs" id="wk-tabs"></div>
+  </div>
+  <span class="updated-label" id="updated-label">Feb 17 – Mar 22, 2026</span>
+</div>
+
+<!-- PAGE 1 -->
+<div class="page active" id="page-overview">
+
+  <div class="kpi-row">
+    <div class="kpi-card blue">
+      <div class="kpi-label">Unique Visitors</div>
+      <div class="kpi-num" id="k-uv">—</div>
+      <div class="kpi-delta" id="k-uv-d"></div>
+      <div class="kpi-prev" id="k-uv-p"></div>
+    </div>
+    <div class="kpi-card accent">
+      <div class="kpi-label">Total Leads</div>
+      <div class="kpi-num" id="k-leads">—</div>
+      <div class="kpi-delta" id="k-leads-d"></div>
+      <div class="kpi-prev" id="k-leads-p"></div>
+    </div>
+    <div class="kpi-card orange">
+      <div class="kpi-label">CVR %</div>
+      <div class="kpi-num" id="k-cvr">—</div>
+      <div class="kpi-delta" id="k-cvr-d"></div>
+      <div class="kpi-prev" id="k-cvr-p"></div>
+    </div>
+    <div class="kpi-card" id="k-mtg-card">
+      <div class="kpi-label">Meetings Booked</div>
+      <div class="kpi-num" id="k-mtg">—</div>
+      <div class="kpi-delta" id="k-mtg-d"></div>
+      <div class="kpi-prev" id="k-mtg-p"></div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-hdr">Weekly Trend — Unique Visitors · Total Leads · CTA Rate %</div>
+    <div class="chart-body"><canvas id="trend-chart"></canvas></div>
+  </div>
+
+  <div class="section">
+    <div class="section-hdr"><span class="section-tag">Summary</span><span class="section-title">Executive Summary — Feb 17 – Mar 22, 2026</span></div>
+    <div class="exec-grid">
+      <div class="exec-card span2">
+        <div class="exec-label">5-Week Overview</div>
+        Traffic peaked in Feb W4 (14,347 PV) then declined — Mar W2/W3 reflect LinkedIn spend cut (–44% then –73%). Despite lower volume, CVR improved consistently: 1.52% → 2.08% → 3.55%. <strong>Mar W3 Google Ads delivered 27 conversions</strong> — a 13.5× jump vs Mar W2. CTA click rate collapsed to 0.03% in Mar W3 (tracking anomaly suspected).
+      </div>
+      <div class="exec-card critical">
+        <div class="exec-label">🚨 Critical — 3rd Consecutive Week</div>
+        <strong>DEMO MEETINGS BOOKED = 0</strong> — Mar W1, W2, W3. Demand exists (demo lead forms submitting) but 0% booking rate. Booking flow / Calendly integration is definitively broken.
+      </div>
+      <div class="exec-card">
+        <div class="exec-label">Signals &amp; Actions Needed</div>
+        <strong>Google Ads efficiency improving</strong> — 27 conv. in Mar W3 at 56 CZK CPC. LinkedIn pivoted to engagement (LP clicks collapsed to 18). Leady: 24 leads Mar W3. <strong>Fix booking flow ASAP — leads are entering but not converting.</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-hdr"><span class="section-tag blue">Layer 1</span><span class="section-title">Reach — Traffic Volume</span></div>
+    <div class="insight info">Awareness and traffic volume metrics. How many people are we putting Boost.space in front of?</div>
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Metric</th><th class="num" id="th-r0">—</th><th class="num" id="th-r1">—</th><th class="num" id="th-r2">—</th><th class="num" id="th-r3">—</th><th class="num" id="th-r4">—</th></tr></thead>
+        <tbody id="reach-tbody"></tbody>
+      </table>
+    </div>
+    <div class="insight warn" id="reach-insight"></div>
+    <div class="sub-section">
+      <div class="sub-title">Traffic Sources — Estimated (Active Week)</div>
+      <table class="data-table" style="margin-top:0.2rem">
+        <thead><tr><th>Source / Medium</th><th class="num">Volume</th><th class="num">% of Total</th></tr></thead>
+        <tbody id="sources-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-hdr"><span class="section-tag accent">Paid</span><span class="section-title">Paid Channel Performance</span></div>
+    <div class="insight info">Ad platform data synced via PostHog Data Warehouse. LinkedIn Ads + Google Ads.</div>
+    <div class="sub-section">
+      <div class="sub-title">LinkedIn Ads — Weekly Summary (USD) · includes Feb W1/W2 historical</div>
+      <table class="data-table">
+        <thead><tr><th>Week</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">LP Clicks</th><th class="num">Spend</th><th class="num">CTR</th><th class="num">CPC</th><th class="num">Conv.</th></tr></thead>
+        <tbody id="li-weekly-tbody"></tbody>
+      </table>
+    </div>
+    <div class="insight warn">Zero <code>external_website_conversions</code> tracked across all weeks — LinkedIn pixel not configured. Mar W3 LP clicks collapsed to 18 — campaign mix fully shifted to Post Engagement.</div>
+    <div class="sub-section" style="margin-top:0.5rem">
+      <div class="sub-title">LinkedIn Ads — Top Campaigns Mar W2 (by spend)</div>
+      <table class="data-table">
+        <thead><tr><th>Campaign</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">Spend</th><th class="num">CTR</th><th class="num">CPC</th></tr></thead>
+        <tbody>
+          <tr><td>BOFU | Remarketing | Post Engagement</td><td class="num">18,615</td><td class="num">438</td><td class="num">$354</td><td class="num">2.35%</td><td class="num">$0.81</td></tr>
+          <tr><td>TOFU | DACH | Website visit</td><td class="num">1,154</td><td class="num">11</td><td class="num">$264</td><td class="num">0.95%</td><td class="num crit">$24.00</td></tr>
+          <tr><td>Engagement — Mar 2, 2026</td><td class="num">9,423</td><td class="num">359</td><td class="num">$254</td><td class="num">3.81%</td><td class="num">$0.71</td></tr>
+          <tr><td>UKI | Supplier Updates Without Chaos</td><td class="num">6,596</td><td class="num">96</td><td class="num">$224</td><td class="num">1.46%</td><td class="num">$2.33</td></tr>
+          <tr><td>UKI | GEO — AI-Discoverable Catalog</td><td class="num">8,676</td><td class="num">88</td><td class="num">$222</td><td class="num">1.01%</td><td class="num">$2.52</td></tr>
+          <tr><td>UKI | Marketplace Expansion</td><td class="num">8,198</td><td class="num">100</td><td class="num">$221</td><td class="num">1.22%</td><td class="num">$2.21</td></tr>
+          <tr><td>UKI | AI Enrichment at Scale</td><td class="num">6,460</td><td class="num">69</td><td class="num">$215</td><td class="num">1.07%</td><td class="num">$3.12</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sub-section" style="margin-top:0.5rem">
+      <div class="sub-title">Google Ads — Weekly Summary (CZK, ~25 CZK/USD)</div>
+      <table class="data-table">
+        <thead><tr><th>Week</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">Spend CZK</th><th class="num">CTR</th><th class="num">CPC CZK</th><th class="num">Conv.</th></tr></thead>
+        <tbody id="ga-weekly-tbody"></tbody>
+      </table>
+    </div>
+    <div class="insight warn">Mar W3: 27 conversions — 13.5× jump vs Mar W2. CPC rose to 56 CZK. BSP Commerce campaigns maturing. Mar W2 was a trough after restructure.</div>
+    <div class="sub-section">
+      <div class="sub-title">Google Ads — Top Campaigns Mar W2 (by spend)</div>
+      <table class="data-table">
+        <thead><tr><th>Campaign</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">Spend CZK</th><th class="num">Conv.</th><th class="num">CTR</th></tr></thead>
+        <tbody>
+          <tr><td>BSP | Commerce - GEO Catalog</td><td class="num">4,221</td><td class="num">338</td><td class="num">15,999</td><td class="num good">2</td><td class="num">10.61%</td></tr>
+          <tr><td>BSP | Commerce - Marketplace Expansion</td><td class="num">1,509</td><td class="num">47</td><td class="num">4,775</td><td class="num">0</td><td class="num">3.57%</td></tr>
+          <tr><td>Search - Database for Make</td><td class="num">4,933</td><td class="num">93</td><td class="num">4,158</td><td class="num">0</td><td class="num">1.32%</td></tr>
+          <tr><td>BSP | Commerce - Dynamic Pricing</td><td class="num">810</td><td class="num">51</td><td class="num">2,728</td><td class="num">0</td><td class="num">11.67%</td></tr>
+          <tr><td>BSP | Commerce - AI Enrichment</td><td class="num">88</td><td class="num">6</td><td class="num">417</td><td class="num">0</td><td class="num">6.18%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-hdr"><span class="section-tag orange">Layer 2</span><span class="section-title">Engagement — On-Site Behavior</span></div>
+    <div class="insight info">Are visitors taking meaningful actions? Are we attracting the right audience?</div>
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Metric</th><th class="num" id="th-e0">—</th><th class="num" id="th-e1">—</th><th class="num" id="th-e2">—</th><th class="num" id="th-e3">—</th><th class="num" id="th-e4">—</th></tr></thead>
+        <tbody id="eng-tbody"></tbody>
+      </table>
+    </div>
+    <div class="insight warn">Mar W3 CTA click rate dropped to 0.03% (1 click) — likely a tracking anomaly (CTA event rename or PostHog filter issue). CVR improved to 3.55% suggesting organic intent is strong.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-hdr"><span class="section-tag accent">Layer 3</span><span class="section-title">Lead Capture — Visitor → Lead Conversion</span></div>
+    <div class="insight info">Visitor → Lead conversion. How many visitors are we converting into identifiable leads?</div>
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Form Type</th><th class="num" id="th-l0">—</th><th class="num" id="th-l1">—</th><th class="num" id="th-l2">—</th><th class="num" id="th-l3">—</th><th class="num" id="th-l4">—</th></tr></thead>
+        <tbody id="lead-tbody"></tbody>
+      </table>
+    </div>
+    <div class="insight info">Mar W3 sign_up_lead_email surged to 71 (highest across all weeks). Total leads 108 — strong rebound vs Mar W2 (76). CVR 3.55% is best on record. Volume is recovering despite lower traffic.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-hdr"><span class="section-tag red">Layer 4</span><span class="section-title">MQL Conversion — Lead → Meeting</span></div>
+    <div class="insight critical">
+      <strong>DEMO MEETINGS BOOKED = 0 — Third Consecutive Week (Mar W1, W2, W3).</strong><br>
+      24 (Feb W3) → 11 (Feb W4) → 0 → 0 → 0. Demo lead forms are submitting but zero convert to booked meetings. Booking flow / Calendly integration is definitively broken.
+    </div>
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Metric</th><th class="num" id="th-m0">—</th><th class="num" id="th-m1">—</th><th class="num" id="th-m2">—</th><th class="num" id="th-m3">—</th><th class="num" id="th-m4">—</th></tr></thead>
+        <tbody id="mql-tbody"></tbody>
+      </table>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">Root Cause Analysis</div>
+      <div style="padding:0.35rem 0; display:flex; flex-direction:column; gap:0.2rem;">
+        <div class="question-item"><span class="q-num">→</span><span class="q-text">Demo lead forms are submitting (new + old events) — demand exists but ZERO convert to booked meetings across 3 weeks</span></div>
+        <div class="question-item"><span class="q-num">→</span><span class="q-text"><strong>demo_meeting_booked event stopped firing</strong> — event rename side-effect or Calendly/HubSpot integration disconnect</span></div>
+        <div class="question-item"><span class="q-num">→</span><span class="q-text">Leady leads ramping (4 → 30 → 24) — first quality signal but needs validation vs form_submit correlation</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-hdr"><span class="section-tag">Funnel</span><span class="section-title">Full Funnel — <span id="funnel-wk">Mar W3</span></span></div>
+    <div class="funnel-row" id="funnel-row"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-hdr"><span class="section-tag">Status</span><span class="section-title">Honest Status Check</span></div>
+    <div class="status-grid">
+      <div class="status-row"><span class="status-icon">✅</span><span class="status-initiative">PostHog tracking setup</span><span class="status-badge done">Done</span><span class="status-notes">Core events tracked. CTA click event anomaly in Mar W3 needs investigation.</span></div>
+      <div class="status-row"><span class="status-icon">✅</span><span class="status-initiative">Weekly TOFU Report</span><span class="status-badge done">Done</span><span class="status-notes">Automated with live PostHog fetch. 5 weeks live.</span></div>
+      <div class="status-row"><span class="status-icon">✅</span><span class="status-initiative">Demo lead form tracking</span><span class="status-badge done">Done</span><span class="status-notes">Consolidated into form_submit (form_type=demo_lead). Old event still firing.</span></div>
+      <div class="status-row"><span class="status-icon">✅</span><span class="status-initiative">Leady / RB2B integration</span><span class="status-badge done">Done</span><span class="status-notes">Mar W2: 30 leads. Mar W3: 24 leads. Ramping.</span></div>
+      <div class="status-row"><span class="status-icon">❌</span><span class="status-initiative">MQL target (8/week)</span><span class="status-badge fail">Not Met</span><span class="status-notes">0 booked meetings. 3rd straight week. Booking flow broken.</span></div>
+      <div class="status-row"><span class="status-icon">✅</span><span class="status-initiative">Hunting Grounds (UKI)</span><span class="status-badge done">Done</span><span class="status-notes">Live in Mar W2. 5 UKI campaigns active.</span></div>
+      <div class="status-row"><span class="status-icon">❌</span><span class="status-initiative">LinkedIn pixel conversion</span><span class="status-badge fail">Not Met</span><span class="status-notes">Zero conversions tracked in DW across all weeks.</span></div>
+      <div class="status-row"><span class="status-icon">✅</span><span class="status-initiative">Google Ads efficiency</span><span class="status-badge done">Improving</span><span class="status-notes">Mar W3: 27 conversions — BSP Commerce campaigns maturing after restructure.</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-hdr"><span class="section-tag">?</span><span class="section-title">Open Questions</span></div>
+    <div class="questions-list">
+      <div class="question-item"><span class="q-num">01</span><span class="q-text"><strong>demo_meeting_booked = 0 for 3 weeks:</strong> Tracking issue or real broken booking flow? Calendly/HubSpot automation trigger disconnected?</span></div>
+      <div class="question-item"><span class="q-num">02</span><span class="q-text"><strong>Mar W3 CTA click rate = 0.03%:</strong> 1 CTA click from 3,042 visitors is implausible. Event tracking anomaly or CTA element hidden/broken?</span></div>
+      <div class="question-item"><span class="q-num">03</span><span class="q-text"><strong>MQL definition:</strong> Should we count demo lead form submissions as MQLs, or only booked meetings (0)?</span></div>
+      <div class="question-item"><span class="q-num">04</span><span class="q-text"><strong>Leady integration:</strong> 4 → 30 → 24 — intentional ramp? Needs baseline vs form_submit volume correlation.</span></div>
+      <div class="question-item"><span class="q-num">05</span><span class="q-text"><strong>LinkedIn conversion pixel:</strong> Zero external_website_conversions across ALL 5 weeks — pixel not installed or misconfigured?</span></div>
+      <div class="question-item"><span class="q-num">06</span><span class="q-text"><strong>Google Mar W3 27 conversions:</strong> What event is being tracked? Same conversion definition as Feb W4 (16 conv)? Needs validation.</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-hdr"><span class="section-tag">Notes</span><span class="section-title">Data Notes &amp; Limitations</span></div>
+    <div class="notes-list">
+      <div class="note-item">All data from PostHog (project: Boost.space, ID: 100634, EU instance)</div>
+      <div class="note-item">Weeks: Feb W3=Feb 17–23 | Feb W4=Feb 24–Mar 1 | Mar W1=Mar 1–7 | Mar W2=Mar 8–14 | Mar W3=Mar 15–22</div>
+      <div class="note-item"><strong>be_form_submit_demo_lead</strong> renamed to <strong>form_submit (form_type=demo_lead)</strong> mid-Mar W1. Old event still firing.</div>
+      <div class="note-item">leady_new_lead started Mar 8 — Mar W2 is first full-week baseline (30 leads), Mar W3: 24 leads</div>
+      <div class="note-item">Traffic source % are estimates — high direct/none attribution (~80%) due to UTM gaps</div>
+      <div class="note-item">Google Ads costs in CZK (~25 CZK/USD). LinkedIn Ads in USD.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="page-source">
+  <div class="src-kpi-row">
+    <div class="kpi-card"><div class="kpi-label" style="color:var(--muted)">Direct / None (est.)</div><div class="kpi-num" id="s-direct" style="color:var(--text)">—</div><div class="kpi-delta" id="s-direct-p" style="color:var(--muted)"></div></div>
+    <div class="kpi-card blue"><div class="kpi-label">LinkedIn Paid (LP Clicks)</div><div class="kpi-num" id="s-li">—</div><div class="kpi-delta" id="s-li-p"></div></div>
+    <div class="kpi-card accent"><div class="kpi-label">Google Search (Clicks)</div><div class="kpi-num" id="s-ga">—</div><div class="kpi-delta" id="s-ga-p"></div></div>
+    <div class="kpi-card"><div class="kpi-label" style="color:var(--dim)">Other / Organic</div><div class="kpi-num" id="s-other" style="color:var(--dim)">—</div><div class="kpi-delta" id="s-other-p"></div></div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-hdr">Traffic Source Mix — All Weeks (% of Pageviews, estimated)</div>
+    <div class="chart-body"><canvas id="source-chart"></canvas></div>
+  </div>
+
+  <div class="src-section">
+    <div class="section-hdr"><span class="section-tag blue">Reach</span><span class="section-title">Source Split — Traffic Volume (All Weeks)</span></div>
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Source / Medium</th><th class="num" id="th-s0">—</th><th class="num" id="th-s1">—</th><th class="num" id="th-s2">—</th><th class="num" id="th-s3">—</th><th class="num" id="th-s4">—</th></tr></thead>
+        <tbody id="src-reach-tbody"></tbody>
+      </table>
+    </div>
+    <div class="insight warn">~80–82% Direct/None attribution due to UTM tracking gaps. The <code>{campaign}</code> ValueTrack parameter is not being substituted in Google Ads — all paid sessions show literal <code>{campaign}</code> in PostHog.</div>
+  </div>
+
+  <div class="src-section">
+    <div class="section-hdr"><span class="section-tag orange">Engagement</span><span class="section-title">Source Split — Engagement Metrics</span></div>
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Metric</th><th class="num" id="th-se0">—</th><th class="num" id="th-se1">—</th><th class="num" id="th-se2">—</th><th class="num" id="th-se3">—</th><th class="num" id="th-se4">—</th></tr></thead>
+        <tbody id="src-eng-tbody"></tbody>
+      </table>
+    </div>
+    <div class="insight info">High LinkedIn LP click periods (Feb W4, Mar W1) correlate with lower CTA rate — paid traffic lower intent than organic. Mar W3 LinkedIn LP clicks = 18 (near zero) and CTA rate = 0.03% — tracking anomaly investigation required.</div>
+  </div>
+
+  <div class="src-section">
+    <div class="section-hdr"><span class="section-tag accent">Leads</span><span class="section-title">Source Split — Lead Attribution</span></div>
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Metric</th><th class="num" id="th-sl0">—</th><th class="num" id="th-sl1">—</th><th class="num" id="th-sl2">—</th><th class="num" id="th-sl3">—</th><th class="num" id="th-sl4">—</th></tr></thead>
+        <tbody id="src-lead-tbody"></tbody>
+      </table>
+    </div>
+    <div class="insight warn">Cannot reliably attribute leads to paid channels — UTM gaps mean ~80% appear as Direct/None. Google search term data confirms 2 form submits from paid search in Mar W2.</div>
+  </div>
+
+  <div class="src-section">
+    <div class="section-hdr"><span class="section-tag red">Paid Efficiency</span><span class="section-title">Paid Channel Efficiency — All Weeks</span></div>
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Platform · Week</th><th class="num">Spend</th><th class="num">LP / Clicks</th><th class="num">Cost/LP or Click</th><th class="num">Conv.</th><th class="num">CPA</th></tr></thead>
+        <tbody id="src-mql-tbody"></tbody>
+      </table>
+    </div>
+    <div class="insight critical"><strong>LinkedIn pixel has zero recorded conversions across all 5 weeks.</strong> Cannot attribute any MQL to LinkedIn. Google conversions spiked to 27 in Mar W3 — validate conversion event definition.</div>
+  </div>
+
+  <div class="src-section">
+    <div class="section-hdr"><span class="section-tag blue">LinkedIn</span><span class="section-title">LinkedIn — Campaign Efficiency Trend (7 Weeks)</span></div>
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Week</th><th class="num">Spend</th><th class="num">LP Clicks</th><th class="num">$/LP Click</th><th class="num">Impressions</th><th class="num">CTR</th><th class="num">Note</th></tr></thead>
+        <tbody id="li-trend-tbody"></tbody>
+      </table>
+    </div>
+    <div class="insight warn">Mar W1 was most LP-efficient ($0.46/click, 9,011 clicks). Mar W3 collapsed to 18 LP clicks ($35.83/click) — campaign mix fully on Post Engagement. Consider reverting to website visit campaigns for LP volume.</div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="pulse-dot"></div>
+  <span>boost.space · tofu report</span>
+  <span class="footer-sep"></span>
+  <span id="footer-range">Feb 17 – Mar 22, 2026</span>
+  <span class="footer-right" id="footer-right">5 weeks</span>
+</div>
+
+<script>
+(function () {
+  var weeks = [], activeIdx = 0;
+
+  var liStatic = [
+    { label:'Feb W1', impr:155834, clicks:1735, lp:1019, spend:'$2,856', ctr:'1.11%', cpc:'$1.65', conv:0 },
+    { label:'Feb W2', impr:337097, clicks:2747, lp:1376, spend:'$8,961', ctr:'0.81%', cpc:'$3.26', conv:0 },
+  ];
+  var liTrendStatic = [
+    { label:'Feb W1', spend:'$2,856', lp:1019, cpl:'$2.80', impr:155834, ctr:'1.11%', note:'—' },
+    { label:'Feb W2', spend:'$8,961', lp:1376, cpl:'$6.51', impr:337097, ctr:'0.81%', note:'CPC spike', crit:true },
+  ];
+
+  var fmt = function(n){ return n==null?'—':Number(n).toLocaleString(); };
+  var d2 = function(n){ return n==null?'—':n.toFixed(2); };
+
+  function pct(a,b){ return b&&b>0?((a-b)/b*100):null; }
+  function dH(p){ if(p==null)return '<span class="flat">—</span>'; var c=Math.abs(p)<0.5?'flat':p>0?'up':'dn',a=p>0?'↑':p<0?'↓':'→'; return '<span class="'+c+'">'+a+' '+Math.abs(p).toFixed(1)+'%</span>'; }
+  function setAct(px,n){ for(var i=0;i<n;i++){var e=document.getElementById(px+i);if(e)e.classList.toggle('active-col',i===activeIdx);} }
+  function setHdr(px,n){ for(var i=0;i<n;i++){var e=document.getElementById(px+i);if(e)e.textContent=i<weeks.length?weeks[i].label:'—';} }
+
+  function buildKpi(){
+    var w=weeks[activeIdx], p=activeIdx>0?weeks[activeIdx-1]:null;
+    document.getElementById('k-uv').textContent=fmt(w.reach.unique_visitors);
+    document.getElementById('k-uv-d').innerHTML=p?dH(pct(w.reach.unique_visitors,p.reach.unique_visitors))+' vs '+p.label:'—';
+    document.getElementById('k-uv-p').textContent=p?'prev: '+fmt(p.reach.unique_visitors)+' UV · '+fmt(p.reach.pageviews)+' PV':'';
+    document.getElementById('k-leads').textContent=w.leads.total_forms;
+    document.getElementById('k-leads-d').innerHTML=p?dH(pct(w.leads.total_forms,p.leads.total_forms))+' vs '+p.label:'—';
+    document.getElementById('k-leads-p').textContent=p?'prev: '+p.leads.total_forms+' forms':'';
+    var cvr=w.leads.cvr||0;
+    document.getElementById('k-cvr').textContent=cvr?cvr.toFixed(2)+'%':'—';
+    document.getElementById('k-cvr-d').innerHTML=(p&&p.leads.cvr)?dH(pct(cvr,p.leads.cvr))+' vs '+p.label:'—';
+    document.getElementById('k-cvr-p').textContent=(p&&p.leads.cvr)?'prev: '+p.leads.cvr.toFixed(2)+'%':'';
+    var mtg=w.mql.demo_meeting_booked, card=document.getElementById('k-mtg-card'), pm=p?p.mql.demo_meeting_booked:null;
+    card.className='kpi-card '+(mtg===0?'red':'green');
+    document.getElementById('k-mtg').innerHTML=mtg===0?'0<span class="badge-crit">CRITICAL</span>':mtg;
+    document.getElementById('k-mtg-d').innerHTML=pm!==null?(mtg===0&&pm===0?'<span class="dn">↓ '+activeIdx+' consec. zeros</span>':dH(pct(mtg,pm)))+' vs '+p.label:'—';
+    document.getElementById('k-mtg-p').textContent=pm!==null?'prev: '+pm+' meetings':'';
+  }
+
+  function buildReach(){
+    var n=weeks.length;
+    setHdr('th-r',5); setAct('th-r',5);
+    var rows=[
+      {l:'Pageviews', f:function(w){return fmt(w.reach.pageviews);}},
+      {l:'Unique Visitors', f:function(w){return fmt(w.reach.unique_visitors);}},
+      {l:'Sessions', f:function(w){return fmt(w.reach.sessions);}},
+      {l:'Pages / Session', f:function(w){return d2(w.reach.pages_per_session);}},
+    ];
+    document.getElementById('reach-tbody').innerHTML=rows.map(function(r){
+      return '<tr><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+'">'+r.f(w)+'</td>';}).join('')+'</tr>';
+    }).join('');
+    var w=weeks[activeIdx], p=activeIdx>0?weeks[activeIdx-1]:null;
+    var ins=document.getElementById('reach-insight');
+    if(p){var d=pct(w.reach.unique_visitors,p.reach.unique_visitors); ins.textContent=w.label+': '+fmt(w.reach.unique_visitors)+' UV ('+(d!=null?(d>0?'+':'')+d.toFixed(1)+'% WoW':'—')+'), '+fmt(w.reach.pageviews)+' PV. LinkedIn LP clicks: '+fmt(w.paid.linkedin.lp_clicks)+'. Google clicks: '+fmt(w.paid.google.clicks||0)+'.';}
+    else ins.textContent='Feb W3 baseline: '+fmt(w.reach.unique_visitors)+' UV, '+fmt(w.reach.pageviews)+' PV.';
+  }
+
+  function buildSources(){
+    var w=weeks[activeIdx],pv=w.reach.pageviews,li=w.paid.linkedin.lp_clicks,ga=w.paid.google.clicks||0,other=Math.max(0,Math.round(pv*0.02)),direct=Math.max(0,pv-li-ga-other);
+    document.getElementById('sources-tbody').innerHTML=[
+      {n:'Direct / None',v:direct},{n:'LinkedIn Paid (LP Clicks)',v:li},{n:'Google Search (Clicks)',v:ga},{n:'Other / Organic',v:other}
+    ].map(function(r){var p=pv>0?Math.round(r.v/pv*100):0;return '<tr><td>'+r.n+'</td><td class="num">~'+fmt(r.v)+'</td><td class="num">~'+p+'%</td></tr>';}).join('');
+    document.getElementById('s-direct').textContent='~'+fmt(direct);
+    document.getElementById('s-direct-p').textContent='~'+(pv>0?Math.round(direct/pv*100):0)+'% of PV';
+    document.getElementById('s-li').textContent=fmt(li);
+    document.getElementById('s-li-p').textContent='~'+(pv>0?Math.round(li/pv*100):0)+'% of PV';
+    document.getElementById('s-ga').textContent=fmt(ga);
+    document.getElementById('s-ga-p').textContent='~'+(pv>0?Math.round(ga/pv*100):0)+'% of PV';
+    document.getElementById('s-other').textContent='~'+fmt(other);
+    document.getElementById('s-other-p').textContent='~2% of PV';
+  }
+
+  function buildLiWeekly(){
+    var dyn=weeks.map(function(w){var li=w.paid.linkedin,ctr=li.impressions>0?(li.clicks/li.impressions*100).toFixed(2)+'%':'—',cpc=li.clicks>0?'$'+(li.spend_usd/li.clicks).toFixed(2):'—';return{label:w.label,impr:li.impressions,clicks:li.clicks,lp:li.lp_clicks,spend:'$'+li.spend_usd.toLocaleString(),ctr:ctr,cpc:cpc,conv:li.conversions};});
+    document.getElementById('li-weekly-tbody').innerHTML=liStatic.concat(dyn).map(function(r){
+      return '<tr><td>'+r.label+'</td><td class="num">'+fmt(r.impr)+'</td><td class="num">'+fmt(r.clicks)+'</td><td class="num">'+fmt(r.lp)+'</td><td class="num">'+r.spend+'</td><td class="num">'+r.ctr+'</td><td class="num">'+r.cpc+'</td><td class="num">'+r.conv+'</td></tr>';
+    }).join('');
+  }
+
+  function buildGaWeekly(){
+    document.getElementById('ga-weekly-tbody').innerHTML=weeks.filter(function(w){return w.paid.google.impressions>0;}).map(function(w){
+      var g=w.paid.google,ctr=g.clicks>0?(g.clicks/g.impressions*100).toFixed(2)+'%':'—',cpc=g.clicks>0?(g.spend_czk/g.clicks).toFixed(2):'—';
+      return '<tr><td>'+w.label+'</td><td class="num">'+fmt(g.impressions)+'</td><td class="num">'+fmt(g.clicks)+'</td><td class="num">'+fmt(g.spend_czk)+'</td><td class="num">'+ctr+'</td><td class="num">'+cpc+'</td><td class="num'+(g.conversions>10?' good':'')+'">'+g.conversions+'</td></tr>';
+    }).join('');
+  }
+
+  function buildEng(){
+    setHdr('th-e',5); setAct('th-e',5);
+    var rows=[
+      {l:'CTA Clicks', f:function(w){return fmt(w.engagement.cta_clicks);}},
+      {l:'CTA Click Rate', f:function(w){return d2(w.engagement.cta_click_rate)+'%';}},
+      {l:'Install Views', f:function(w){return fmt(w.engagement.install_views);}},
+      {l:'Pricing Selections', f:function(w){return w.engagement.pricing_selections;}},
+      {l:'Pages / Session', f:function(w){return d2(w.reach.pages_per_session);}},
+    ];
+    document.getElementById('eng-tbody').innerHTML=rows.map(function(r){
+      return '<tr><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+'">'+r.f(w)+'</td>';}).join('')+'</tr>';
+    }).join('');
+  }
+
+  function buildLeads(){
+    setHdr('th-l',5); setAct('th-l',5);
+    var rows=[
+      {l:'sign_up_lead_email', f:function(w){return w.leads.sign_up_lead_email;}},
+      {l:'sign_up', f:function(w){return w.leads.sign_up;}},
+      {l:'demo_lead (new)', f:function(w){return w.leads.demo_lead||0;}},
+      {l:'callback', f:function(w){return w.leads.callback||0;}},
+      {l:'waiting_list', f:function(w){return w.leads.waiting_list||0;}},
+      {l:'newsletter', f:function(w){return w.leads.newsletter||0;}},
+      {l:'TOTAL form_submit', f:function(w){return w.leads.total_forms;}, tot:true},
+      {l:'be_form_submit_demo_lead (old)', f:function(w){return w.leads.old_demo_event>0?w.leads.old_demo_event:'—';}},
+      {l:'CVR % (forms / unique)', f:function(w){return w.leads.cvr?d2(w.leads.cvr)+'%':'—';}},
+    ];
+    document.getElementById('lead-tbody').innerHTML=rows.map(function(r){
+      return '<tr'+(r.tot?' class="total-row"':'')+'><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+'">'+r.f(w)+'</td>';}).join('')+'</tr>';
+    }).join('');
+  }
+
+  function buildMql(){
+    setHdr('th-m',5); setAct('th-m',5);
+    var rows=[
+      {l:'Demo Lead Forms (new event)', f:function(w){return w.leads.demo_lead||0;}},
+      {l:'Demo Lead Forms (old event)', f:function(w){return w.leads.old_demo_event>0?w.leads.old_demo_event:'—';}},
+      {l:'Callback Forms', f:function(w){return w.leads.callback||0;}},
+      {l:'Demo Meetings Booked', f:function(w){return w.mql.demo_meeting_booked;}, mtg:true},
+      {l:'Leady New Leads', f:function(w){return w.mql.leady_new_lead>0?w.mql.leady_new_lead:'—';}},
+    ];
+    document.getElementById('mql-tbody').innerHTML=rows.map(function(r){
+      return '<tr><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){var v=r.f(w),c='num'+(i===activeIdx?' active-col':'')+(r.mtg&&v===0?' crit':'');return '<td class="'+c+'">'+v+'</td>';}).join('')+'</tr>';
+    }).join('');
+  }
+
+  function buildFunnel(){
+    var w=weeks[activeIdx], p=activeIdx>0?weeks[activeIdx-1]:null;
+    document.getElementById('funnel-wk').textContent=w.label;
+    var uv=w.reach.unique_visitors, cta=w.engagement.cta_clicks, forms=w.leads.total_forms, demo=(w.leads.demo_lead||0)+(w.leads.old_demo_event||0), mtg=w.mql.demo_meeting_booked;
+    function cell(s,v,cvr,trend,crit){return '<div class="funnel-cell"><div class="funnel-stage">'+s+'</div><div class="funnel-vol'+(crit?' crit':'')+'">'+v+'</div>'+(cvr?'<div class="funnel-cvr">'+cvr+'</div>':'')+(trend?'<div class="funnel-trend">'+trend+'</div>':'')+'</div>';}
+    document.getElementById('funnel-row').innerHTML=
+      cell('Unique Visitors',fmt(uv),'',p?dH(pct(uv,p.reach.unique_visitors))+' WoW':'')+
+      cell('CTA Clicks',fmt(cta),(uv>0?(cta/uv*100).toFixed(2):0)+'% CTR',p?dH(pct(cta,p.engagement.cta_clicks))+' WoW':'')+
+      cell('Form Submissions',fmt(forms),(uv>0?(forms/uv*100).toFixed(2):0)+'% CVR',w.leads.cvr?'CVR '+d2(w.leads.cvr)+'%':'')+
+      cell('Demo Leads',demo,(forms>0?(demo/forms*100).toFixed(0):0)+'% of leads','new+old event')+
+      cell('Meetings Booked',mtg===0?'0 🛑':fmt(mtg),(demo>0?(mtg/demo*100).toFixed(0):0)+'%',mtg===0?activeIdx+' consec. zeros':'',mtg===0);
+  }
+
+  var tChart=null;
+  function buildTrendChart(){
+    var ctx=document.getElementById('trend-chart').getContext('2d');
+    if(tChart)tChart.destroy();
+    tChart=new Chart(ctx,{type:'bar',data:{labels:weeks.map(function(w){return w.label;}),datasets:[
+      {label:'Unique Visitors',data:weeks.map(function(w){return w.reach.unique_visitors;}),backgroundColor:'rgba(96,165,250,0.22)',borderColor:'rgba(96,165,250,0.7)',borderWidth:1,yAxisID:'y',order:2},
+      {label:'Total Leads',data:weeks.map(function(w){return w.leads.total_forms;}),backgroundColor:'rgba(200,230,74,0.22)',borderColor:'rgba(200,230,74,0.7)',borderWidth:1,yAxisID:'y',order:3},
+      {label:'CTA Rate %',data:weeks.map(function(w){return w.engagement.cta_click_rate;}),type:'line',borderColor:'rgba(249,115,22,0.8)',backgroundColor:'transparent',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'rgba(249,115,22,0.8)',tension:0.3,yAxisID:'y2',order:1},
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{
+      legend:{labels:{color:'#71717A',font:{family:'JetBrains Mono',size:10},boxWidth:10}},
+      tooltip:{backgroundColor:'#18181B',titleColor:'#E8E8E8',bodyColor:'#A1A1AA',borderColor:'rgb(39,39,42)',borderWidth:1}
+    },scales:{
+      x:{ticks:{color:'#71717A',font:{family:'JetBrains Mono',size:10}},grid:{color:'rgba(39,39,42,0.5)'}},
+      y:{ticks:{color:'#71717A',font:{family:'JetBrains Mono',size:10}},grid:{color:'rgba(39,39,42,0.5)'},position:'left'},
+      y2:{ticks:{color:'#F97316',font:{family:'JetBrains Mono',size:10},callback:function(v){return v.toFixed(1)+'%';}},grid:{display:false},position:'right'}
+    }}});
+  }
+
+  var sChart=null;
+  function buildSourcePage(){
+    setHdr('th-s',5); setAct('th-s',5); setHdr('th-se',5); setAct('th-se',5); setHdr('th-sl',5); setAct('th-sl',5);
+    document.getElementById('src-reach-tbody').innerHTML=[
+      {n:'Pageviews (Total)', f:function(w){return fmt(w.reach.pageviews);}},
+      {n:'Direct / None (est.)', f:function(w){var p=w.reach.pageviews,l=w.paid.linkedin.lp_clicks,g=w.paid.google.clicks||0,o=Math.max(0,Math.round(p*0.02));return '~'+fmt(Math.max(0,p-l-g-o));}},
+      {n:'LinkedIn Paid (LP Clicks)', f:function(w){return fmt(w.paid.linkedin.lp_clicks);}},
+      {n:'Google Search (Clicks)', f:function(w){return fmt(w.paid.google.clicks||0);}},
+      {n:'Other / Organic (~2%)', f:function(w){return '~'+fmt(Math.max(0,Math.round(w.reach.pageviews*0.02)));}},
+      {n:'Sessions', f:function(w){return fmt(w.reach.sessions);}},
+      {n:'Unique Visitors', f:function(w){return fmt(w.reach.unique_visitors);}},
+    ].map(function(r){return '<tr><td class="metric-col">'+r.n+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+'">'+r.f(w)+'</td>';}).join('')+'</tr>';}).join('');
+
+    document.getElementById('src-eng-tbody').innerHTML=[
+      {l:'CTA Click Rate (all traffic)', f:function(w){return d2(w.engagement.cta_click_rate)+'%';}},
+      {l:'LinkedIn LP % (LP÷PV)', f:function(w){return w.reach.pageviews>0?(w.paid.linkedin.lp_clicks/w.reach.pageviews*100).toFixed(1)+'%':'—';}},
+      {l:'Google Clicks % (Clicks÷PV)', f:function(w){return w.reach.pageviews>0?((w.paid.google.clicks||0)/w.reach.pageviews*100).toFixed(1)+'%':'—';}},
+      {l:'Install Views', f:function(w){return fmt(w.engagement.install_views);}},
+      {l:'Pricing Selections', f:function(w){return w.engagement.pricing_selections;}},
+    ].map(function(r){return '<tr><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+'">'+r.f(w)+'</td>';}).join('')+'</tr>';}).join('');
+
+    document.getElementById('src-lead-tbody').innerHTML=[
+      {l:'Total Forms', f:function(w){return w.leads.total_forms;}},
+      {l:'Google Paid Conv. (tracked)', f:function(w){return w.paid.google.conversions||'—';}},
+      {l:'LinkedIn Conv. (pixel gap)', f:function(){return '?';}},
+      {l:'CVR % (visitors → form)', f:function(w){return w.leads.cvr?d2(w.leads.cvr)+'%':'—';}},
+      {l:'Leady / RB2B Leads', f:function(w){return w.mql.leady_new_lead||'—';}},
+    ].map(function(r){return '<tr><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+'">'+r.f(w)+'</td>';}).join('')+'</tr>';}).join('');
+
+    document.getElementById('src-mql-tbody').innerHTML=weeks.map(function(w){
+      var li=w.paid.linkedin,g=w.paid.google;
+      var liCpl=li.lp_clicks>0?'$'+(li.spend_usd/li.lp_clicks).toFixed(2):'—';
+      var gSpend=g.spend_czk>0?'~$'+(g.spend_czk/25).toFixed(0):'—';
+      var gCpl=g.clicks>0?'$'+(g.spend_czk/25/g.clicks).toFixed(2):'—';
+      var gCpa=g.conversions>0?'~$'+(g.spend_czk/25/g.conversions).toFixed(0):'—';
+      return '<tr style="color:rgba(96,165,250,0.8)"><td>LinkedIn · '+w.label+'</td><td class="num">$'+li.spend_usd.toLocaleString()+'</td><td class="num">'+fmt(li.lp_clicks)+' LP</td><td class="num">'+liCpl+'</td><td class="num">0</td><td class="num">—</td></tr>'+
+        (g.impressions>0?'<tr style="color:rgba(200,230,74,0.8)"><td>Google · '+w.label+'</td><td class="num">'+gSpend+'</td><td class="num">'+fmt(g.clicks)+' clicks</td><td class="num">'+gCpl+'</td><td class="num'+(g.conversions>10?' good':'')+'">'+g.conversions+'</td><td class="num">'+gCpa+'</td></tr>':'');
+    }).join('');
+
+    // LinkedIn trend table
+    var dynTrend=weeks.map(function(w){var li=w.paid.linkedin,cpl=li.lp_clicks>0?'$'+(li.spend_usd/li.lp_clicks).toFixed(2):'—',ctr=li.impressions>0?(li.clicks/li.impressions*100).toFixed(2)+'%':'—';return{label:w.label,spend:'$'+li.spend_usd.toLocaleString(),lp:li.lp_clicks,cpl:cpl,impr:li.impressions,ctr:ctr};});
+    document.getElementById('li-trend-tbody').innerHTML=liTrendStatic.concat(dynTrend).map(function(r,i){
+      return '<tr><td>'+r.label+'</td><td class="num">'+r.spend+'</td><td class="num">'+fmt(r.lp)+'</td><td class="num'+(r.crit?' crit':'')+'">'+r.cpl+'</td><td class="num">'+fmt(r.impr)+'</td><td class="num">'+r.ctr+'</td><td class="num">'+(r.note||'—')+'</td></tr>';
+    }).join('');
+
+    // Stacked source chart
+    var ctx2=document.getElementById('source-chart').getContext('2d');
+    if(sChart)sChart.destroy();
+    var liP=weeks.map(function(w){return w.reach.pageviews>0?(w.paid.linkedin.lp_clicks/w.reach.pageviews*100):0;});
+    var gaP=weeks.map(function(w){return w.reach.pageviews>0?((w.paid.google.clicks||0)/w.reach.pageviews*100):0;});
+    var dirP=weeks.map(function(w,i){return Math.max(0,100-liP[i]-gaP[i]-2);});
+    sChart=new Chart(ctx2,{type:'bar',data:{labels:weeks.map(function(w){return w.label;}),datasets:[
+      {label:'Direct/None',data:dirP,backgroundColor:'rgba(113,113,122,0.5)',stack:'s'},
+      {label:'LinkedIn Paid',data:liP,backgroundColor:'rgba(96,165,250,0.6)',stack:'s'},
+      {label:'Google Search',data:gaP,backgroundColor:'rgba(200,230,74,0.6)',stack:'s'},
+      {label:'Other',data:weeks.map(function(){return 2;}),backgroundColor:'rgba(63,63,70,0.5)',stack:'s'},
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{
+      legend:{labels:{color:'#71717A',font:{family:'JetBrains Mono',size:10},boxWidth:10}},
+      tooltip:{backgroundColor:'#18181B',titleColor:'#E8E8E8',bodyColor:'#A1A1AA',borderColor:'rgb(39,39,42)',borderWidth:1,callbacks:{label:function(c){return ' '+c.dataset.label+': '+c.parsed.y.toFixed(1)+'%';}}}
+    },scales:{
+      x:{stacked:true,ticks:{color:'#71717A',font:{family:'JetBrains Mono',size:10}},grid:{color:'rgba(39,39,42,0.5)'}},
+      y:{stacked:true,max:100,ticks:{color:'#71717A',font:{family:'JetBrains Mono',size:10},callback:function(v){return v+'%';}},grid:{color:'rgba(39,39,42,0.5)'}}
+    }}});
+  }
+
+  function refreshAll(){buildKpi();buildReach();buildSources();buildEng();buildLeads();buildMql();buildFunnel();buildSourcePage();}
+
+  function buildWeekTabs(){
+    var c=document.getElementById('wk-tabs');
+    c.innerHTML=weeks.map(function(w,i){return '<button class="wk-tab'+(i===activeIdx?' active':'')+'" data-idx="'+i+'">'+w.label+'</button>';}).join('');
+    c.querySelectorAll('.wk-tab').forEach(function(btn){btn.addEventListener('click',function(){activeIdx=parseInt(btn.dataset.idx);c.querySelectorAll('.wk-tab').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');refreshAll();});});
+  }
+
+  document.querySelectorAll('.pg-tab').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('.pg-tab').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});document.getElementById('page-'+btn.dataset.page).classList.add('active');});});
+
+  fetch('./data/weekly.json').then(function(r){return r.json();}).then(function(data){
+    weeks=data.weeks; activeIdx=weeks.length-1;
+    var meta=data._meta||{};
+    if(meta.updated_at)document.getElementById('footer-right').textContent='updated '+meta.updated_at.slice(0,10);
+    buildWeekTabs(); buildLiWeekly(); buildGaWeekly(); buildTrendChart(); refreshAll();
+  }).catch(function(e){console.error('weekly.json load failed:',e);});
+})();
+</script>
 </body>
 </html>
