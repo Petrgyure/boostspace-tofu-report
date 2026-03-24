@@ -1,10 +1,11 @@
 {
   "_meta": {
     "source": "PostHog EU — project 100634",
-    "updated_at": "2026-03-23T11:45:03.630Z",
+    "updated_at": "2026-03-24T14:00:00.000Z",
     "updated_by": "fetch-week-script",
     "next_update": "2026-03-30T07:00:00.000Z",
-    "version": 1
+    "version": 2,
+    "notes": "v2: lead definitions corrected per boostspace-tofu-report-instructions.md. demo_lead now combines demo_meeting_booked + be_form_submit_demo_lead + form_submit(demo_lead). Total leads includes all lead types. Meetings Booked metric retired."
   },
   "weeks": [
     {
@@ -25,18 +26,16 @@
         "pricing_selections": 27
       },
       "leads": {
-        "total_forms": 133,
-        "cvr": 1.72,
-        "sign_up_lead_email": 47,
-        "sign_up": 75,
-        "demo_lead": 0,
+        "total_leads": 157,
+        "cvr": 2.03,
+        "plg_signup_email": 47,
+        "plg_signup_direct": 75,
+        "demo_lead": 24,
         "callback": 0,
         "waiting_list": 4,
-        "newsletter": 7,
-        "old_demo_event": 0
+        "newsletter": 7
       },
       "mql": {
-        "demo_meeting_booked": 24,
         "leady_new_lead": 0
       },
       "paid": {
@@ -51,7 +50,7 @@
           "clicks": 4225,
           "lp_clicks": 1827,
           "spend_usd": 6119,
-          "conversions": 3
+          "conversions": 0
         }
       }
     },
@@ -73,18 +72,16 @@
         "pricing_selections": 17
       },
       "leads": {
-        "total_forms": 137,
-        "cvr": 1.56,
-        "sign_up_lead_email": 80,
-        "sign_up": 45,
-        "demo_lead": 0,
+        "total_leads": 148,
+        "cvr": 1.68,
+        "plg_signup_email": 80,
+        "plg_signup_direct": 45,
+        "demo_lead": 11,
         "callback": 0,
         "waiting_list": 7,
-        "newsletter": 5,
-        "old_demo_event": 0
+        "newsletter": 5
       },
       "mql": {
-        "demo_meeting_booked": 11,
         "leady_new_lead": 0
       },
       "paid": {
@@ -105,8 +102,8 @@
     },
     {
       "label": "Mar W1",
-      "range": "2026-03-01 – 2026-03-07",
-      "start": "2026-03-01",
+      "range": "2026-03-02 – 2026-03-07",
+      "start": "2026-03-02",
       "end": "2026-03-07",
       "reach": {
         "pageviews": 13727,
@@ -121,18 +118,16 @@
         "pricing_selections": 16
       },
       "leads": {
-        "total_forms": 120,
-        "cvr": 1.52,
-        "sign_up_lead_email": 65,
-        "sign_up": 39,
-        "demo_lead": 4,
+        "total_leads": 132,
+        "cvr": 1.67,
+        "plg_signup_email": 65,
+        "plg_signup_direct": 39,
+        "demo_lead": 16,
         "callback": 4,
         "waiting_list": 5,
-        "newsletter": 3,
-        "old_demo_event": 12
+        "newsletter": 3
       },
       "mql": {
-        "demo_meeting_booked": 0,
         "leady_new_lead": 4
       },
       "paid": {
@@ -169,18 +164,16 @@
         "pricing_selections": 6
       },
       "leads": {
-        "total_forms": 76,
-        "cvr": 2.08,
-        "sign_up_lead_email": 47,
-        "sign_up": 22,
-        "demo_lead": 3,
-        "callback": 2,
+        "total_leads": 81,
+        "cvr": 2.22,
+        "plg_signup_email": 47,
+        "plg_signup_direct": 22,
+        "demo_lead": 7,
+        "callback": 3,
         "waiting_list": 1,
-        "newsletter": 1,
-        "old_demo_event": 4
+        "newsletter": 1
       },
       "mql": {
-        "demo_meeting_booked": 0,
         "leady_new_lead": 30
       },
       "paid": {
@@ -203,7 +196,7 @@
       "label": "Mar W3",
       "range": "2026-03-16 – 2026-03-22",
       "start": "2026-03-16",
-      "end": "2026-03-23",
+      "end": "2026-03-22",
       "reach": {
         "pageviews": 5107,
         "unique_visitors": 3042,
@@ -217,18 +210,16 @@
         "pricing_selections": 9
       },
       "leads": {
-        "total_forms": 108,
-        "cvr": 3.55,
-        "sign_up_lead_email": 71,
-        "sign_up": 27,
-        "demo_lead": 4,
-        "callback": 5,
+        "total_leads": 119,
+        "cvr": 3.91,
+        "plg_signup_email": 71,
+        "plg_signup_direct": 27,
+        "demo_lead": 9,
+        "callback": 11,
         "waiting_list": 1,
-        "newsletter": 0,
-        "old_demo_event": 5
+        "newsletter": 0
       },
       "mql": {
-        "demo_meeting_booked": 0,
         "leady_new_lead": 24
       },
       "paid": {

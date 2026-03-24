@@ -196,11 +196,11 @@ html, body { min-height: 100%; background: var(--bg); color: var(--text); font-f
       <div class="kpi-delta" id="k-cvr-d"></div>
       <div class="kpi-prev" id="k-cvr-p"></div>
     </div>
-    <div class="kpi-card" id="k-mtg-card">
-      <div class="kpi-label">Meetings Booked</div>
-      <div class="kpi-num" id="k-mtg">—</div>
-      <div class="kpi-delta" id="k-mtg-d"></div>
-      <div class="kpi-prev" id="k-mtg-p"></div>
+    <div class="kpi-card green" id="k-demo-card">
+      <div class="kpi-label">Demo Leads</div>
+      <div class="kpi-num" id="k-demo">—</div>
+      <div class="kpi-delta" id="k-demo-d"></div>
+      <div class="kpi-prev" id="k-demo-p"></div>
     </div>
   </div>
 
@@ -214,15 +214,15 @@ html, body { min-height: 100%; background: var(--bg); color: var(--text); font-f
     <div class="exec-grid">
       <div class="exec-card span2">
         <div class="exec-label">5-Week Overview</div>
-        Traffic peaked in Feb W4 (14,347 PV) then declined — Mar W2/W3 reflect LinkedIn spend cut (–44% then –73%). Despite lower volume, CVR improved consistently: 1.52% → 2.08% → 3.55%. <strong>Mar W3 Google Ads delivered 27 conversions</strong> — a 13.5× jump vs Mar W2. CTA click rate collapsed to 0.03% in Mar W3 (tracking anomaly suspected).
+        Traffic peaked in Feb W4 (14,347 PV) then declined — Mar W2/W3 reflect LinkedIn spend cut. Despite lower volume, CVR improved consistently: <strong>2.03% → 1.68% → 1.67% → 2.22% → 3.91%</strong>. Mar W3 CVR of 3.91% is the strongest on record. The apparent "0 demo meetings" in Mar W1–W3 was a <strong>form redesign event rename</strong>, not a broken booking flow — <code>demo_meeting_booked</code> was replaced by <code>be_form_submit_demo_lead</code> on ~Mar 2. Demo demand has been continuous.
       </div>
-      <div class="exec-card critical">
-        <div class="exec-label">🚨 Critical — 3rd Consecutive Week</div>
-        <strong>DEMO MEETINGS BOOKED = 0</strong> — Mar W1, W2, W3. Demand exists (demo lead forms submitting) but 0% booking rate. Booking flow / Calendly integration is definitively broken.
+      <div class="exec-card">
+        <div class="exec-label">Lead Performance</div>
+        <strong>Mar W3: 119 total leads</strong> — strong rebound vs Mar W2 (81). PLG email signups surged to 71 (highest across all weeks). Demo leads: 9. Callback requests: 11 (new high). <strong>Google Ads: 27 conversions</strong> in Mar W3 — 13.5× jump vs Mar W2.
       </div>
       <div class="exec-card">
         <div class="exec-label">Signals &amp; Actions Needed</div>
-        <strong>Google Ads efficiency improving</strong> — 27 conv. in Mar W3 at 56 CZK CPC. LinkedIn pivoted to engagement (LP clicks collapsed to 18). Leady: 24 leads Mar W3. <strong>Fix booking flow ASAP — leads are entering but not converting.</strong>
+        <strong>CTA click tracking broken</strong> since ~Mar 13 — 1 click in Mar W3 (0.03%) is a tracking anomaly, not real drop. LinkedIn pixel: zero conversions all weeks (not configured). Leady: 24 new leads Mar W3. LinkedIn LP clicks collapsed to 18 in Mar W3 — campaign mix fully on Post Engagement.
       </div>
     </div>
   </div>
@@ -316,14 +316,13 @@ html, body { min-height: 100%; background: var(--bg); color: var(--text); font-f
         <tbody id="lead-tbody"></tbody>
       </table>
     </div>
-    <div class="insight info">Mar W3 sign_up_lead_email surged to 71 (highest across all weeks). Total leads 108 — strong rebound vs Mar W2 (76). CVR 3.55% is best on record. Volume is recovering despite lower traffic.</div>
+    <div class="insight info">Mar W3: 71 PLG email signups (highest across all weeks), 27 PLG direct, 9 demo leads, 11 callbacks. Total 119 leads — strong rebound vs Mar W2 (81). CVR 3.91% is best on record. Volume recovering despite lower traffic.</div>
   </div>
 
   <div class="section">
-    <div class="section-hdr"><span class="section-tag red">Layer 4</span><span class="section-title">MQL Conversion — Lead → Meeting</span></div>
-    <div class="insight critical">
-      <strong>DEMO MEETINGS BOOKED = 0 — Third Consecutive Week (Mar W1, W2, W3).</strong><br>
-      24 (Feb W3) → 11 (Feb W4) → 0 → 0 → 0. Demo lead forms are submitting but zero convert to booked meetings. Booking flow / Calendly integration is definitively broken.
+    <div class="section-hdr"><span class="section-tag red">Layer 4</span><span class="section-title">Demo Lead — MQL Signal</span></div>
+    <div class="insight info">
+      <strong>Demo Lead</strong> = combined <code>demo_meeting_booked</code> OR <code>be_form_submit_demo_lead</code>. The form was redesigned on ~Mar 2, 2026 — old Calendly widget replaced by a standard lead form. Both events represent the same intent: a visitor requesting a demo. The sales team follows up to schedule meetings. Leady (<code>leady_new_lead</code>) is the company identification layer — available from Mar 8.
     </div>
     <div class="tbl-wrap">
       <table class="data-table">
@@ -332,11 +331,11 @@ html, body { min-height: 100%; background: var(--bg); color: var(--text); font-f
       </table>
     </div>
     <div class="sub-section">
-      <div class="sub-title">Root Cause Analysis</div>
+      <div class="sub-title">Context</div>
       <div style="padding:0.35rem 0; display:flex; flex-direction:column; gap:0.2rem;">
-        <div class="question-item"><span class="q-num">→</span><span class="q-text">Demo lead forms are submitting (new + old events) — demand exists but ZERO convert to booked meetings across 3 weeks</span></div>
-        <div class="question-item"><span class="q-num">→</span><span class="q-text"><strong>demo_meeting_booked event stopped firing</strong> — event rename side-effect or Calendly/HubSpot integration disconnect</span></div>
-        <div class="question-item"><span class="q-num">→</span><span class="q-text">Leady leads ramping (4 → 30 → 24) — first quality signal but needs validation vs form_submit correlation</span></div>
+        <div class="question-item"><span class="q-num">→</span><span class="q-text">Demo lead flow is healthy — 24 (Feb W3) → 11 (Feb W4) → 16 (Mar W1) → 7 (Mar W2) → 9 (Mar W3). No broken booking flow.</span></div>
+        <div class="question-item"><span class="q-num">→</span><span class="q-text"><strong>Event rename context:</strong> <code>demo_meeting_booked</code> fired up to ~Mar 2; <code>be_form_submit_demo_lead</code> fires from ~Mar 2. Both = Demo Lead. Not a tracking issue.</span></div>
+        <div class="question-item"><span class="q-num">→</span><span class="q-text">Leady ramp: 4 (Mar W1) → 30 (Mar W2) → 24 (Mar W3) — company-level identification signal improving.</span></div>
       </div>
     </div>
   </div>
@@ -353,7 +352,7 @@ html, body { min-height: 100%; background: var(--bg); color: var(--text); font-f
       <div class="status-row"><span class="status-icon">✅</span><span class="status-initiative">Weekly TOFU Report</span><span class="status-badge done">Done</span><span class="status-notes">Automated with live PostHog fetch. 5 weeks live.</span></div>
       <div class="status-row"><span class="status-icon">✅</span><span class="status-initiative">Demo lead form tracking</span><span class="status-badge done">Done</span><span class="status-notes">Consolidated into form_submit (form_type=demo_lead). Old event still firing.</span></div>
       <div class="status-row"><span class="status-icon">✅</span><span class="status-initiative">Leady / RB2B integration</span><span class="status-badge done">Done</span><span class="status-notes">Mar W2: 30 leads. Mar W3: 24 leads. Ramping.</span></div>
-      <div class="status-row"><span class="status-icon">❌</span><span class="status-initiative">MQL target (8/week)</span><span class="status-badge fail">Not Met</span><span class="status-notes">0 booked meetings. 3rd straight week. Booking flow broken.</span></div>
+      <div class="status-row"><span class="status-icon">✅</span><span class="status-initiative">Demo leads (MQL signal)</span><span class="status-badge done">Active</span><span class="status-notes">Demo leads present every week: 24 → 11 → 16 → 7 → 9. Form redesigned Mar 2 (event rename, not broken flow). Sales follow-up needed.</span></div>
       <div class="status-row"><span class="status-icon">✅</span><span class="status-initiative">Hunting Grounds (UKI)</span><span class="status-badge done">Done</span><span class="status-notes">Live in Mar W2. 5 UKI campaigns active.</span></div>
       <div class="status-row"><span class="status-icon">❌</span><span class="status-initiative">LinkedIn pixel conversion</span><span class="status-badge fail">Not Met</span><span class="status-notes">Zero conversions tracked in DW across all weeks.</span></div>
       <div class="status-row"><span class="status-icon">✅</span><span class="status-initiative">Google Ads efficiency</span><span class="status-badge done">Improving</span><span class="status-notes">Mar W3: 27 conversions — BSP Commerce campaigns maturing after restructure.</span></div>
@@ -363,12 +362,11 @@ html, body { min-height: 100%; background: var(--bg); color: var(--text); font-f
   <div class="section">
     <div class="section-hdr"><span class="section-tag">?</span><span class="section-title">Open Questions</span></div>
     <div class="questions-list">
-      <div class="question-item"><span class="q-num">01</span><span class="q-text"><strong>demo_meeting_booked = 0 for 3 weeks:</strong> Tracking issue or real broken booking flow? Calendly/HubSpot automation trigger disconnected?</span></div>
-      <div class="question-item"><span class="q-num">02</span><span class="q-text"><strong>Mar W3 CTA click rate = 0.03%:</strong> 1 CTA click from 3,042 visitors is implausible. Event tracking anomaly or CTA element hidden/broken?</span></div>
-      <div class="question-item"><span class="q-num">03</span><span class="q-text"><strong>MQL definition:</strong> Should we count demo lead form submissions as MQLs, or only booked meetings (0)?</span></div>
-      <div class="question-item"><span class="q-num">04</span><span class="q-text"><strong>Leady integration:</strong> 4 → 30 → 24 — intentional ramp? Needs baseline vs form_submit volume correlation.</span></div>
-      <div class="question-item"><span class="q-num">05</span><span class="q-text"><strong>LinkedIn conversion pixel:</strong> Zero external_website_conversions across ALL 5 weeks — pixel not installed or misconfigured?</span></div>
-      <div class="question-item"><span class="q-num">06</span><span class="q-text"><strong>Google Mar W3 27 conversions:</strong> What event is being tracked? Same conversion definition as Feb W4 (16 conv)? Needs validation.</span></div>
+      <div class="question-item"><span class="q-num">01</span><span class="q-text"><strong>CTA click tracking broken since ~Mar 13:</strong> Mar W3 = 1 click (0.03% rate). Real tracking anomaly — CTA event rename or PostHog filter issue? Needs immediate investigation.</span></div>
+      <div class="question-item"><span class="q-num">02</span><span class="q-text"><strong>Leady integration:</strong> 4 → 30 → 24 — is the ramp intentional? Needs baseline vs form_submit volume correlation to assess signal quality.</span></div>
+      <div class="question-item"><span class="q-num">03</span><span class="q-text"><strong>LinkedIn conversion pixel:</strong> Zero <code>external_website_conversions</code> across ALL 5 weeks — LinkedIn Insight Tag not configured. Attribution blind spot for all LinkedIn spend.</span></div>
+      <div class="question-item"><span class="q-num">04</span><span class="q-text"><strong>Google Mar W3 27 conversions:</strong> What conversion event is being counted? Same definition as Feb W4 (16 conv)? Validate against PostHog form events.</span></div>
+      <div class="question-item"><span class="q-num">05</span><span class="q-text"><strong>LinkedIn LP clicks collapsed (Mar W3 = 18):</strong> Campaign mix fully on Post Engagement. Is this intentional? Consider reverting some budget to Website Visit campaigns for lead generation.</span></div>
     </div>
   </div>
 
@@ -376,8 +374,8 @@ html, body { min-height: 100%; background: var(--bg); color: var(--text); font-f
     <div class="section-hdr"><span class="section-tag">Notes</span><span class="section-title">Data Notes &amp; Limitations</span></div>
     <div class="notes-list">
       <div class="note-item">All data from PostHog (project: Boost.space, ID: 100634, EU instance)</div>
-      <div class="note-item">Weeks: Feb W3=Feb 17–23 | Feb W4=Feb 24–Mar 1 | Mar W1=Mar 1–7 | Mar W2=Mar 8–14 | Mar W3=Mar 15–22</div>
-      <div class="note-item"><strong>be_form_submit_demo_lead</strong> renamed to <strong>form_submit (form_type=demo_lead)</strong> mid-Mar W1. Old event still firing.</div>
+      <div class="note-item">Weeks: Feb W3=Feb 17–23 | Feb W4=Feb 24–Mar 1 | Mar W1=Mar 2–7 | Mar W2=Mar 8–14 | Mar W3=Mar 16–22</div>
+      <div class="note-item"><strong>Demo Lead</strong> = <code>demo_meeting_booked</code> (up to ~Mar 2) OR <code>be_form_submit_demo_lead</code> (from ~Mar 2). Same business meaning — both = demo request. Event rename due to form redesign. Combined with OR logic in all queries.</div>
       <div class="note-item">leady_new_lead started Mar 8 — Mar W2 is first full-week baseline (30 leads), Mar W3: 24 leads</div>
       <div class="note-item">Traffic source % are estimates — high direct/none attribution (~80%) due to UTM gaps</div>
       <div class="note-item">Google Ads costs in CZK (~25 CZK/USD). LinkedIn Ads in USD.</div>
@@ -489,18 +487,17 @@ html, body { min-height: 100%; background: var(--bg); color: var(--text); font-f
     document.getElementById('k-uv').textContent=fmt(w.reach.unique_visitors);
     document.getElementById('k-uv-d').innerHTML=p?dH(pct(w.reach.unique_visitors,p.reach.unique_visitors))+' vs '+p.label:'—';
     document.getElementById('k-uv-p').textContent=p?'prev: '+fmt(p.reach.unique_visitors)+' UV · '+fmt(p.reach.pageviews)+' PV':'';
-    document.getElementById('k-leads').textContent=w.leads.total_forms;
-    document.getElementById('k-leads-d').innerHTML=p?dH(pct(w.leads.total_forms,p.leads.total_forms))+' vs '+p.label:'—';
-    document.getElementById('k-leads-p').textContent=p?'prev: '+p.leads.total_forms+' forms':'';
+    document.getElementById('k-leads').textContent=w.leads.total_leads;
+    document.getElementById('k-leads-d').innerHTML=p?dH(pct(w.leads.total_leads,p.leads.total_leads))+' vs '+p.label:'—';
+    document.getElementById('k-leads-p').textContent=p?'prev: '+p.leads.total_leads+' leads':'';
     var cvr=w.leads.cvr||0;
     document.getElementById('k-cvr').textContent=cvr?cvr.toFixed(2)+'%':'—';
     document.getElementById('k-cvr-d').innerHTML=(p&&p.leads.cvr)?dH(pct(cvr,p.leads.cvr))+' vs '+p.label:'—';
     document.getElementById('k-cvr-p').textContent=(p&&p.leads.cvr)?'prev: '+p.leads.cvr.toFixed(2)+'%':'';
-    var mtg=w.mql.demo_meeting_booked, card=document.getElementById('k-mtg-card'), pm=p?p.mql.demo_meeting_booked:null;
-    card.className='kpi-card '+(mtg===0?'red':'green');
-    document.getElementById('k-mtg').innerHTML=mtg===0?'0<span class="badge-crit">CRITICAL</span>':mtg;
-    document.getElementById('k-mtg-d').innerHTML=pm!==null?(mtg===0&&pm===0?'<span class="dn">↓ '+activeIdx+' consec. zeros</span>':dH(pct(mtg,pm)))+' vs '+p.label:'—';
-    document.getElementById('k-mtg-p').textContent=pm!==null?'prev: '+pm+' meetings':'';
+    var demo=w.leads.demo_lead||0, pdemo=p?p.leads.demo_lead||0:null;
+    document.getElementById('k-demo').textContent=demo;
+    document.getElementById('k-demo-d').innerHTML=pdemo!==null?dH(pct(demo,pdemo))+' vs '+p.label:'—';
+    document.getElementById('k-demo-p').textContent=pdemo!==null?'prev: '+pdemo+' demo leads':'';
   }
 
   function buildReach(){
@@ -567,15 +564,14 @@ html, body { min-height: 100%; background: var(--bg); color: var(--text); font-f
   function buildLeads(){
     setHdr('th-l',5); setAct('th-l',5);
     var rows=[
-      {l:'sign_up_lead_email', f:function(w){return w.leads.sign_up_lead_email;}},
-      {l:'sign_up', f:function(w){return w.leads.sign_up;}},
-      {l:'demo_lead (new)', f:function(w){return w.leads.demo_lead||0;}},
-      {l:'callback', f:function(w){return w.leads.callback||0;}},
-      {l:'waiting_list', f:function(w){return w.leads.waiting_list||0;}},
-      {l:'newsletter', f:function(w){return w.leads.newsletter||0;}},
-      {l:'TOTAL form_submit', f:function(w){return w.leads.total_forms;}, tot:true},
-      {l:'be_form_submit_demo_lead (old)', f:function(w){return w.leads.old_demo_event>0?w.leads.old_demo_event:'—';}},
-      {l:'CVR % (forms / unique)', f:function(w){return w.leads.cvr?d2(w.leads.cvr)+'%':'—';}},
+      {l:'PLG Signup (email)', f:function(w){return w.leads.plg_signup_email||0;}},
+      {l:'PLG Signup (direct)', f:function(w){return w.leads.plg_signup_direct||0;}},
+      {l:'Demo Lead', f:function(w){return w.leads.demo_lead||0;}},
+      {l:'Callback', f:function(w){return w.leads.callback||0;}},
+      {l:'Waiting List', f:function(w){return w.leads.waiting_list||0;}},
+      {l:'Newsletter', f:function(w){return w.leads.newsletter||0;}},
+      {l:'TOTAL Leads', f:function(w){return w.leads.total_leads;}, tot:true},
+      {l:'CVR % (total leads / unique visitors)', f:function(w){return w.leads.cvr?d2(w.leads.cvr)+'%':'—';}},
     ];
     document.getElementById('lead-tbody').innerHTML=rows.map(function(r){
       return '<tr'+(r.tot?' class="total-row"':'')+'><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+'">'+r.f(w)+'</td>';}).join('')+'</tr>';
@@ -585,28 +581,26 @@ html, body { min-height: 100%; background: var(--bg); color: var(--text); font-f
   function buildMql(){
     setHdr('th-m',5); setAct('th-m',5);
     var rows=[
-      {l:'Demo Lead Forms (new event)', f:function(w){return w.leads.demo_lead||0;}},
-      {l:'Demo Lead Forms (old event)', f:function(w){return w.leads.old_demo_event>0?w.leads.old_demo_event:'—';}},
-      {l:'Callback Forms', f:function(w){return w.leads.callback||0;}},
-      {l:'Demo Meetings Booked', f:function(w){return w.mql.demo_meeting_booked;}, mtg:true},
+      {l:'Demo Lead (combined)', f:function(w){return w.leads.demo_lead||0;}},
+      {l:'Callback', f:function(w){return w.leads.callback||0;}},
       {l:'Leady New Leads', f:function(w){return w.mql.leady_new_lead>0?w.mql.leady_new_lead:'—';}},
     ];
     document.getElementById('mql-tbody').innerHTML=rows.map(function(r){
-      return '<tr><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){var v=r.f(w),c='num'+(i===activeIdx?' active-col':'')+(r.mtg&&v===0?' crit':'');return '<td class="'+c+'">'+v+'</td>';}).join('')+'</tr>';
+      return '<tr><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){var v=r.f(w),c='num'+(i===activeIdx?' active-col':'');return '<td class="'+c+'">'+v+'</td>';}).join('')+'</tr>';
     }).join('');
   }
 
   function buildFunnel(){
     var w=weeks[activeIdx], p=activeIdx>0?weeks[activeIdx-1]:null;
     document.getElementById('funnel-wk').textContent=w.label;
-    var uv=w.reach.unique_visitors, cta=w.engagement.cta_clicks, forms=w.leads.total_forms, demo=(w.leads.demo_lead||0)+(w.leads.old_demo_event||0), mtg=w.mql.demo_meeting_booked;
+    var uv=w.reach.unique_visitors, cta=w.engagement.cta_clicks, total=w.leads.total_leads, demo=w.leads.demo_lead||0, leady=w.mql.leady_new_lead||0;
     function cell(s,v,cvr,trend,crit){return '<div class="funnel-cell"><div class="funnel-stage">'+s+'</div><div class="funnel-vol'+(crit?' crit':'')+'">'+v+'</div>'+(cvr?'<div class="funnel-cvr">'+cvr+'</div>':'')+(trend?'<div class="funnel-trend">'+trend+'</div>':'')+'</div>';}
     document.getElementById('funnel-row').innerHTML=
       cell('Unique Visitors',fmt(uv),'',p?dH(pct(uv,p.reach.unique_visitors))+' WoW':'')+
       cell('CTA Clicks',fmt(cta),(uv>0?(cta/uv*100).toFixed(2):0)+'% CTR',p?dH(pct(cta,p.engagement.cta_clicks))+' WoW':'')+
-      cell('Form Submissions',fmt(forms),(uv>0?(forms/uv*100).toFixed(2):0)+'% CVR',w.leads.cvr?'CVR '+d2(w.leads.cvr)+'%':'')+
-      cell('Demo Leads',demo,(forms>0?(demo/forms*100).toFixed(0):0)+'% of leads','new+old event')+
-      cell('Meetings Booked',mtg===0?'0 🛑':fmt(mtg),(demo>0?(mtg/demo*100).toFixed(0):0)+'%',mtg===0?activeIdx+' consec. zeros':'',mtg===0);
+      cell('Total Leads',fmt(total),(uv>0?(total/uv*100).toFixed(2):0)+'% CVR',w.leads.cvr?'CVR '+d2(w.leads.cvr)+'%':'')+
+      cell('Demo Leads',fmt(demo),(total>0?(demo/total*100).toFixed(0):0)+'% of leads',p?dH(pct(demo,p.leads.demo_lead||0))+' WoW':'')+
+      cell('Leady Leads',leady>0?fmt(leady):'—',leady>0?(total>0?(leady/total*100).toFixed(0):0)+'% of leads':'company ID layer',leady>0?'from Mar W2':'starts Mar 8');
   }
 
   var tChart=null;
@@ -615,7 +609,7 @@ html, body { min-height: 100%; background: var(--bg); color: var(--text); font-f
     if(tChart)tChart.destroy();
     tChart=new Chart(ctx,{type:'bar',data:{labels:weeks.map(function(w){return w.label;}),datasets:[
       {label:'Unique Visitors',data:weeks.map(function(w){return w.reach.unique_visitors;}),backgroundColor:'rgba(96,165,250,0.22)',borderColor:'rgba(96,165,250,0.7)',borderWidth:1,yAxisID:'y',order:2},
-      {label:'Total Leads',data:weeks.map(function(w){return w.leads.total_forms;}),backgroundColor:'rgba(200,230,74,0.22)',borderColor:'rgba(200,230,74,0.7)',borderWidth:1,yAxisID:'y',order:3},
+      {label:'Total Leads',data:weeks.map(function(w){return w.leads.total_leads;}),backgroundColor:'rgba(200,230,74,0.22)',borderColor:'rgba(200,230,74,0.7)',borderWidth:1,yAxisID:'y',order:3},
       {label:'CTA Rate %',data:weeks.map(function(w){return w.engagement.cta_click_rate;}),type:'line',borderColor:'rgba(249,115,22,0.8)',backgroundColor:'transparent',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'rgba(249,115,22,0.8)',tension:0.3,yAxisID:'y2',order:1},
     ]},options:{responsive:true,maintainAspectRatio:false,plugins:{
       legend:{labels:{color:'#71717A',font:{family:'JetBrains Mono',size:10},boxWidth:10}},
@@ -649,7 +643,7 @@ html, body { min-height: 100%; background: var(--bg); color: var(--text); font-f
     ].map(function(r){return '<tr><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+'">'+r.f(w)+'</td>';}).join('')+'</tr>';}).join('');
 
     document.getElementById('src-lead-tbody').innerHTML=[
-      {l:'Total Forms', f:function(w){return w.leads.total_forms;}},
+      {l:'Total Leads', f:function(w){return w.leads.total_leads;}},
       {l:'Google Paid Conv. (tracked)', f:function(w){return w.paid.google.conversions||'—';}},
       {l:'LinkedIn Conv. (pixel gap)', f:function(){return '?';}},
       {l:'CVR % (visitors → form)', f:function(w){return w.leads.cvr?d2(w.leads.cvr)+'%':'—';}},

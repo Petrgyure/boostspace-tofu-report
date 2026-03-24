@@ -1,9 +1,9 @@
 {
   "_meta": {
     "source": "PostHog EU — project 100634",
-    "updated_at": "2026-03-18T09:54:42.032Z",
+    "updated_at": "2026-03-23T11:45:03.630Z",
     "updated_by": "fetch-week-script",
-    "next_update": "2026-03-23T08:00:00.000Z",
+    "next_update": "2026-03-30T07:00:00.000Z",
     "version": 1
   },
   "weeks": [
@@ -195,6 +195,54 @@
           "clicks": 1291,
           "lp_clicks": 1139,
           "spend_usd": 2091,
+          "conversions": 0
+        }
+      }
+    },
+    {
+      "label": "Mar W3",
+      "range": "2026-03-16 – 2026-03-22",
+      "start": "2026-03-16",
+      "end": "2026-03-23",
+      "reach": {
+        "pageviews": 5107,
+        "unique_visitors": 3042,
+        "sessions": 3362,
+        "pages_per_session": 1.52
+      },
+      "engagement": {
+        "cta_clicks": 1,
+        "cta_click_rate": 0.03,
+        "install_views": 168,
+        "pricing_selections": 9
+      },
+      "leads": {
+        "total_forms": 108,
+        "cvr": 3.55,
+        "sign_up_lead_email": 71,
+        "sign_up": 27,
+        "demo_lead": 4,
+        "callback": 5,
+        "waiting_list": 1,
+        "newsletter": 0,
+        "old_demo_event": 5
+      },
+      "mql": {
+        "demo_meeting_booked": 0,
+        "leady_new_lead": 24
+      },
+      "paid": {
+        "google": {
+          "impressions": 26257,
+          "clicks": 699,
+          "spend_czk": 39119,
+          "conversions": 27
+        },
+        "linkedin": {
+          "impressions": 5783,
+          "clicks": 193,
+          "lp_clicks": 18,
+          "spend_usd": 645,
           "conversions": 0
         }
       }
