@@ -977,7 +977,21 @@ td.num, th.num { text-align: center; }
             '<td class="num" colspan="2">'+r.f_demo+' / '+r.l_demo+'</td>' +
             '<td class="num" colspan="2">'+r.f_total+' / '+r.l_total+'</td></tr>';
         }).join('');
-      }).catch(function(e){ console.warn('[attr compare]', e.message); });
+      }).catch(function(e){
+        // fallback: use static data for both models
+        var first = (staticLive.attribution || {}).first || [];
+        var last  = (staticLive.attribution || {}).last  || [];
+        if (first.length || last.length) {
+          var channels = {};
+          first.forEach(function(r){ channels[r.channel]=channels[r.channel]||{channel:r.channel,f_plg:0,f_demo:0,f_cb:0,f_total:0,l_plg:0,l_demo:0,l_cb:0,l_total:0}; channels[r.channel].f_plg=r.plg;channels[r.channel].f_demo=r.demo;channels[r.channel].f_cb=r.callback;channels[r.channel].f_total=r.total; });
+          last.forEach(function(r){ channels[r.channel]=channels[r.channel]||{channel:r.channel,f_plg:0,f_demo:0,f_cb:0,f_total:0,l_plg:0,l_demo:0,l_cb:0,l_total:0}; channels[r.channel].l_plg=r.plg;channels[r.channel].l_demo=r.demo;channels[r.channel].l_cb=r.callback;channels[r.channel].l_total=r.total; });
+          var thead = document.querySelector('#attr-tbody').closest('table').querySelector('thead tr');
+          if (thead) thead.innerHTML = '<th>Channel</th><th class="num" colspan="2">PLG (1st/Last)</th><th class="num" colspan="2">Demo (1st/Last)</th><th class="num" colspan="2">Total (1st/Last)</th>';
+          var tbody = document.getElementById('attr-tbody');
+          if (tbody) tbody.innerHTML = Object.values(channels).sort(function(a,b){return (b.f_total+b.l_total)-(a.f_total+a.l_total);}).map(function(r){ return '<tr><td class="metric-col">'+r.channel+'</td><td class="num" colspan="2">'+r.f_plg+' / '+r.l_plg+'</td><td class="num" colspan="2">'+r.f_demo+' / '+r.l_demo+'</td><td class="num" colspan="2">'+r.f_total+' / '+r.l_total+'</td></tr>'; }).join('');
+        }
+        console.warn('[attr compare] using static fallback:', e.message);
+      });
       return;
     }
     // Reset thead for non-compare
@@ -992,8 +1006,10 @@ td.num, th.num { text-align: center; }
         renderAttrTable(rows, model);
       })
       .catch(function(e){
-        renderAttrTable({error: '(local server required)'}, model);
-        console.warn('[attribution]', e.message);
+        var fallback = (staticLive.attribution || {})[model];
+        if (fallback) { attrCache[model] = fallback; renderAttrTable(fallback, model); }
+        else { renderAttrTable({error: '(local server required)'}, model); }
+        console.warn('[attribution] using static fallback:', e.message);
       });
   }
 
@@ -1122,9 +1138,12 @@ td.num, th.num { text-align: center; }
     });
   });
 
+  var staticLive = {};
+
   function loadData(){
     return fetch('./data/weekly.json?t='+Date.now()).then(function(r){return r.json();}).then(function(data){
       weeks=data.weeks; activeIdx=weeks.length-1;
+      staticLive = data._live || {};
       var meta=data._meta||{};
       var upd=meta.updated_at?meta.updated_at.slice(0,10):'—';
       document.getElementById('footer-right').textContent='updated '+upd;

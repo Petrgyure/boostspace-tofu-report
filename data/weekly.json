@@ -7,6 +7,19 @@
     "version": 3,
     "notes": "v3: aligned with boostspace-tofu-report-instructions v2.md. PLG Signup = sign_up_lead_email only. sign_up (account creation) removed from lead totals — tracked separately as sign_up_account for funnel view. Total leads = plg_signup + demo_lead + callback + waiting_list + newsletter."
   },
+  "_live": {
+    "attribution_as_of": "2026-03-26",
+    "attribution": {
+      "first": [
+        {"channel":"Direct / None","plg":306,"demo":51,"callback":25,"total":382,"pct":100}
+      ],
+      "last": [
+        {"channel":"Other","plg":178,"demo":6,"callback":8,"total":192,"pct":50.3},
+        {"channel":"Google Organic","plg":128,"demo":9,"callback":6,"total":143,"pct":37.4},
+        {"channel":"Direct / None","plg":0,"demo":36,"callback":11,"total":47,"pct":12.3}
+      ]
+    }
+  },
   "weeks": [
     {
       "label": "Feb W4",
