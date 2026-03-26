@@ -547,8 +547,8 @@ td.num, th.num { text-align: center; }
   <div class="src-section">
     <div class="section-hdr"><span class="section-tag accent">§11</span><span class="section-title">Conversion Paths by Channel — Attribution</span></div>
     <div class="attr-toggle">
-      <button class="attr-btn active" data-model="first">First Touch</button>
-      <button class="attr-btn" data-model="last">Last Touch</button>
+      <button class="attr-btn" data-model="first">First Touch</button>
+      <button class="attr-btn active" data-model="last">Last Touch</button>
       <button class="attr-btn" data-model="compare">Compare</button>
     </div>
     <div class="tbl-wrap">
@@ -894,11 +894,74 @@ td.num, th.num { text-align: center; }
       '<tr style="color:rgba(96,165,250,0.85)"><td>LinkedIn Ads</td><td class="num">'+fmt(liSpendCzk)+'</td><td class="num">$'+fmt(li.spend_usd)+'</td><td class="num">'+fmt(li.clicks||0)+'</td><td class="num">0</td><td class="num crit">—</td><td class="num" style="color:var(--dim)">needs API key</td></tr>';
   }
 
-  // Attribution toggle (§11)
+  // Attribution (§11) — live PostHog query
+  var attrCache = {};
+
+  function renderAttrTable(rows, model) {
+    var tbody = document.getElementById('attr-tbody');
+    if (!tbody) return;
+    if (!rows || rows.error) {
+      tbody.innerHTML = '<tr><td colspan="6" style="color:var(--dim);font-style:italic;padding:0.5rem 0.75rem">' +
+        (rows && rows.error ? rows.error : '(local server required)') + '</td></tr>';
+      return;
+    }
+    tbody.innerHTML = rows.map(function(r) {
+      return '<tr><td class="metric-col">'+r.channel+'</td>' +
+        '<td class="num">'+r.plg+'</td>' +
+        '<td class="num">'+r.demo+'</td>' +
+        '<td class="num">'+r.callback+'</td>' +
+        '<td class="num"><strong>'+r.total+'</strong></td>' +
+        '<td class="num">'+r.pct+'%</td></tr>';
+    }).join('');
+  }
+
+  function loadAttribution(model) {
+    if (model === 'compare') {
+      // Show first+last side by side in a single fetch
+      Promise.all([
+        fetch('/api/attribution?touch=first&days=30').then(function(r){return r.json();}),
+        fetch('/api/attribution?touch=last&days=30').then(function(r){return r.json();})
+      ]).then(function(results) {
+        var first = results[0], last = results[1];
+        var tbody = document.getElementById('attr-tbody');
+        if (!tbody) return;
+        // Build channel union
+        var channels = {};
+        (Array.isArray(first)?first:[]).forEach(function(r){ channels[r.channel]=channels[r.channel]||{channel:r.channel,f_plg:0,f_demo:0,f_cb:0,f_total:0,l_plg:0,l_demo:0,l_cb:0,l_total:0}; channels[r.channel].f_plg=r.plg;channels[r.channel].f_demo=r.demo;channels[r.channel].f_cb=r.callback;channels[r.channel].f_total=r.total; });
+        (Array.isArray(last)?last:[]).forEach(function(r){ channels[r.channel]=channels[r.channel]||{channel:r.channel,f_plg:0,f_demo:0,f_cb:0,f_total:0,l_plg:0,l_demo:0,l_cb:0,l_total:0}; channels[r.channel].l_plg=r.plg;channels[r.channel].l_demo=r.demo;channels[r.channel].l_cb=r.callback;channels[r.channel].l_total=r.total; });
+        var thead = document.querySelector('#attr-tbody').closest('table').querySelector('thead tr');
+        if (thead) thead.innerHTML = '<th>Channel</th><th class="num" colspan="2">PLG (1st/Last)</th><th class="num" colspan="2">Demo (1st/Last)</th><th class="num" colspan="2">Total (1st/Last)</th>';
+        tbody.innerHTML = Object.values(channels).sort(function(a,b){return (b.f_total+b.l_total)-(a.f_total+a.l_total);}).map(function(r){
+          return '<tr><td class="metric-col">'+r.channel+'</td>' +
+            '<td class="num" colspan="2">'+r.f_plg+' / '+r.l_plg+'</td>' +
+            '<td class="num" colspan="2">'+r.f_demo+' / '+r.l_demo+'</td>' +
+            '<td class="num" colspan="2">'+r.f_total+' / '+r.l_total+'</td></tr>';
+        }).join('');
+      }).catch(function(e){ console.warn('[attr compare]', e.message); });
+      return;
+    }
+    // Reset thead for non-compare
+    var thead = document.querySelector('#attr-tbody').closest('table').querySelector('thead tr');
+    if (thead) thead.innerHTML = '<th>Channel</th><th class="num">PLG Signup</th><th class="num">Demo Lead</th><th class="num">Callback</th><th class="num">Total Converts</th><th class="num">% of Total</th>';
+
+    if (attrCache[model]) { renderAttrTable(attrCache[model], model); return; }
+    fetch('/api/attribution?touch='+model+'&days=30')
+      .then(function(r){return r.json();})
+      .then(function(rows){
+        attrCache[model] = rows;
+        renderAttrTable(rows, model);
+      })
+      .catch(function(e){
+        renderAttrTable({error: '(local server required)'}, model);
+        console.warn('[attribution]', e.message);
+      });
+  }
+
   document.querySelectorAll('.attr-btn').forEach(function(btn){
     btn.addEventListener('click',function(){
       document.querySelectorAll('.attr-btn').forEach(function(b){b.classList.remove('active');});
       btn.classList.add('active');
+      loadAttribution(btn.dataset.model);
     });
   });
 
@@ -980,6 +1043,9 @@ td.num, th.num { text-align: center; }
             refreshBtn.textContent='✓ Done';
             refreshBtn.style.color='var(--green)';
             loadConvBehavior();
+            attrCache = {};
+            var activeModel = (document.querySelector('.attr-btn.active')||{}).dataset||{};
+            loadAttribution(activeModel.model || 'last');
             return loadData();
           } else {
             throw new Error(res.error||'refresh failed');
@@ -1004,6 +1070,7 @@ td.num, th.num { text-align: center; }
 
   loadData().catch(function(e){console.error('weekly.json load failed:',e);});
   loadConvBehavior();
+  loadAttribution('last');
 })();
 </script>
 </body>
