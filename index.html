@@ -139,10 +139,27 @@ td.num, th.num { text-align: center; }
 .cb-hist-labels { display: flex; margin-top: 0.2rem; }
 .cb-hist-labels span { flex: 1; font-size: 0.42rem; color: var(--dim); text-align: center; }
 .needs-live { font-size: 0.65rem; color: var(--dim); font-style: italic; }
-/* ATTRIBUTION TABLE (§11) */
-.attr-toggle { display: flex; gap: 0.3rem; padding: 0.45rem 1.5rem 0; }
-.attr-btn { background: none; border: var(--bw) solid var(--border); color: var(--muted); font-family: var(--mono); font-size: 0.575rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.2rem 0.55rem; border-radius: 2px; cursor: pointer; }
-.attr-btn.active { background: #18181B; color: var(--text); border-color: var(--dim); }
+/* ATTRIBUTION BAR CHART (§11) */
+.attr-path-tabs { display:flex; border-bottom:1px solid var(--border); padding:0.3rem 1.5rem 0; gap:0; }
+.attr-path-btn { background:none; border:none; border-bottom:2px solid transparent; color:var(--muted); font-family:var(--mono); font-size:0.725rem; padding:0.4rem 0.9rem; cursor:pointer; margin-bottom:-1px; transition:color 0.12s,border-color 0.12s; }
+.attr-path-btn.active { color:var(--text); border-bottom-color:var(--accent); }
+.attr-model-row { padding:0.55rem 1.5rem 0; display:flex; align-items:center; gap:1rem; }
+.attr-model-label { font-size:0.575rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--dim); }
+.attr-model-select { background:#18181B; border:1px solid var(--border); color:var(--text); font-family:var(--mono); font-size:0.72rem; padding:0.25rem 1.75rem 0.25rem 0.55rem; border-radius:3px; cursor:pointer; appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2371717A' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 0.45rem center; }
+.attr-info { padding:0.4rem 1.5rem; font-size:0.7rem; color:var(--muted); line-height:1.6; }
+.attr-bar-row { display:flex; align-items:center; gap:0.75rem; padding:0.2rem 1.5rem; }
+.attr-bar-channel { font-size:0.65rem; color:var(--sub); width:10rem; flex-shrink:0; text-align:right; }
+.attr-bar-track { flex:1; height:18px; background:var(--card2); border-radius:2px; overflow:hidden; }
+.attr-bar-fill { height:100%; border-radius:2px; transition:width 0.3s; }
+.attr-bar-pct { font-size:0.65rem; color:var(--sub); width:2.5rem; flex-shrink:0; text-align:right; }
+.attr-paid-summary { padding:0.55rem 1.5rem 0.75rem; display:flex; gap:3rem; }
+.attr-paid-block { display:flex; flex-direction:column; gap:0.1rem; }
+.attr-paid-val { font-size:1.1rem; font-weight:500; }
+.attr-paid-val.paid { color:var(--accent); }
+.attr-paid-val.npaid { color:var(--sub); }
+.attr-paid-label { font-size:0.5rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--dim); }
+.attr-paid-sub { font-size:0.62rem; color:var(--muted); }
+.attr-paid-sep { display:flex; align-items:center; padding-top:0.25rem; color:var(--dim); }
 /* PAID FLOW (§12) */
 .paid-flow-grid { padding: 0.55rem 1.5rem; display: grid; grid-template-columns: 1fr 2px 1fr 2px 1fr; gap: 0; }
 .paid-flow-col { display: flex; flex-direction: column; gap: 0.3rem; }
@@ -156,6 +173,11 @@ td.num, th.num { text-align: center; }
 .paid-flow-node.linkedin { border-color: rgba(96,165,250,0.3); }
 .paid-flow-node.conv-signup { border-color: rgba(200,230,74,0.25); }
 .paid-flow-node.conv-demo { border-color: rgba(139,92,246,0.25); }
+/* SANKEY (§12) */
+.sankey-wrap { padding:0.55rem 1.5rem; }
+.sankey-svg { width:100%; max-width:760px; display:block; overflow:visible; }
+.sankey-label { font-family:"JetBrains Mono",monospace; font-size:11px; fill:#A1A1AA; }
+.sankey-sublabel { font-family:"JetBrains Mono",monospace; font-size:9px; fill:#71717A; }
 /* STATUS */
 .status-grid { padding: 0.55rem 1.5rem; display: flex; flex-direction: column; gap: 0.3rem; }
 .status-row { display: flex; align-items: center; gap: 0.7rem; padding: 0.4rem 0.7rem; background: var(--card2); border-radius: 3px; border: var(--bw) solid var(--border); }
@@ -586,48 +608,27 @@ td.num, th.num { text-align: center; }
 
   <div class="src-section">
     <div class="section-hdr"><span class="section-tag accent">§11</span><span class="section-title">Conversion Paths by Channel — Attribution</span></div>
-    <div class="attr-toggle">
-      <button class="attr-btn" data-model="first">First Touch</button>
-      <button class="attr-btn active" data-model="last">Last Touch</button>
-      <button class="attr-btn" data-model="compare">Compare</button>
+    <div class="attr-path-tabs">
+      <button class="attr-path-btn active" data-apath="plg">Signup</button>
+      <button class="attr-path-btn" data-apath="dc">Demo + Callback</button>
     </div>
-    <div class="tbl-wrap">
-      <table class="data-table">
-        <thead><tr><th>Channel</th><th class="num">PLG Signup</th><th class="num">Demo Lead</th><th class="num">Callback</th><th class="num">Total Converts</th><th class="num">% of Total</th></tr></thead>
-        <tbody id="attr-tbody">
-          <tr><td class="metric-col">Google Ads (cpc)</td><td class="num" colspan="5" style="color:var(--dim);font-style:italic">Needs PostHog API key — see HogQL §11.3</td></tr>
-          <tr><td class="metric-col">LinkedIn Ads</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
-          <tr><td class="metric-col">Google Organic</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
-          <tr><td class="metric-col">Direct / None</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
-          <tr><td class="metric-col">Other</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
-        </tbody>
-      </table>
+    <div class="attr-model-row">
+      <span class="attr-model-label">Attribution model</span>
+      <select class="attr-model-select" id="attr-model-select">
+        <option value="first">First touch</option>
+        <option value="last" selected>Last touch</option>
+      </select>
     </div>
+    <div class="attr-info" id="attr-info">—</div>
+    <div id="attr-chart"></div>
+    <div class="attr-paid-summary" id="attr-paid-summary"></div>
     <div class="insight warn">~80% Direct/None attribution expected due to UTM gaps. First-touch and last-touch will both show inflated Direct due to missing Google Ads UTM substitution (<code>{campaign}</code> bug). LinkedIn sessions underreported — backend events carry no session/UTM data.</div>
   </div>
 
   <div class="src-section">
     <div class="section-hdr"><span class="section-tag red">§12</span><span class="section-title">Paid Channel Flow — Spend → Sessions → Conversions</span></div>
-    <div class="insight info">All spend normalized to CZK (~21.1 CZK/USD for Mar 2026). Sessions = PostHog UTM-matched pageviews. Conversions = person-level any-touch model.</div>
-    <div class="paid-flow-grid" id="paid-flow-grid">
-      <div class="paid-flow-col">
-        <div class="paid-flow-hdr">Spend (CZK)</div>
-        <div class="paid-flow-node google" id="pf-google-spend"></div>
-        <div class="paid-flow-node linkedin" id="pf-linkedin-spend"></div>
-      </div>
-      <div class="paid-flow-divider"></div>
-      <div class="paid-flow-col">
-        <div class="paid-flow-hdr">PostHog Sessions</div>
-        <div class="paid-flow-node google" id="pf-google-sess"></div>
-        <div class="paid-flow-node linkedin" id="pf-linkedin-sess"></div>
-      </div>
-      <div class="paid-flow-divider"></div>
-      <div class="paid-flow-col">
-        <div class="paid-flow-hdr">Conversions (active week)</div>
-        <div class="paid-flow-node conv-signup" id="pf-google-conv"></div>
-        <div class="paid-flow-node conv-demo" id="pf-linkedin-conv"></div>
-      </div>
-    </div>
+    <div class="insight info">All spend normalized to CZK (~21.1 CZK/USD for Mar 2026). Sessions = platform-reported clicks / LP clicks (proxy — PostHog UTM broken). Conversions = active week totals.</div>
+    <div class="sankey-wrap"><svg class="sankey-svg" id="sankey-svg" viewBox="0 0 700 240" style="height:auto"></svg></div>
     <div class="tbl-wrap" style="padding-top:0.3rem">
       <table class="data-table">
         <thead><tr><th>Channel</th><th class="num">Spend CZK</th><th class="num">Spend USD eq.</th><th class="num">Clicks</th><th class="num">Conv. (DW)</th><th class="num">CPA CZK</th><th class="num">Sessions (PostHog)</th></tr></thead>
@@ -910,116 +911,178 @@ td.num, th.num { text-align: center; }
   function buildPaidFlow(){
     var w=weeks[activeIdx];
     var g=w.paid.google, li=w.paid.linkedin;
-    var czk_rate=21.1;
-    var gSpendCzk=g.spend_czk||0, liSpendCzk=Math.round((li.spend_usd||0)*czk_rate);
-    var gCpa=g.conversions>0?Math.round(gSpendCzk/g.conversions):'—';
-    var liCpa=li.conversions>0?Math.round(liSpendCzk/li.conversions):'—';
-    // flow nodes
-    var gn=document.getElementById('pf-google-spend');
-    if(gn)gn.innerHTML='<div class="pfn-label">Google Ads</div><div class="pfn-val">'+fmt(gSpendCzk)+' CZK</div><div class="pfn-sub">~$'+Math.round(gSpendCzk/25)+'</div>';
-    var ln=document.getElementById('pf-linkedin-spend');
-    if(ln)ln.innerHTML='<div class="pfn-label">LinkedIn Ads</div><div class="pfn-val">'+fmt(liSpendCzk)+' CZK</div><div class="pfn-sub">$'+fmt(li.spend_usd)+'</div>';
-    var gs=document.getElementById('pf-google-sess');
-    if(gs)gs.innerHTML='<div class="pfn-label">Google (Clicks proxy)</div><div class="pfn-val">'+fmt(g.clicks||0)+'</div><div class="pfn-sub">UTM sessions underreported (~{campaign} bug)</div>';
-    var ls=document.getElementById('pf-linkedin-sess');
-    if(ls)ls.innerHTML='<div class="pfn-label">LinkedIn (LP Clicks)</div><div class="pfn-val">'+fmt(li.lp_clicks||0)+'</div><div class="pfn-sub">BE events have no session_id</div>';
-    var gc=document.getElementById('pf-google-conv');
-    if(gc)gc.innerHTML='<div class="pfn-label">Google Ads Conv.</div><div class="pfn-val">'+(g.conversions||0)+'</div><div class="pfn-sub">CPA: '+(gCpa==='—'?'—':fmt(gCpa)+' CZK')+'</div>';
-    var lc=document.getElementById('pf-linkedin-conv');
-    if(lc)lc.innerHTML='<div class="pfn-label">LinkedIn Conv.</div><div class="pfn-val">'+li.conversions+'</div><div class="pfn-sub">Pixel not configured</div>';
-    // flow table
+    var CZK=21.1;
+    var gCzk=g.spend_czk||0, liCzk=Math.round((li.spend_usd||0)*CZK);
+    var gSess=g.clicks||0, liSess=li.lp_clicks||0;
+    var plgN=w.leads.plg_signup||0, demN=w.leads.demo_lead||0, cbN=w.leads.callback||0;
+    var gCpa=g.conversions>0?Math.round(gCzk/g.conversions):null;
+
+    // Summary table
     var tb=document.getElementById('paid-flow-tbody');
     if(tb)tb.innerHTML=
-      '<tr style="color:rgba(200,230,74,0.85)"><td>Google Ads</td><td class="num">'+fmt(gSpendCzk)+'</td><td class="num">~$'+Math.round(gSpendCzk/25)+'</td><td class="num">'+fmt(g.clicks||0)+'</td><td class="num'+(g.conversions>10?' good':'')+'">'+g.conversions+'</td><td class="num">'+gCpa+(gCpa!=='—'?' CZK':'')+'</td><td class="num" style="color:var(--dim)">needs API key</td></tr>'+
-      '<tr style="color:rgba(96,165,250,0.85)"><td>LinkedIn Ads</td><td class="num">'+fmt(liSpendCzk)+'</td><td class="num">$'+fmt(li.spend_usd)+'</td><td class="num">'+fmt(li.clicks||0)+'</td><td class="num">0</td><td class="num crit">—</td><td class="num" style="color:var(--dim)">needs API key</td></tr>';
+      '<tr style="color:rgba(200,230,74,0.85)"><td>Google Ads</td><td class="num">'+fmt(gCzk)+'</td><td class="num">~$'+Math.round(gCzk/25)+'</td><td class="num">'+fmt(gSess)+'</td><td class="num'+(g.conversions>10?' good':'')+'">'+g.conversions+'</td><td class="num">'+(gCpa?fmt(gCpa)+' CZK':'—')+'</td><td class="num" style="color:var(--dim)">UTM gap</td></tr>'+
+      '<tr style="color:rgba(96,165,250,0.85)"><td>LinkedIn Ads</td><td class="num">'+fmt(liCzk)+'</td><td class="num">$'+fmt(li.spend_usd||0)+'</td><td class="num">'+fmt(li.clicks||0)+'</td><td class="num">0</td><td class="num crit">—</td><td class="num" style="color:var(--dim)">pixel gap</td></tr>';
+
+    // SVG Sankey
+    var svg=document.getElementById('sankey-svg');
+    if(!svg)return;
+
+    var nW=148, P=22, GAP=16;
+    var cx=[10, 276, 542];
+
+    function nh(val,total,avail){ if(!total)return Math.max(22,Math.round(avail/2)); return Math.max(22,Math.round(val/total*avail)); }
+
+    var tSpend=Math.max(gCzk+liCzk,1), av1=Math.max(40,(160-GAP));
+    var gSpH=nh(gCzk,tSpend,av1), liSpH=nh(liCzk,tSpend,av1);
+
+    var tSess=Math.max(gSess+liSess,1), av2=Math.max(40,(160-GAP));
+    var gSeH=nh(gSess,tSess,av2), liSeH=nh(liSess,tSess,av2);
+
+    var tConv=Math.max(plgN+demN+cbN,1), av3=Math.max(40,(160-GAP*2));
+    var plgH=nh(plgN,tConv,av3), demH=nh(demN,tConv,av3), cbH=nh(cbN,tConv,av3);
+
+    var h1=gSpH+GAP+liSpH, h2=gSeH+GAP+liSeH, h3=plgH+GAP+demH+GAP+cbH;
+    var maxH=Math.max(h1,h2,h3);
+    var H=P+20+maxH+P;
+
+    function startY(hCol){ return 20+P+Math.round(Math.max(0,maxH-hCol)/2); }
+    var y1=startY(h1), y2=startY(h2), y3=startY(h3);
+    var gSpY=y1, liSpY=y1+gSpH+GAP;
+    var gSeY=y2, liSeY=y2+gSeH+GAP;
+    var plgY=y3, demY=y3+plgH+GAP, cbY=demY+demH+GAP;
+
+    function ribbon(x1,ys1,ye1,x2,ys2,ye2,col){
+      var mx=Math.round((x1+x2)/2);
+      return '<path d="M'+x1+','+ys1+' C'+mx+','+ys1+' '+mx+','+ys2+' '+x2+','+ys2+
+        ' L'+x2+','+ye2+' C'+mx+','+ye2+' '+mx+','+ye1+' '+x1+','+ye1+' Z" fill="'+col+'"/>';
+    }
+    function nRect(x,y,w,h,fill,stroke,lbl,s1,s2){
+      var mid=y+Math.round(h/2);
+      var ty=s1?mid-7:mid;
+      return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="3" fill="'+fill+'" stroke="'+stroke+'" stroke-width="1"/>'+
+        '<text x="'+(x+w/2)+'" y="'+ty+'" text-anchor="middle" dominant-baseline="middle" class="sankey-label">'+lbl+'</text>'+
+        (s1?'<text x="'+(x+w/2)+'" y="'+(ty+12)+'" text-anchor="middle" dominant-baseline="middle" class="sankey-sublabel">'+s1+'</text>':'')+
+        (s2?'<text x="'+(x+w/2)+'" y="'+(ty+23)+'" text-anchor="middle" dominant-baseline="middle" class="sankey-sublabel">'+s2+'</text>':'');
+    }
+
+    var r='';
+    // Ribbons (drawn behind nodes)
+    if(gCzk&&gSess) r+=ribbon(cx[0]+nW,gSpY,gSpY+gSpH,cx[1],gSeY,gSeY+gSeH,'rgba(200,230,74,0.1)');
+    if(liCzk&&liSess) r+=ribbon(cx[0]+nW,liSpY,liSpY+liSpH,cx[1],liSeY,liSeY+liSeH,'rgba(96,165,250,0.1)');
+    if(gSess&&plgN) r+=ribbon(cx[1]+nW,gSeY,gSeY+gSeH,cx[2],plgY,plgY+plgH,'rgba(200,230,74,0.09)');
+    if(liSess&&(demN+cbN)){ var liConvH=demH+GAP+cbH; r+=ribbon(cx[1]+nW,liSeY,liSeY+liSeH,cx[2],demY,demY+liConvH,'rgba(96,165,250,0.09)'); }
+
+    // Nodes
+    r+=nRect(cx[0],gSpY,nW,gSpH,'rgba(200,230,74,0.15)','rgba(200,230,74,0.3)','Google Ads',fmt(gCzk)+' CZK','~$'+Math.round(gCzk/25));
+    r+=nRect(cx[0],liSpY,nW,liSpH,'rgba(96,165,250,0.15)','rgba(96,165,250,0.3)','LinkedIn Ads',fmt(liCzk)+' CZK','$'+(li.spend_usd||0));
+    r+=nRect(cx[1],gSeY,nW,gSeH,'rgba(200,230,74,0.12)','rgba(200,230,74,0.25)','Google Ads',fmt(gSess)+' clicks','DW proxy');
+    r+=nRect(cx[1],liSeY,nW,liSeH,'rgba(96,165,250,0.12)','rgba(96,165,250,0.25)','LinkedIn Ads',fmt(liSess)+' LP clicks','LP proxy');
+    r+=nRect(cx[2],plgY,nW,plgH,'rgba(200,230,74,0.15)','rgba(200,230,74,0.3)','Signup',plgN+' people',null);
+    r+=nRect(cx[2],demY,nW,demH,'rgba(139,92,246,0.15)','rgba(139,92,246,0.3)','Demo lead',demN+' people',null);
+    r+=nRect(cx[2],cbY,nW,cbH,'rgba(249,115,22,0.15)','rgba(249,115,22,0.3)','Callback',cbN+' people',null);
+
+    // Column labels
+    r+='<text x="'+(cx[0]+nW/2)+'" y="12" text-anchor="middle" class="sankey-sublabel">Ad spend (CZK)</text>';
+    r+='<text x="'+(cx[1]+nW/2)+'" y="12" text-anchor="middle" class="sankey-sublabel">Sessions (proxy)</text>';
+    r+='<text x="'+(cx[2]+nW/2)+'" y="12" text-anchor="middle" class="sankey-sublabel">Conversions</text>';
+
+    svg.setAttribute('viewBox','0 0 700 '+H);
+    svg.innerHTML=r;
   }
 
   // Attribution (§11) — live PostHog query
   var attrCache = {};
+  var attrPath = 'plg';
 
-  function renderAttrTable(rows, model) {
-    var tbody = document.getElementById('attr-tbody');
-    if (!tbody) return;
-    if (!rows || rows.error) {
-      tbody.innerHTML = '<tr><td colspan="6" style="color:var(--dim);font-style:italic;padding:0.5rem 0.75rem">' +
-        (rows && rows.error ? rows.error : '(local server required)') + '</td></tr>';
+  function isPaidChannel(ch) {
+    var lc = (ch || '').toLowerCase();
+    return lc.indexOf('google ads') >= 0 || lc.indexOf('linkedin') >= 0 || lc.indexOf('cpc') >= 0;
+  }
+
+  function getAttrColor(ch) {
+    var lc = (ch || '').toLowerCase();
+    if (lc.indexOf('direct') >= 0 || lc.indexOf('none') >= 0) return 'rgba(113,113,122,0.65)';
+    if (lc.indexOf('organic') >= 0) return 'rgba(126,231,135,0.65)';
+    if (lc.indexOf('google ads') >= 0 || lc.indexOf('cpc') >= 0) return 'rgba(200,230,74,0.75)';
+    if (lc.indexOf('linkedin') >= 0) return 'rgba(96,165,250,0.75)';
+    return 'rgba(63,63,70,0.6)';
+  }
+
+  function renderAttrBars(rows, path, model) {
+    var chart = document.getElementById('attr-chart');
+    var info  = document.getElementById('attr-info');
+    var summary = document.getElementById('attr-paid-summary');
+    if (!chart) return;
+    if (!rows || rows.error || !Array.isArray(rows)) {
+      chart.innerHTML = '<div style="padding:0.45rem 1.5rem;color:var(--dim);font-style:italic;font-size:0.7rem">' +
+        (rows && rows.error ? rows.error : '(local server required)') + '</div>';
       return;
     }
-    tbody.innerHTML = rows.map(function(r) {
-      return '<tr><td class="metric-col">'+r.channel+'</td>' +
-        '<td class="num">'+r.plg+'</td>' +
-        '<td class="num">'+r.demo+'</td>' +
-        '<td class="num">'+r.callback+'</td>' +
-        '<td class="num"><strong>'+r.total+'</strong></td>' +
-        '<td class="num">'+r.pct+'%</td></tr>';
-    }).join('');
+    var vals = rows.map(function(r) {
+      var v = path === 'plg' ? (r.plg || 0) : ((r.demo || 0) + (r.callback || 0));
+      return { channel: r.channel, val: v };
+    });
+    var total = vals.reduce(function(s, r) { return s + r.val; }, 0) || 1;
+    vals.sort(function(a, b) { return b.val - a.val; });
+    var modelLabel = model === 'first'
+      ? 'First touch: channel of the person\'s earliest pageview in 90-day window.'
+      : 'Last touch: channel of the person\'s most recent pageview before conversion.';
+    if (info) info.textContent = total + ' converters (last 30 days, 90-day lookback). ' + modelLabel;
+    chart.innerHTML = '<div style="padding-bottom:0.35rem">' +
+      vals.map(function(r) {
+        var p = Math.round(r.val / total * 100);
+        return '<div class="attr-bar-row">' +
+          '<div class="attr-bar-channel">' + r.channel + '</div>' +
+          '<div class="attr-bar-track"><div class="attr-bar-fill" style="width:' + p + '%;background:' + getAttrColor(r.channel) + '"></div></div>' +
+          '<div class="attr-bar-pct">' + p + '%</div>' +
+        '</div>';
+      }).join('') + '</div>';
+    var paid = 0, nonPaid = 0;
+    vals.forEach(function(r) { if (isPaidChannel(r.channel)) paid += r.val; else nonPaid += r.val; });
+    var paidPct = Math.round(paid / total * 100);
+    var npPct   = Math.round(nonPaid / total * 100);
+    if (summary) summary.innerHTML =
+      '<div class="attr-paid-block"><div class="attr-paid-val paid">' + paid + '</div>' +
+        '<div class="attr-paid-label">Paid channels</div>' +
+        '<div class="attr-paid-sub">' + paidPct + '% of conversions</div></div>' +
+      '<div class="attr-paid-sep">↓</div>' +
+      '<div class="attr-paid-block"><div class="attr-paid-val npaid">' + nonPaid + '</div>' +
+        '<div class="attr-paid-label">Non-paid</div>' +
+        '<div class="attr-paid-sub">' + npPct + '% of conversions</div></div>';
   }
 
   function loadAttribution(model) {
-    if (model === 'compare') {
-      // Show first+last side by side in a single fetch
-      Promise.all([
-        fetch('/api/attribution?touch=first&days=30').then(function(r){return r.json();}),
-        fetch('/api/attribution?touch=last&days=30').then(function(r){return r.json();})
-      ]).then(function(results) {
-        var first = results[0], last = results[1];
-        var tbody = document.getElementById('attr-tbody');
-        if (!tbody) return;
-        // Build channel union
-        var channels = {};
-        (Array.isArray(first)?first:[]).forEach(function(r){ channels[r.channel]=channels[r.channel]||{channel:r.channel,f_plg:0,f_demo:0,f_cb:0,f_total:0,l_plg:0,l_demo:0,l_cb:0,l_total:0}; channels[r.channel].f_plg=r.plg;channels[r.channel].f_demo=r.demo;channels[r.channel].f_cb=r.callback;channels[r.channel].f_total=r.total; });
-        (Array.isArray(last)?last:[]).forEach(function(r){ channels[r.channel]=channels[r.channel]||{channel:r.channel,f_plg:0,f_demo:0,f_cb:0,f_total:0,l_plg:0,l_demo:0,l_cb:0,l_total:0}; channels[r.channel].l_plg=r.plg;channels[r.channel].l_demo=r.demo;channels[r.channel].l_cb=r.callback;channels[r.channel].l_total=r.total; });
-        var thead = document.querySelector('#attr-tbody').closest('table').querySelector('thead tr');
-        if (thead) thead.innerHTML = '<th>Channel</th><th class="num" colspan="2">PLG (1st/Last)</th><th class="num" colspan="2">Demo (1st/Last)</th><th class="num" colspan="2">Total (1st/Last)</th>';
-        tbody.innerHTML = Object.values(channels).sort(function(a,b){return (b.f_total+b.l_total)-(a.f_total+a.l_total);}).map(function(r){
-          return '<tr><td class="metric-col">'+r.channel+'</td>' +
-            '<td class="num" colspan="2">'+r.f_plg+' / '+r.l_plg+'</td>' +
-            '<td class="num" colspan="2">'+r.f_demo+' / '+r.l_demo+'</td>' +
-            '<td class="num" colspan="2">'+r.f_total+' / '+r.l_total+'</td></tr>';
-        }).join('');
-      }).catch(function(e){
-        // fallback: use static data for both models
-        var first = (staticLive.attribution || {}).first || [];
-        var last  = (staticLive.attribution || {}).last  || [];
-        if (first.length || last.length) {
-          var channels = {};
-          first.forEach(function(r){ channels[r.channel]=channels[r.channel]||{channel:r.channel,f_plg:0,f_demo:0,f_cb:0,f_total:0,l_plg:0,l_demo:0,l_cb:0,l_total:0}; channels[r.channel].f_plg=r.plg;channels[r.channel].f_demo=r.demo;channels[r.channel].f_cb=r.callback;channels[r.channel].f_total=r.total; });
-          last.forEach(function(r){ channels[r.channel]=channels[r.channel]||{channel:r.channel,f_plg:0,f_demo:0,f_cb:0,f_total:0,l_plg:0,l_demo:0,l_cb:0,l_total:0}; channels[r.channel].l_plg=r.plg;channels[r.channel].l_demo=r.demo;channels[r.channel].l_cb=r.callback;channels[r.channel].l_total=r.total; });
-          var thead = document.querySelector('#attr-tbody').closest('table').querySelector('thead tr');
-          if (thead) thead.innerHTML = '<th>Channel</th><th class="num" colspan="2">PLG (1st/Last)</th><th class="num" colspan="2">Demo (1st/Last)</th><th class="num" colspan="2">Total (1st/Last)</th>';
-          var tbody = document.getElementById('attr-tbody');
-          if (tbody) tbody.innerHTML = Object.values(channels).sort(function(a,b){return (b.f_total+b.l_total)-(a.f_total+a.l_total);}).map(function(r){ return '<tr><td class="metric-col">'+r.channel+'</td><td class="num" colspan="2">'+r.f_plg+' / '+r.l_plg+'</td><td class="num" colspan="2">'+r.f_demo+' / '+r.l_demo+'</td><td class="num" colspan="2">'+r.f_total+' / '+r.l_total+'</td></tr>'; }).join('');
-        }
-        console.warn('[attr compare] using static fallback:', e.message);
-      });
-      return;
-    }
-    // Reset thead for non-compare
-    var thead = document.querySelector('#attr-tbody').closest('table').querySelector('thead tr');
-    if (thead) thead.innerHTML = '<th>Channel</th><th class="num">PLG Signup</th><th class="num">Demo Lead</th><th class="num">Callback</th><th class="num">Total Converts</th><th class="num">% of Total</th>';
-
-    if (attrCache[model]) { renderAttrTable(attrCache[model], model); return; }
-    fetch('/api/attribution?touch='+model+'&days=30')
-      .then(function(r){return r.json();})
-      .then(function(rows){
+    if (attrCache[model]) { renderAttrBars(attrCache[model], attrPath, model); return; }
+    fetch('/api/attribution?touch=' + model + '&days=30')
+      .then(function(r) { return r.json(); })
+      .then(function(rows) {
         attrCache[model] = rows;
-        renderAttrTable(rows, model);
+        renderAttrBars(rows, attrPath, model);
       })
-      .catch(function(e){
+      .catch(function(e) {
         var fallback = (staticLive.attribution || {})[model];
-        if (fallback) { attrCache[model] = fallback; renderAttrTable(fallback, model); }
-        else { renderAttrTable({error: '(local server required)'}, model); }
+        if (fallback) { attrCache[model] = fallback; renderAttrBars(fallback, attrPath, model); }
+        else { renderAttrBars({ error: '(local server required)' }, attrPath, model); }
         console.warn('[attribution] using static fallback:', e.message);
       });
   }
 
-  document.querySelectorAll('.attr-btn').forEach(function(btn){
-    btn.addEventListener('click',function(){
-      document.querySelectorAll('.attr-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.attr-path-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.attr-path-btn').forEach(function(b) { b.classList.remove('active'); });
       btn.classList.add('active');
-      loadAttribution(btn.dataset.model);
+      attrPath = btn.dataset.apath;
+      var model = (document.getElementById('attr-model-select') || {}).value || 'last';
+      if (attrCache[model]) renderAttrBars(attrCache[model], attrPath, model);
     });
   });
+
+  var attrSel = document.getElementById('attr-model-select');
+  if (attrSel) {
+    attrSel.addEventListener('change', function() {
+      loadAttribution(this.value);
+    });
+  }
 
   function refreshAll(){buildKpi();buildReach();buildSources();buildEng();buildLeads();buildMql();buildFunnel();buildSplitBar();buildPaidFlow();buildSourcePage();}
 
@@ -1183,8 +1246,8 @@ td.num, th.num { text-align: center; }
             loadConvBehavior();
             loadPaidParticipation();
             attrCache = {};
-            var activeModel = (document.querySelector('.attr-btn.active')||{}).dataset||{};
-            loadAttribution(activeModel.model || 'last');
+            var activeModel = (document.getElementById('attr-model-select')||{}).value || 'last';
+            loadAttribution(activeModel);
             return loadData();
           } else {
             throw new Error(res.error||'refresh failed');
