@@ -1040,6 +1040,21 @@ td.num, th.num { text-align: center; }
     }).join('');
   }
 
+  function fillConvPath(prefix, path) {
+    var nd = function(id){ return document.getElementById(id); };
+    var fmt = function(v){ return v === null ? '—' : v; };
+    nd(prefix+'-avg-days') && (nd(prefix+'-avg-days').textContent = fmt(path.avg_days));
+    nd(prefix+'-med-days') && (nd(prefix+'-med-days').textContent = fmt(path.med_days));
+    nd(prefix+'-avg-sess') && (nd(prefix+'-avg-sess').textContent = fmt(path.avg_sessions));
+    nd(prefix+'-med-sess') && (nd(prefix+'-med-sess').textContent = fmt(path.med_sessions));
+    nd(prefix+'-td-avg-days') && (nd(prefix+'-td-avg-days').textContent = fmt(path.avg_days));
+    nd(prefix+'-td-med-days') && (nd(prefix+'-td-med-days').textContent = fmt(path.med_days));
+    nd(prefix+'-td-avg-sess') && (nd(prefix+'-td-avg-sess').textContent = fmt(path.avg_sessions));
+    nd(prefix+'-td-med-sess') && (nd(prefix+'-td-med-sess').textContent = fmt(path.med_sessions));
+    nd(prefix+'-td-conv')    && (nd(prefix+'-td-conv').textContent    = path.converters || 0);
+    renderHist(nd(prefix+'-hist'), path.histogram || [0,0,0,0,0,0]);
+  }
+
   function loadConvBehavior() {
     fetch('/api/conv-behavior')
       .then(function(r){ return r.json(); })
@@ -1048,28 +1063,20 @@ td.num, th.num { text-align: center; }
         var cbStatus = document.getElementById('cb-status');
         if (cbStatus) cbStatus.textContent = '';
 
-        function fill(prefix, path) {
-          var nd = function(id){ return document.getElementById(id); };
-          var fmt = function(v){ return v === null ? '—' : v; };
-          nd(prefix+'-avg-days') && (nd(prefix+'-avg-days').textContent = fmt(path.avg_days));
-          nd(prefix+'-med-days') && (nd(prefix+'-med-days').textContent = fmt(path.med_days));
-          nd(prefix+'-avg-sess') && (nd(prefix+'-avg-sess').textContent = fmt(path.avg_sessions));
-          nd(prefix+'-med-sess') && (nd(prefix+'-med-sess').textContent = fmt(path.med_sessions));
-          nd(prefix+'-td-avg-days') && (nd(prefix+'-td-avg-days').textContent = fmt(path.avg_days));
-          nd(prefix+'-td-med-days') && (nd(prefix+'-td-med-days').textContent = fmt(path.med_days));
-          nd(prefix+'-td-avg-sess') && (nd(prefix+'-td-avg-sess').textContent = fmt(path.avg_sessions));
-          nd(prefix+'-td-med-sess') && (nd(prefix+'-td-med-sess').textContent = fmt(path.med_sessions));
-          nd(prefix+'-td-conv')    && (nd(prefix+'-td-conv').textContent    = path.converters || 0);
-          renderHist(nd(prefix+'-hist'), path.histogram || [0,0,0,0,0,0]);
-        }
-
-        fill('cb-plg', d.plg);
-        fill('cb-dc',  d.demo_callback);
+        fillConvPath('cb-plg', d.plg);
+        fillConvPath('cb-dc',  d.demo_callback);
       })
       .catch(function(e){
         var cbStatus = document.getElementById('cb-status');
-        if (cbStatus) cbStatus.textContent = '(local server required)';
-        console.warn('[conv-behavior] not available:', e.message);
+        var fallback = staticLive.conv_behavior;
+        if (fallback) {
+          if (cbStatus) cbStatus.textContent = '(static snapshot)';
+          fillConvPath('cb-plg', fallback.plg);
+          fillConvPath('cb-dc',  fallback.demo_callback);
+        } else {
+          if (cbStatus) cbStatus.textContent = '(local server required)';
+        }
+        console.warn('[conv-behavior] using static fallback:', e.message);
       });
   }
 
