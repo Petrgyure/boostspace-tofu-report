@@ -13,15 +13,18 @@
       "plg":           {"avg_days":2.9,"med_days":0,"avg_sessions":3.7,"med_sessions":1,"converters":295,"histogram":[256,3,9,6,8,13]},
       "demo_callback": {"avg_days":12.8,"med_days":0,"avg_sessions":19.8,"med_sessions":1,"converters":17,"histogram":[12,0,0,1,1,3]}
     },
-    "attribution_as_of": "2026-03-26",
+    "paid_participation": {
+      "plg": {"total":305,"gads_people":0,"gads_pct":0,"gads_sessions":0,"gads_sess_pct":0,"li_people":0,"li_pct":0,"li_sessions":0,"li_sess_pct":0,"total_sessions":1088},
+      "dc":  {"total":51,"gads_people":0,"gads_pct":0,"gads_sessions":0,"gads_sess_pct":0,"li_people":0,"li_pct":0,"li_sessions":0,"li_sess_pct":0,"total_sessions":339}
+    },
     "attribution": {
       "first": [
-        {"channel":"Direct / None","plg":306,"demo":51,"callback":25,"total":382,"pct":100}
+        {"channel":"Direct / None","plg":296,"demo":51,"callback":25,"total":372,"pct":100}
       ],
       "last": [
-        {"channel":"Other","plg":178,"demo":6,"callback":8,"total":192,"pct":50.3},
-        {"channel":"Google Organic","plg":128,"demo":9,"callback":6,"total":143,"pct":37.4},
-        {"channel":"Direct / None","plg":0,"demo":36,"callback":11,"total":47,"pct":12.3}
+        {"channel":"Other","plg":175,"demo":6,"callback":8,"total":189,"pct":50.8},
+        {"channel":"Google Organic","plg":121,"demo":9,"callback":6,"total":136,"pct":36.6},
+        {"channel":"Direct / None","plg":0,"demo":36,"callback":11,"total":47,"pct":12.6}
       ]
     }
   },

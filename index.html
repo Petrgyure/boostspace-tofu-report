@@ -1125,8 +1125,15 @@ td.num, th.num { text-align: center; }
       })
       .catch(function(e){
         var ppStatus = document.getElementById('pp-status');
-        if (ppStatus) ppStatus.textContent = '(local server required)';
-        console.warn('[paid-participation] not available:', e.message);
+        var fallback = staticLive.paid_participation;
+        if (fallback) {
+          ppData = fallback;
+          if (ppStatus) ppStatus.textContent = '(static snapshot)';
+          renderPp(ppActive === 'plg' ? fallback.plg : fallback.dc);
+        } else {
+          if (ppStatus) ppStatus.textContent = '(local server required)';
+        }
+        console.warn('[paid-participation] using static fallback:', e.message);
       });
   }
 
