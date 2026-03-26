@@ -1,59 +1,13 @@
 {
   "_meta": {
     "source": "PostHog EU — project 100634",
-    "updated_at": "2026-03-26T10:00:00.000Z",
-    "updated_by": "manual — v2 lead definitions",
-    "next_update": "2026-03-30T07:00:00.000Z",
+    "updated_at": "2026-03-26T13:37:00.000Z",
+    "updated_by": "PostHog HogQL + Google Ads DW + LinkedIn Ads DW",
+    "next_update": "2026-04-06T07:00:00.000Z",
     "version": 3,
     "notes": "v3: aligned with boostspace-tofu-report-instructions v2.md. PLG Signup = sign_up_lead_email only. sign_up (account creation) removed from lead totals — tracked separately as sign_up_account for funnel view. Total leads = plg_signup + demo_lead + callback + waiting_list + newsletter."
   },
   "weeks": [
-    {
-      "label": "Feb W3",
-      "range": "2026-02-17 – 2026-02-23",
-      "start": "2026-02-17",
-      "end": "2026-02-23",
-      "reach": {
-        "pageviews": 12797,
-        "unique_visitors": 7745,
-        "sessions": 8630,
-        "pages_per_session": 1.48
-      },
-      "engagement": {
-        "cta_clicks": 130,
-        "cta_click_rate": 1.68,
-        "install_views": 450,
-        "pricing_selections": 27
-      },
-      "leads": {
-        "total_leads": 82,
-        "cvr": 1.06,
-        "plg_signup": 47,
-        "sign_up_account": 75,
-        "demo_lead": 24,
-        "callback": 0,
-        "waiting_list": 4,
-        "newsletter": 7
-      },
-      "mql": {
-        "leady_new_lead": 0
-      },
-      "paid": {
-        "google": {
-          "impressions": 0,
-          "clicks": 0,
-          "spend_czk": 0,
-          "conversions": 0
-        },
-        "linkedin": {
-          "impressions": 357713,
-          "clicks": 4225,
-          "lp_clicks": 1827,
-          "spend_usd": 6119,
-          "conversions": 0
-        }
-      }
-    },
     {
       "label": "Feb W4",
       "range": "2026-02-24 – 2026-03-01",
@@ -234,6 +188,53 @@
           "clicks": 193,
           "lp_clicks": 18,
           "spend_usd": 645,
+          "conversions": 0
+        }
+      }
+    },
+    {
+      "label": "Mar W4",
+      "range": "2026-03-23 – 2026-03-26",
+      "start": "2026-03-23",
+      "end": "2026-03-26",
+      "_note": "Partial week — 4 days (Mon–Thu). Full week ends Mar 29.",
+      "reach": {
+        "pageviews": 3174,
+        "unique_visitors": 1681,
+        "sessions": 1852,
+        "pages_per_session": 1.71
+      },
+      "engagement": {
+        "cta_clicks": 0,
+        "cta_click_rate": 0.0,
+        "install_views": 177,
+        "pricing_selections": 12
+      },
+      "leads": {
+        "total_leads": 71,
+        "cvr": 4.22,
+        "plg_signup": 54,
+        "sign_up_account": 12,
+        "demo_lead": 6,
+        "callback": 7,
+        "waiting_list": 2,
+        "newsletter": 2
+      },
+      "mql": {
+        "leady_new_lead": 18
+      },
+      "paid": {
+        "google": {
+          "impressions": 35130,
+          "clicks": 630,
+          "spend_czk": 28632,
+          "conversions": 21
+        },
+        "linkedin": {
+          "impressions": 2850,
+          "clicks": 100,
+          "lp_clicks": 9,
+          "spend_usd": 363,
           "conversions": 0
         }
       }
