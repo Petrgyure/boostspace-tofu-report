@@ -117,6 +117,45 @@ td.num, th.num { text-align: center; }
 .funnel-vol.crit { color: var(--error); }
 .funnel-cvr { font-size: 0.575rem; color: var(--muted); margin-top: 0.08rem; }
 .funnel-trend { font-size: 0.55rem; color: var(--muted); margin-top: 0.1rem; }
+/* SPLIT BAR (SLG funnel) */
+.split-bar-wrap { padding: 0.55rem 1.5rem 0.7rem; }
+.split-bar-track { height: 22px; background: var(--card2); border-radius: 3px; overflow: hidden; display: flex; border: var(--bw) solid var(--border); }
+.split-bar-seg { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 0.525rem; font-weight: 500; transition: width 0.3s; white-space: nowrap; overflow: hidden; }
+.split-bar-seg.demo { background: rgba(139,92,246,0.55); color: #ddd6fe; }
+.split-bar-seg.callback { background: rgba(249,115,22,0.55); color: #fed7aa; }
+.split-bar-legend { display: flex; gap: 1rem; margin-top: 0.35rem; font-size: 0.6rem; color: var(--sub); }
+.split-bar-legend span { display: flex; align-items: center; gap: 0.35rem; }
+.split-bar-legend .dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+/* CONVERSION BEHAVIOR (§10) */
+.conv-behavior-grid { padding: 0.55rem 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem; }
+.cb-card { background: var(--card2); border: var(--bw) solid var(--border); border-radius: 3px; padding: 0.65rem 0.9rem; }
+.cb-label { font-size: 0.475rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--dim); margin-bottom: 0.4rem; }
+.cb-metrics { display: flex; gap: 1.5rem; }
+.cb-metric { display: flex; flex-direction: column; gap: 0.1rem; }
+.cb-val { font-size: 1.05rem; font-weight: 500; color: var(--text); }
+.cb-sub { font-size: 0.55rem; color: var(--muted); }
+.cb-hist { margin-top: 0.5rem; display: flex; gap: 2px; align-items: flex-end; height: 32px; }
+.cb-hist-bar { flex: 1; background: rgba(200,230,74,0.3); border-radius: 1px; min-height: 2px; }
+.cb-hist-labels { display: flex; margin-top: 0.2rem; }
+.cb-hist-labels span { flex: 1; font-size: 0.42rem; color: var(--dim); text-align: center; }
+.needs-live { font-size: 0.65rem; color: var(--dim); font-style: italic; }
+/* ATTRIBUTION TABLE (§11) */
+.attr-toggle { display: flex; gap: 0.3rem; padding: 0.45rem 1.5rem 0; }
+.attr-btn { background: none; border: var(--bw) solid var(--border); color: var(--muted); font-family: var(--mono); font-size: 0.575rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.2rem 0.55rem; border-radius: 2px; cursor: pointer; }
+.attr-btn.active { background: #18181B; color: var(--text); border-color: var(--dim); }
+/* PAID FLOW (§12) */
+.paid-flow-grid { padding: 0.55rem 1.5rem; display: grid; grid-template-columns: 1fr 2px 1fr 2px 1fr; gap: 0; }
+.paid-flow-col { display: flex; flex-direction: column; gap: 0.3rem; }
+.paid-flow-divider { background: var(--border); align-self: stretch; margin: 0 0.7rem; }
+.paid-flow-hdr { font-size: 0.475rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--dim); margin-bottom: 0.25rem; }
+.paid-flow-node { background: var(--card2); border: var(--bw) solid var(--border); border-radius: 3px; padding: 0.5rem 0.75rem; }
+.paid-flow-node .pfn-label { font-size: 0.6rem; color: var(--sub); }
+.paid-flow-node .pfn-val { font-size: 0.9rem; font-weight: 500; color: var(--text); margin: 0.1rem 0; }
+.paid-flow-node .pfn-sub { font-size: 0.525rem; color: var(--dim); }
+.paid-flow-node.google { border-color: rgba(200,230,74,0.3); }
+.paid-flow-node.linkedin { border-color: rgba(96,165,250,0.3); }
+.paid-flow-node.conv-signup { border-color: rgba(200,230,74,0.25); }
+.paid-flow-node.conv-demo { border-color: rgba(139,92,246,0.25); }
 /* STATUS */
 .status-grid { padding: 0.55rem 1.5rem; display: flex; flex-direction: column; gap: 0.3rem; }
 .status-row { display: flex; align-items: center; gap: 0.7rem; padding: 0.4rem 0.7rem; background: var(--card2); border-radius: 3px; border: var(--bw) solid var(--border); }
@@ -357,7 +396,52 @@ td.num, th.num { text-align: center; }
       <div class="funnel-col">
         <div class="funnel-col-hdr">SLG — Demo &amp; Callback</div>
         <div class="funnel-row" id="funnel-slg"></div>
+        <div class="split-bar-wrap">
+          <div class="split-bar-track" id="slg-split-bar"></div>
+          <div class="split-bar-legend">
+            <span><span class="dot" style="background:rgba(139,92,246,0.7)"></span><span id="slg-demo-label">Demo Lead</span></span>
+            <span><span class="dot" style="background:rgba(249,115,22,0.7)"></span><span id="slg-cb-label">Callback</span></span>
+          </div>
+        </div>
       </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-hdr"><span class="section-tag">§10</span><span class="section-title">Conversion Behavior — Time &amp; Session Depth</span></div>
+    <div class="insight info">How long does it take people to convert? How many sessions before they submit? Split by PLG Signup vs Demo + Callback. Requires live PostHog query (90-day lookback).</div>
+    <div class="conv-behavior-grid" id="conv-behavior-grid">
+      <div class="cb-card">
+        <div class="cb-label">PLG Signup path — avg days to convert</div>
+        <div class="cb-metrics">
+          <div class="cb-metric"><div class="cb-val" id="cb-plg-avg-days">—</div><div class="cb-sub">avg days</div></div>
+          <div class="cb-metric"><div class="cb-val" id="cb-plg-med-days">—</div><div class="cb-sub">median</div></div>
+          <div class="cb-metric"><div class="cb-val" id="cb-plg-avg-sess">—</div><div class="cb-sub">avg sessions</div></div>
+          <div class="cb-metric"><div class="cb-val" id="cb-plg-med-sess">—</div><div class="cb-sub">median sess.</div></div>
+        </div>
+        <div class="cb-hist" id="cb-plg-hist"></div>
+        <div class="cb-hist-labels"><span>same day</span><span>1d</span><span>2–6d</span><span>7–13d</span><span>14–29d</span><span>30+</span></div>
+      </div>
+      <div class="cb-card">
+        <div class="cb-label">Demo + Callback path — avg days to convert</div>
+        <div class="cb-metrics">
+          <div class="cb-metric"><div class="cb-val" id="cb-dc-avg-days">—</div><div class="cb-sub">avg days</div></div>
+          <div class="cb-metric"><div class="cb-val" id="cb-dc-med-days">—</div><div class="cb-sub">median</div></div>
+          <div class="cb-metric"><div class="cb-val" id="cb-dc-avg-sess">—</div><div class="cb-sub">avg sessions</div></div>
+          <div class="cb-metric"><div class="cb-val" id="cb-dc-med-sess">—</div><div class="cb-sub">median sess.</div></div>
+        </div>
+        <div class="cb-hist" id="cb-dc-hist"></div>
+        <div class="cb-hist-labels"><span>same day</span><span>1d</span><span>2–6d</span><span>7–13d</span><span>14–29d</span><span>30+</span></div>
+      </div>
+    </div>
+    <div class="tbl-wrap" style="padding-top:0">
+      <table class="data-table">
+        <thead><tr><th>Conversion Type</th><th class="num">Avg Days</th><th class="num">Median Days</th><th class="num">Avg Sessions</th><th class="num">Median Sessions</th><th class="num">Converters (30d)</th></tr></thead>
+        <tbody id="conv-behavior-tbody">
+          <tr><td class="metric-col">PLG Signup</td><td class="num" colspan="5" style="color:var(--dim);font-style:italic">Needs PostHog API key — see HogQL §10.1 / §10.2</td></tr>
+          <tr><td class="metric-col">Demo + Callback</td><td class="num" colspan="5" style="color:var(--dim);font-style:italic">Needs PostHog API key — see HogQL §10.1 / §10.2</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -457,6 +541,58 @@ td.num, th.num { text-align: center; }
       </table>
     </div>
     <div class="insight critical"><strong>LinkedIn pixel has zero recorded conversions across all 5 weeks.</strong> Cannot attribute any MQL to LinkedIn. Google conversions spiked to 27 in Mar W3 — validate conversion event definition.</div>
+  </div>
+
+  <div class="src-section">
+    <div class="section-hdr"><span class="section-tag accent">§11</span><span class="section-title">Conversion Paths by Channel — Attribution</span></div>
+    <div class="attr-toggle">
+      <button class="attr-btn active" data-model="first">First Touch</button>
+      <button class="attr-btn" data-model="last">Last Touch</button>
+      <button class="attr-btn" data-model="compare">Compare</button>
+    </div>
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Channel</th><th class="num">PLG Signup</th><th class="num">Demo Lead</th><th class="num">Callback</th><th class="num">Total Converts</th><th class="num">% of Total</th></tr></thead>
+        <tbody id="attr-tbody">
+          <tr><td class="metric-col">Google Ads (cpc)</td><td class="num" colspan="5" style="color:var(--dim);font-style:italic">Needs PostHog API key — see HogQL §11.3</td></tr>
+          <tr><td class="metric-col">LinkedIn Ads</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr><td class="metric-col">Google Organic</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr><td class="metric-col">Direct / None</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr><td class="metric-col">Other</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="insight warn">~80% Direct/None attribution expected due to UTM gaps. First-touch and last-touch will both show inflated Direct due to missing Google Ads UTM substitution (<code>{campaign}</code> bug). LinkedIn sessions underreported — backend events carry no session/UTM data.</div>
+  </div>
+
+  <div class="src-section">
+    <div class="section-hdr"><span class="section-tag red">§12</span><span class="section-title">Paid Channel Flow — Spend → Sessions → Conversions</span></div>
+    <div class="insight info">All spend normalized to CZK (~21.1 CZK/USD for Mar 2026). Sessions = PostHog UTM-matched pageviews. Conversions = person-level any-touch model.</div>
+    <div class="paid-flow-grid" id="paid-flow-grid">
+      <div class="paid-flow-col">
+        <div class="paid-flow-hdr">Spend (CZK)</div>
+        <div class="paid-flow-node google" id="pf-google-spend"></div>
+        <div class="paid-flow-node linkedin" id="pf-linkedin-spend"></div>
+      </div>
+      <div class="paid-flow-divider"></div>
+      <div class="paid-flow-col">
+        <div class="paid-flow-hdr">PostHog Sessions</div>
+        <div class="paid-flow-node google" id="pf-google-sess"></div>
+        <div class="paid-flow-node linkedin" id="pf-linkedin-sess"></div>
+      </div>
+      <div class="paid-flow-divider"></div>
+      <div class="paid-flow-col">
+        <div class="paid-flow-hdr">Conversions (active week)</div>
+        <div class="paid-flow-node conv-signup" id="pf-google-conv"></div>
+        <div class="paid-flow-node conv-demo" id="pf-linkedin-conv"></div>
+      </div>
+    </div>
+    <div class="tbl-wrap" style="padding-top:0.3rem">
+      <table class="data-table">
+        <thead><tr><th>Channel</th><th class="num">Spend CZK</th><th class="num">Spend USD eq.</th><th class="num">Clicks</th><th class="num">Conv. (DW)</th><th class="num">CPA CZK</th><th class="num">Sessions (PostHog)</th></tr></thead>
+        <tbody id="paid-flow-tbody"></tbody>
+      </table>
+    </div>
   </div>
 
   <div class="src-section">
@@ -716,7 +852,56 @@ td.num, th.num { text-align: center; }
     }}});
   }
 
-  function refreshAll(){buildKpi();buildReach();buildSources();buildEng();buildLeads();buildMql();buildFunnel();buildSourcePage();}
+  function buildSplitBar(){
+    var w=weeks[activeIdx];
+    var demo=w.leads.demo_lead||0, cb=w.leads.callback||0, total=demo+cb;
+    var bar=document.getElementById('slg-split-bar');
+    if(!bar)return;
+    if(total===0){bar.innerHTML='<div class="split-bar-seg demo" style="width:50%">0</div><div class="split-bar-seg callback" style="width:50%">0</div>';}
+    else{
+      var dp=Math.round(demo/total*100), cp=100-dp;
+      bar.innerHTML='<div class="split-bar-seg demo" style="width:'+dp+'%">'+(dp>15?demo+' demo':'')+'</div><div class="split-bar-seg callback" style="width:'+cp+'%">'+(cp>15?cb+' cb':'')+'</div>';
+    }
+    document.getElementById('slg-demo-label').textContent='Demo Lead — '+demo+' ('+Math.round(demo/(total||1)*100)+'%)';
+    document.getElementById('slg-cb-label').textContent='Callback — '+cb+' ('+Math.round(cb/(total||1)*100)+'%)';
+  }
+
+  function buildPaidFlow(){
+    var w=weeks[activeIdx];
+    var g=w.paid.google, li=w.paid.linkedin;
+    var czk_rate=21.1;
+    var gSpendCzk=g.spend_czk||0, liSpendCzk=Math.round((li.spend_usd||0)*czk_rate);
+    var gCpa=g.conversions>0?Math.round(gSpendCzk/g.conversions):'—';
+    var liCpa=li.conversions>0?Math.round(liSpendCzk/li.conversions):'—';
+    // flow nodes
+    var gn=document.getElementById('pf-google-spend');
+    if(gn)gn.innerHTML='<div class="pfn-label">Google Ads</div><div class="pfn-val">'+fmt(gSpendCzk)+' CZK</div><div class="pfn-sub">~$'+Math.round(gSpendCzk/25)+'</div>';
+    var ln=document.getElementById('pf-linkedin-spend');
+    if(ln)ln.innerHTML='<div class="pfn-label">LinkedIn Ads</div><div class="pfn-val">'+fmt(liSpendCzk)+' CZK</div><div class="pfn-sub">$'+fmt(li.spend_usd)+'</div>';
+    var gs=document.getElementById('pf-google-sess');
+    if(gs)gs.innerHTML='<div class="pfn-label">Google (Clicks proxy)</div><div class="pfn-val">'+fmt(g.clicks||0)+'</div><div class="pfn-sub">UTM sessions underreported (~{campaign} bug)</div>';
+    var ls=document.getElementById('pf-linkedin-sess');
+    if(ls)ls.innerHTML='<div class="pfn-label">LinkedIn (LP Clicks)</div><div class="pfn-val">'+fmt(li.lp_clicks||0)+'</div><div class="pfn-sub">BE events have no session_id</div>';
+    var gc=document.getElementById('pf-google-conv');
+    if(gc)gc.innerHTML='<div class="pfn-label">Google Ads Conv.</div><div class="pfn-val">'+(g.conversions||0)+'</div><div class="pfn-sub">CPA: '+(gCpa==='—'?'—':fmt(gCpa)+' CZK')+'</div>';
+    var lc=document.getElementById('pf-linkedin-conv');
+    if(lc)lc.innerHTML='<div class="pfn-label">LinkedIn Conv.</div><div class="pfn-val">'+li.conversions+'</div><div class="pfn-sub">Pixel not configured</div>';
+    // flow table
+    var tb=document.getElementById('paid-flow-tbody');
+    if(tb)tb.innerHTML=
+      '<tr style="color:rgba(200,230,74,0.85)"><td>Google Ads</td><td class="num">'+fmt(gSpendCzk)+'</td><td class="num">~$'+Math.round(gSpendCzk/25)+'</td><td class="num">'+fmt(g.clicks||0)+'</td><td class="num'+(g.conversions>10?' good':'')+'">'+g.conversions+'</td><td class="num">'+gCpa+(gCpa!=='—'?' CZK':'')+'</td><td class="num" style="color:var(--dim)">needs API key</td></tr>'+
+      '<tr style="color:rgba(96,165,250,0.85)"><td>LinkedIn Ads</td><td class="num">'+fmt(liSpendCzk)+'</td><td class="num">$'+fmt(li.spend_usd)+'</td><td class="num">'+fmt(li.clicks||0)+'</td><td class="num">0</td><td class="num crit">—</td><td class="num" style="color:var(--dim)">needs API key</td></tr>';
+  }
+
+  // Attribution toggle (§11)
+  document.querySelectorAll('.attr-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('.attr-btn').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+    });
+  });
+
+  function refreshAll(){buildKpi();buildReach();buildSources();buildEng();buildLeads();buildMql();buildFunnel();buildSplitBar();buildPaidFlow();buildSourcePage();}
 
   function buildWeekTabs(){
     var c=document.getElementById('wk-tabs');
