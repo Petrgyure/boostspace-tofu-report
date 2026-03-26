@@ -3,9 +3,10 @@
   "configurations": [
     {
       "name": "tofu-report",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "5055"],
-      "port": 5055
+      "runtimeExecutable": "/Users/petrgyure/.nvm/versions/node/v20.18.1/bin/node",
+      "runtimeArgs": ["./node_modules/.bin/vite", "preview", "--host"],
+      "port": 5055,
+      "autoPort": true
     }
   ]
 }

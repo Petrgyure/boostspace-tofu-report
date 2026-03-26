@@ -447,6 +447,46 @@ td.num, th.num { text-align: center; }
   </div>
 
   <div class="section">
+    <div class="section-hdr"><span class="section-tag">§10.3</span><span class="section-title">Paid Channel Participation in Converting Visits</span></div>
+    <div class="insight info">Any-touch: of all sessions by converters in a 90-day window, what share came from paid channels? <span id="pp-status" style="color:var(--dim);font-style:italic">Loading…</span></div>
+    <div class="cb-tabs" style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:1rem">
+      <button class="cb-tab-btn active" data-pp="plg" style="background:none;border:none;border-bottom:2px solid var(--accent);color:var(--text);font-size:0.85rem;padding:0.5rem 1rem;cursor:pointer;margin-bottom:-1px">Signup</button>
+      <button class="cb-tab-btn" data-pp="dc" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:0.85rem;padding:0.5rem 1rem;cursor:pointer;margin-bottom:-1px">Demo + Callback</button>
+    </div>
+    <div id="pp-subtitle" style="color:var(--muted);font-size:0.8rem;margin-bottom:0.75rem"></div>
+    <div style="display:flex;align-items:center;gap:1.25rem;margin-bottom:0.4rem;font-size:0.75rem;color:var(--muted)">
+      <span><span class="dot" style="background:#6366f1;display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle"></span>Google Ads</span>
+      <span><span class="dot" style="background:#8b5cf6;display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle"></span>LinkedIn Ads</span>
+      <span><span class="dot" style="background:var(--surface3,#2a2a2a);display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle;border:1px solid var(--border)"></span>Non-paid</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+      <span style="color:var(--muted);font-size:0.75rem;min-width:80px">Session share</span>
+      <div id="pp-share-bar" style="flex:1;height:22px;border-radius:4px;overflow:hidden;display:flex;background:var(--surface2,#222)">
+        <div id="pp-bar-gads" style="background:#6366f1;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#fff;min-width:0;transition:width 0.4s;width:0"></div>
+        <div id="pp-bar-li" style="background:#8b5cf6;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#fff;min-width:0;transition:width 0.4s;width:0"></div>
+        <div id="pp-bar-np" style="flex:1;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:var(--muted)"></div>
+      </div>
+    </div>
+    <div class="conv-behavior-grid">
+      <div class="cb-card">
+        <div class="cb-label">Google Ads</div>
+        <div class="cb-metrics">
+          <div class="cb-metric"><div class="cb-val" id="pp-gads-sess">—</div><div class="cb-sub">sessions</div></div>
+        </div>
+        <div id="pp-gads-touched" style="color:var(--muted);font-size:0.8rem;margin-top:0.25rem"></div>
+      </div>
+      <div class="cb-card">
+        <div class="cb-label">LinkedIn Ads</div>
+        <div class="cb-metrics">
+          <div class="cb-metric"><div class="cb-val" id="pp-li-sess">—</div><div class="cb-sub">sessions</div></div>
+        </div>
+        <div id="pp-li-touched" style="color:var(--muted);font-size:0.8rem;margin-top:0.25rem"></div>
+      </div>
+    </div>
+    <div class="insight warn" style="margin-top:0.75rem">⚠ ~80% of sessions show Direct/None UTM — paid participation is understated. Google Ads ValueTrack <code>{campaign}</code> not substituting; LinkedIn pixel not configured.</div>
+  </div>
+
+  <div class="section">
     <div class="section-hdr"><span class="section-tag">Status</span><span class="section-title">Honest Status Check</span></div>
     <div class="status-grid">
       <div class="status-row"><span class="status-icon">✅</span><span class="status-initiative">PostHog tracking setup</span><span class="status-badge done">Done</span><span class="status-notes">Core events tracked. CTA click event anomaly in Mar W3 needs investigation.</span></div>
@@ -1017,6 +1057,71 @@ td.num, th.num { text-align: center; }
       });
   }
 
+  var ppData = null;
+  var ppActive = 'plg';
+
+  function renderPp(path) {
+    if (!path) return;
+    var nd = function(id){ return document.getElementById(id); };
+    var totalSess = path.total_sessions || 0;
+    var gadsSess  = path.gads_sessions  || 0;
+    var liSess    = path.li_sessions    || 0;
+    var npSess    = Math.max(0, totalSess - gadsSess - liSess);
+    var gadsPct   = path.gads_sess_pct  || 0;
+    var liPct     = path.li_sess_pct    || 0;
+    var npPct     = totalSess > 0 ? Math.round(npSess / totalSess * 1000) / 10 : 0;
+
+    // subtitle
+    var sub = nd('pp-subtitle');
+    if (sub) sub.textContent = totalSess + ' total sessions across ' + path.total + ' converters (90-day window). Shows how many sessions had paid channel attribution.';
+
+    // share bar
+    var barGads = nd('pp-bar-gads'), barLi = nd('pp-bar-li'), barNp = nd('pp-bar-np');
+    if (barGads) { barGads.style.width = gadsPct + '%'; barGads.textContent = gadsPct > 3 ? gadsPct + '%' : ''; }
+    if (barLi)   { barLi.style.width   = liPct   + '%'; barLi.textContent   = liPct   > 3 ? liPct   + '%' : ''; }
+    if (barNp)   { barNp.textContent   = npPct   + '%'; }
+
+    // metric cards
+    var gSess = nd('pp-gads-sess'), lSess = nd('pp-li-sess');
+    if (gSess) gSess.textContent = gadsSess;
+    if (lSess) lSess.textContent = liSess;
+    var gTouched = nd('pp-gads-touched'), lTouched = nd('pp-li-touched');
+    if (gTouched) gTouched.textContent = path.gads_people + ' of ' + path.total + ' converters touched';
+    if (lTouched) lTouched.textContent = path.li_people   + ' of ' + path.total + ' converters touched';
+  }
+
+  function loadPaidParticipation() {
+    fetch('/api/paid-participation')
+      .then(function(r){ return r.json(); })
+      .then(function(d) {
+        if (d.error) throw new Error(d.error);
+        ppData = d;
+        var ppStatus = document.getElementById('pp-status');
+        if (ppStatus) ppStatus.textContent = '';
+        renderPp(ppActive === 'plg' ? d.plg : d.dc);
+      })
+      .catch(function(e){
+        var ppStatus = document.getElementById('pp-status');
+        if (ppStatus) ppStatus.textContent = '(local server required)';
+        console.warn('[paid-participation] not available:', e.message);
+      });
+  }
+
+  document.querySelectorAll('.cb-tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.cb-tab-btn').forEach(function(b) {
+        b.classList.remove('active');
+        b.style.borderBottomColor = 'transparent';
+        b.style.color = 'var(--muted)';
+      });
+      btn.classList.add('active');
+      btn.style.borderBottomColor = 'var(--accent)';
+      btn.style.color = 'var(--text)';
+      ppActive = btn.dataset.pp;
+      if (ppData) renderPp(ppActive === 'plg' ? ppData.plg : ppData.dc);
+    });
+  });
+
   function loadData(){
     return fetch('./data/weekly.json?t='+Date.now()).then(function(r){return r.json();}).then(function(data){
       weeks=data.weeks; activeIdx=weeks.length-1;
@@ -1043,6 +1148,7 @@ td.num, th.num { text-align: center; }
             refreshBtn.textContent='✓ Done';
             refreshBtn.style.color='var(--green)';
             loadConvBehavior();
+            loadPaidParticipation();
             attrCache = {};
             var activeModel = (document.querySelector('.attr-btn.active')||{}).dataset||{};
             loadAttribution(activeModel.model || 'last');
@@ -1070,6 +1176,7 @@ td.num, th.num { text-align: center; }
 
   loadData().catch(function(e){console.error('weekly.json load failed:',e);});
   loadConvBehavior();
+  loadPaidParticipation();
   loadAttribution('last');
 })();
 </script>
