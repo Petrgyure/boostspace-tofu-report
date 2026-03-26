@@ -1,11 +1,11 @@
 {
   "_meta": {
     "source": "PostHog EU — project 100634",
-    "updated_at": "2026-03-24T14:00:00.000Z",
-    "updated_by": "fetch-week-script",
+    "updated_at": "2026-03-26T10:00:00.000Z",
+    "updated_by": "manual — v2 lead definitions",
     "next_update": "2026-03-30T07:00:00.000Z",
-    "version": 2,
-    "notes": "v2: lead definitions corrected per boostspace-tofu-report-instructions.md. demo_lead now combines demo_meeting_booked + be_form_submit_demo_lead + form_submit(demo_lead). Total leads includes all lead types. Meetings Booked metric retired."
+    "version": 3,
+    "notes": "v3: aligned with boostspace-tofu-report-instructions v2.md. PLG Signup = sign_up_lead_email only. sign_up (account creation) removed from lead totals — tracked separately as sign_up_account for funnel view. Total leads = plg_signup + demo_lead + callback + waiting_list + newsletter."
   },
   "weeks": [
     {
@@ -26,10 +26,10 @@
         "pricing_selections": 27
       },
       "leads": {
-        "total_leads": 157,
-        "cvr": 2.03,
-        "plg_signup_email": 47,
-        "plg_signup_direct": 75,
+        "total_leads": 82,
+        "cvr": 1.06,
+        "plg_signup": 47,
+        "sign_up_account": 75,
         "demo_lead": 24,
         "callback": 0,
         "waiting_list": 4,
@@ -72,10 +72,10 @@
         "pricing_selections": 17
       },
       "leads": {
-        "total_leads": 148,
-        "cvr": 1.68,
-        "plg_signup_email": 80,
-        "plg_signup_direct": 45,
+        "total_leads": 103,
+        "cvr": 1.17,
+        "plg_signup": 80,
+        "sign_up_account": 45,
         "demo_lead": 11,
         "callback": 0,
         "waiting_list": 7,
@@ -118,10 +118,10 @@
         "pricing_selections": 16
       },
       "leads": {
-        "total_leads": 132,
-        "cvr": 1.67,
-        "plg_signup_email": 65,
-        "plg_signup_direct": 39,
+        "total_leads": 93,
+        "cvr": 1.18,
+        "plg_signup": 65,
+        "sign_up_account": 39,
         "demo_lead": 16,
         "callback": 4,
         "waiting_list": 5,
@@ -164,10 +164,10 @@
         "pricing_selections": 6
       },
       "leads": {
-        "total_leads": 81,
-        "cvr": 2.22,
-        "plg_signup_email": 47,
-        "plg_signup_direct": 22,
+        "total_leads": 59,
+        "cvr": 1.61,
+        "plg_signup": 47,
+        "sign_up_account": 22,
         "demo_lead": 7,
         "callback": 3,
         "waiting_list": 1,
@@ -210,10 +210,10 @@
         "pricing_selections": 9
       },
       "leads": {
-        "total_leads": 119,
-        "cvr": 3.91,
-        "plg_signup_email": 71,
-        "plg_signup_direct": 27,
+        "total_leads": 92,
+        "cvr": 3.02,
+        "plg_signup": 71,
+        "sign_up_account": 27,
         "demo_lead": 9,
         "callback": 11,
         "waiting_list": 1,

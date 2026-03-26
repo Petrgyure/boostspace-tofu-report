@@ -105,7 +105,11 @@ td.num, th.num { text-align: center; }
 .sub-section { padding: 0 1.5rem 0.7rem; }
 .sub-title { font-size: 0.525rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--dim); padding: 0.45rem 0 0.25rem; }
 /* FUNNEL */
-.funnel-row { display: grid; grid-template-columns: repeat(5, 1fr); border-top: var(--bw) solid var(--border); }
+.funnel-pair { display: grid; grid-template-columns: 1fr 1fr; border-top: var(--bw) solid var(--border); gap: 0; }
+.funnel-col { border-right: var(--bw) solid var(--border); }
+.funnel-col:last-child { border-right: none; }
+.funnel-col-hdr { font-size: 0.475rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--dim); padding: 0.4rem 0.75rem 0.25rem; border-bottom: var(--bw) solid var(--border); }
+.funnel-row { display: grid; grid-template-columns: repeat(4, 1fr); }
 .funnel-cell { padding: 0.7rem 0.75rem; text-align: center; border-right: var(--bw) solid var(--border); }
 .funnel-cell:last-child { border-right: none; }
 .funnel-stage { font-size: 0.475rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--dim); margin-bottom: 0.15rem; }
@@ -155,8 +159,9 @@ td.num, th.num { text-align: center; }
 @media (max-width: 768px) {
   .kpi-row, .src-kpi-row { grid-template-columns: repeat(2, 1fr); }
   .kpi-card:nth-child(2) { border-right: none; }
+  .funnel-pair { grid-template-columns: 1fr; }
+  .funnel-col { border-right: none; border-bottom: var(--bw) solid var(--border); }
   .funnel-row { grid-template-columns: repeat(2, 1fr); }
-  .funnel-cell:nth-child(even) { border-right: none; }
   .exec-grid { grid-template-columns: 1fr; }
   .exec-card.span2 { grid-column: 1; }
 }
@@ -216,11 +221,11 @@ td.num, th.num { text-align: center; }
     <div class="exec-grid">
       <div class="exec-card span2">
         <div class="exec-label">5-Week Overview</div>
-        Traffic peaked in Feb W4 (14,347 PV) then declined — Mar W2/W3 reflect LinkedIn spend cut. Despite lower volume, CVR improved consistently: <strong>2.03% → 1.68% → 1.67% → 2.22% → 3.91%</strong>. Mar W3 CVR of 3.91% is the strongest on record. The apparent "0 demo meetings" in Mar W1–W3 was a <strong>form redesign event rename</strong>, not a broken booking flow — <code>demo_meeting_booked</code> was replaced by <code>be_form_submit_demo_lead</code> on ~Mar 2. Demo demand has been continuous.
+        Traffic peaked in Feb W4 (14,347 PV) then declined — Mar W2/W3 reflect LinkedIn spend cut. CVR trend: <strong>1.06% → 1.17% → 1.18% → 1.61% → 3.02%</strong> — consistent improvement despite lower traffic. Mar W3 CVR of 3.02% is the highest on record. Lead definition: PLG Signup = <code>sign_up_lead_email</code> only; <code>sign_up</code> (account creation) tracked separately in the funnel view.
       </div>
       <div class="exec-card">
         <div class="exec-label">Lead Performance</div>
-        <strong>Mar W3: 119 total leads</strong> — strong rebound vs Mar W2 (81). PLG email signups surged to 71 (highest across all weeks). Demo leads: 9. Callback requests: 11 (new high). <strong>Google Ads: 27 conversions</strong> in Mar W3 — 13.5× jump vs Mar W2.
+        <strong>Mar W3: 92 total leads</strong> — strong rebound vs Mar W2 (59). PLG signups surged to 71 (highest across all weeks). Demo leads: 9. Callback requests: 11 (new high). <strong>Google Ads: 27 conversions</strong> in Mar W3 — 13.5× jump vs Mar W2.
       </div>
       <div class="exec-card">
         <div class="exec-label">Signals &amp; Actions Needed</div>
@@ -306,7 +311,7 @@ td.num, th.num { text-align: center; }
         <tbody id="eng-tbody"></tbody>
       </table>
     </div>
-    <div class="insight warn">Mar W3 CTA click rate dropped to 0.03% (1 click) — likely a tracking anomaly (CTA event rename or PostHog filter issue). CVR improved to 3.55% suggesting organic intent is strong.</div>
+    <div class="insight warn">Mar W3 CTA click rate dropped to 0.03% (1 click) — likely a tracking anomaly (CTA event rename or PostHog filter issue). CVR improved to 3.02% suggesting organic intent is strong.</div>
   </div>
 
   <div class="section">
@@ -318,7 +323,7 @@ td.num, th.num { text-align: center; }
         <tbody id="lead-tbody"></tbody>
       </table>
     </div>
-    <div class="insight info">Mar W3: 71 PLG email signups (highest across all weeks), 27 PLG direct, 9 demo leads, 11 callbacks. Total 119 leads — strong rebound vs Mar W2 (81). CVR 3.91% is best on record. Volume recovering despite lower traffic.</div>
+    <div class="insight info">Mar W3: 71 PLG signups (<code>sign_up_lead_email</code>), 9 demo leads, 11 callbacks. Total 92 leads — strong rebound vs Mar W2 (59). CVR 3.02% is best on record. Account creations (<code>sign_up</code>): 27 — tracked in funnel view. Volume recovering despite lower traffic.</div>
   </div>
 
   <div class="section">
@@ -343,8 +348,17 @@ td.num, th.num { text-align: center; }
   </div>
 
   <div class="section">
-    <div class="section-hdr"><span class="section-tag">Funnel</span><span class="section-title">Full Funnel — <span id="funnel-wk">Mar W3</span></span></div>
-    <div class="funnel-row" id="funnel-row"></div>
+    <div class="section-hdr"><span class="section-tag">Funnel</span><span class="section-title">Signup Funnels — <span id="funnel-wk">Mar W3</span></span></div>
+    <div class="funnel-pair">
+      <div class="funnel-col">
+        <div class="funnel-col-hdr">PLG — Self-Serve Signup</div>
+        <div class="funnel-row" id="funnel-plg"></div>
+      </div>
+      <div class="funnel-col">
+        <div class="funnel-col-hdr">SLG — Demo &amp; Callback</div>
+        <div class="funnel-row" id="funnel-slg"></div>
+      </div>
+    </div>
   </div>
 
   <div class="section">
@@ -377,9 +391,11 @@ td.num, th.num { text-align: center; }
     <div class="notes-list">
       <div class="note-item">All data from PostHog (project: Boost.space, ID: 100634, EU instance)</div>
       <div class="note-item">Weeks: Feb W3=Feb 17–23 | Feb W4=Feb 24–Mar 1 | Mar W1=Mar 2–7 | Mar W2=Mar 8–14 | Mar W3=Mar 16–22</div>
-      <div class="note-item"><strong>Demo Lead</strong> = <code>demo_meeting_booked</code> (up to ~Mar 2) OR <code>be_form_submit_demo_lead</code> (from ~Mar 2). Same business meaning — both = demo request. Event rename due to form redesign. Combined with OR logic in all queries.</div>
+      <div class="note-item"><strong>PLG Signup</strong> = <code>sign_up_lead_email</code> (email captured in signup flow). <code>sign_up</code> (account creation) is tracked separately in PLG funnel view — it is the conversion outcome, not a lead.</div>
+      <div class="note-item"><strong>Demo Lead</strong> = <code>demo_meeting_booked</code> (up to ~Mar 2) OR <code>be_form_submit_demo_lead</code> (from ~Mar 2). Same business meaning — form redesign renamed the event. Combined with OR logic in all queries.</div>
+      <div class="note-item">Total Leads = PLG Signup + Demo Lead + Callback + Waiting List + Newsletter. Account creations excluded from lead count.</div>
       <div class="note-item">leady_new_lead started Mar 8 — Mar W2 is first full-week baseline (30 leads), Mar W3: 24 leads</div>
-      <div class="note-item">Traffic source % are estimates — high direct/none attribution (~80%) due to UTM gaps</div>
+      <div class="note-item">Traffic source % are estimates — high direct/none attribution (~80%) due to UTM gaps. Google Ads UTM <code>{campaign}</code> parameter not substituting correctly.</div>
       <div class="note-item">Google Ads costs in CZK (~25 CZK/USD). LinkedIn Ads in USD.</div>
     </div>
   </div>
@@ -566,17 +582,17 @@ td.num, th.num { text-align: center; }
   function buildLeads(){
     setHdr('th-l',5); setAct('th-l',5);
     var rows=[
-      {l:'PLG Signup (email)', f:function(w){return w.leads.plg_signup_email||0;}},
-      {l:'PLG Signup (direct)', f:function(w){return w.leads.plg_signup_direct||0;}},
+      {l:'PLG Signup (sign_up_lead_email)', f:function(w){return w.leads.plg_signup||0;}},
       {l:'Demo Lead', f:function(w){return w.leads.demo_lead||0;}},
       {l:'Callback', f:function(w){return w.leads.callback||0;}},
       {l:'Waiting List', f:function(w){return w.leads.waiting_list||0;}},
       {l:'Newsletter', f:function(w){return w.leads.newsletter||0;}},
       {l:'TOTAL Leads', f:function(w){return w.leads.total_leads;}, tot:true},
       {l:'CVR % (total leads / unique visitors)', f:function(w){return w.leads.cvr?d2(w.leads.cvr)+'%':'—';}},
+      {l:'Account Creations (sign_up, funnel only)', f:function(w){return w.leads.sign_up_account||0;}, dim:true},
     ];
     document.getElementById('lead-tbody').innerHTML=rows.map(function(r){
-      return '<tr'+(r.tot?' class="total-row"':'')+'><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+'">'+r.f(w)+'</td>';}).join('')+'</tr>';
+      return '<tr'+(r.tot?' class="total-row"':'')+'><td class="metric-col"'+(r.dim?' style="color:var(--dim)"':'')+'>'+r.l+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+(r.dim?' style="color:var(--dim)"':'')+'">'+(r.dim?'('+r.f(w)+')':r.f(w))+'</td>';}).join('')+'</tr>';
     }).join('');
   }
 
@@ -595,14 +611,26 @@ td.num, th.num { text-align: center; }
   function buildFunnel(){
     var w=weeks[activeIdx], p=activeIdx>0?weeks[activeIdx-1]:null;
     document.getElementById('funnel-wk').textContent=w.label;
-    var uv=w.reach.unique_visitors, cta=w.engagement.cta_clicks, total=w.leads.total_leads, demo=w.leads.demo_lead||0, leady=w.mql.leady_new_lead||0;
-    function cell(s,v,cvr,trend,crit){return '<div class="funnel-cell"><div class="funnel-stage">'+s+'</div><div class="funnel-vol'+(crit?' crit':'')+'">'+v+'</div>'+(cvr?'<div class="funnel-cvr">'+cvr+'</div>':'')+(trend?'<div class="funnel-trend">'+trend+'</div>':'')+'</div>';}
-    document.getElementById('funnel-row').innerHTML=
-      cell('Unique Visitors',fmt(uv),'',p?dH(pct(uv,p.reach.unique_visitors))+' WoW':'')+
-      cell('CTA Clicks',fmt(cta),(uv>0?(cta/uv*100).toFixed(2):0)+'% CTR',p?dH(pct(cta,p.engagement.cta_clicks))+' WoW':'')+
-      cell('Total Leads',fmt(total),(uv>0?(total/uv*100).toFixed(2):0)+'% CVR',w.leads.cvr?'CVR '+d2(w.leads.cvr)+'%':'')+
-      cell('Demo Leads',fmt(demo),(total>0?(demo/total*100).toFixed(0):0)+'% of leads',p?dH(pct(demo,p.leads.demo_lead||0))+' WoW':'')+
-      cell('Leady Leads',leady>0?fmt(leady):'—',leady>0?(total>0?(leady/total*100).toFixed(0):0)+'% of leads':'company ID layer',leady>0?'from Mar W2':'starts Mar 8');
+    var uv=w.reach.unique_visitors;
+    function cell(s,v,sub,trend){return '<div class="funnel-cell"><div class="funnel-stage">'+s+'</div><div class="funnel-vol">'+v+'</div>'+(sub?'<div class="funnel-cvr">'+sub+'</div>':'')+(trend?'<div class="funnel-trend">'+trend+'</div>':'')+'</div>';}
+
+    // PLG: UV → Install View → PLG Signup (email) → Account Created
+    var inst=w.engagement.install_views||0, plg=w.leads.plg_signup||0, acct=w.leads.sign_up_account||0;
+    var pInst=p?p.engagement.install_views||0:null, pPlg=p?p.leads.plg_signup||0:null, pAcct=p?p.leads.sign_up_account||0:null;
+    document.getElementById('funnel-plg').innerHTML=
+      cell('Landing Page',fmt(uv),'',p?dH(pct(uv,p.reach.unique_visitors))+' WoW':'')+
+      cell('Install View',fmt(inst),(uv>0?(inst/uv*100).toFixed(1):0)+'% of UV',pInst!==null?dH(pct(inst,pInst))+' WoW':'')+
+      cell('PLG Signup Email',fmt(plg),(inst>0?(plg/inst*100).toFixed(0):0)+'% of installs',pPlg!==null?dH(pct(plg,pPlg))+' WoW':'')+
+      cell('Account Created',fmt(acct),(plg>0?(acct/plg*100).toFixed(0):0)+'% of signups',pAcct!==null?dH(pct(acct,pAcct))+' WoW':'');
+
+    // SLG: UV → Demo Lead + Callback
+    var demo=w.leads.demo_lead||0, cb=w.leads.callback||0, slgTotal=demo+cb;
+    var pDemo=p?p.leads.demo_lead||0:null, pCb=p?p.leads.callback||0:null;
+    document.getElementById('funnel-slg').innerHTML=
+      cell('Landing Page',fmt(uv),'',p?dH(pct(uv,p.reach.unique_visitors))+' WoW':'')+
+      cell('Demo Lead',fmt(demo),(uv>0?(demo/uv*100).toFixed(2):0)+'% CVR',pDemo!==null?dH(pct(demo,pDemo||1))+' WoW':'')+
+      cell('Callback',fmt(cb),(uv>0?(cb/uv*100).toFixed(2):0)+'% CVR',pCb!==null?dH(pct(cb,pCb||1))+' WoW':'')+
+      cell('Total SLG',fmt(slgTotal),(uv>0?(slgTotal/uv*100).toFixed(2):0)+'% CVR','');
   }
 
   var tChart=null;
@@ -611,7 +639,7 @@ td.num, th.num { text-align: center; }
     if(tChart)tChart.destroy();
     tChart=new Chart(ctx,{type:'bar',data:{labels:weeks.map(function(w){return w.label;}),datasets:[
       {label:'Unique Visitors',data:weeks.map(function(w){return w.reach.unique_visitors;}),backgroundColor:'rgba(96,165,250,0.22)',borderColor:'rgba(96,165,250,0.7)',borderWidth:1,yAxisID:'y',order:2},
-      {label:'Total Leads',data:weeks.map(function(w){return w.leads.total_leads;}),backgroundColor:'rgba(200,230,74,0.22)',borderColor:'rgba(200,230,74,0.7)',borderWidth:1,yAxisID:'y',order:3},
+      {label:'Total Leads (v2)',data:weeks.map(function(w){return w.leads.total_leads;}),backgroundColor:'rgba(200,230,74,0.22)',borderColor:'rgba(200,230,74,0.7)',borderWidth:1,yAxisID:'y',order:3},
       {label:'CTA Rate %',data:weeks.map(function(w){return w.engagement.cta_click_rate;}),type:'line',borderColor:'rgba(249,115,22,0.8)',backgroundColor:'transparent',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'rgba(249,115,22,0.8)',tension:0.3,yAxisID:'y2',order:1},
     ]},options:{responsive:true,maintainAspectRatio:false,plugins:{
       legend:{labels:{color:'#71717A',font:{family:'JetBrains Mono',size:10},boxWidth:10}},
