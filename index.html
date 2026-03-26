@@ -410,7 +410,7 @@ td.num, th.num { text-align: center; }
 
   <div class="section">
     <div class="section-hdr"><span class="section-tag">§10</span><span class="section-title">Conversion Behavior — Time &amp; Session Depth</span></div>
-    <div class="insight info">How long does it take people to convert? How many sessions before they submit? Split by PLG Signup vs Demo + Callback. Requires live PostHog query (90-day lookback).</div>
+    <div class="insight info">How long does it take people to convert? How many sessions before they submit? Split by PLG Signup vs Demo + Callback. Live PostHog query — 90-day lookback. <span id="cb-status" style="color:var(--dim);font-style:italic">Loading…</span></div>
     <div class="conv-behavior-grid" id="conv-behavior-grid">
       <div class="cb-card">
         <div class="cb-label">PLG Signup path — avg days to convert</div>
@@ -439,8 +439,8 @@ td.num, th.num { text-align: center; }
       <table class="data-table">
         <thead><tr><th>Conversion Type</th><th class="num">Avg Days</th><th class="num">Median Days</th><th class="num">Avg Sessions</th><th class="num">Median Sessions</th><th class="num">Converters (30d)</th></tr></thead>
         <tbody id="conv-behavior-tbody">
-          <tr><td class="metric-col">PLG Signup</td><td class="num" colspan="5" style="color:var(--dim);font-style:italic">Needs PostHog API key — see HogQL §10.1 / §10.2</td></tr>
-          <tr><td class="metric-col">Demo + Callback</td><td class="num" colspan="5" style="color:var(--dim);font-style:italic">Needs PostHog API key — see HogQL §10.1 / §10.2</td></tr>
+          <tr><td class="metric-col">PLG Signup</td><td class="num" id="cb-plg-td-avg-days">—</td><td class="num" id="cb-plg-td-med-days">—</td><td class="num" id="cb-plg-td-avg-sess">—</td><td class="num" id="cb-plg-td-med-sess">—</td><td class="num" id="cb-plg-td-conv">—</td></tr>
+          <tr><td class="metric-col">Demo + Callback</td><td class="num" id="cb-dc-td-avg-days">—</td><td class="num" id="cb-dc-td-med-days">—</td><td class="num" id="cb-dc-td-avg-sess">—</td><td class="num" id="cb-dc-td-med-sess">—</td><td class="num" id="cb-dc-td-conv">—</td></tr>
         </tbody>
       </table>
     </div>
@@ -912,6 +912,48 @@ td.num, th.num { text-align: center; }
 
   document.querySelectorAll('.pg-tab').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('.pg-tab').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});document.getElementById('page-'+btn.dataset.page).classList.add('active');});});
 
+  function renderHist(histEl, buckets) {
+    if (!histEl) return;
+    var max = Math.max.apply(null, buckets) || 1;
+    histEl.innerHTML = buckets.map(function(v){
+      var h = Math.max(2, Math.round(v / max * 32));
+      return '<div class="cb-hist-bar" style="height:'+h+'px" title="'+v+'"></div>';
+    }).join('');
+  }
+
+  function loadConvBehavior() {
+    fetch('/api/conv-behavior')
+      .then(function(r){ return r.json(); })
+      .then(function(d) {
+        if (d.error) throw new Error(d.error);
+        var cbStatus = document.getElementById('cb-status');
+        if (cbStatus) cbStatus.textContent = '';
+
+        function fill(prefix, path) {
+          var nd = function(id){ return document.getElementById(id); };
+          var fmt = function(v){ return v === null ? '—' : v; };
+          nd(prefix+'-avg-days') && (nd(prefix+'-avg-days').textContent = fmt(path.avg_days));
+          nd(prefix+'-med-days') && (nd(prefix+'-med-days').textContent = fmt(path.med_days));
+          nd(prefix+'-avg-sess') && (nd(prefix+'-avg-sess').textContent = fmt(path.avg_sessions));
+          nd(prefix+'-med-sess') && (nd(prefix+'-med-sess').textContent = fmt(path.med_sessions));
+          nd(prefix+'-td-avg-days') && (nd(prefix+'-td-avg-days').textContent = fmt(path.avg_days));
+          nd(prefix+'-td-med-days') && (nd(prefix+'-td-med-days').textContent = fmt(path.med_days));
+          nd(prefix+'-td-avg-sess') && (nd(prefix+'-td-avg-sess').textContent = fmt(path.avg_sessions));
+          nd(prefix+'-td-med-sess') && (nd(prefix+'-td-med-sess').textContent = fmt(path.med_sessions));
+          nd(prefix+'-td-conv')    && (nd(prefix+'-td-conv').textContent    = path.converters || 0);
+          renderHist(nd(prefix+'-hist'), path.histogram || [0,0,0,0,0,0]);
+        }
+
+        fill('cb-plg', d.plg);
+        fill('cb-dc',  d.demo_callback);
+      })
+      .catch(function(e){
+        var cbStatus = document.getElementById('cb-status');
+        if (cbStatus) cbStatus.textContent = '(local server required)';
+        console.warn('[conv-behavior] not available:', e.message);
+      });
+  }
+
   function loadData(){
     return fetch('./data/weekly.json?t='+Date.now()).then(function(r){return r.json();}).then(function(data){
       weeks=data.weeks; activeIdx=weeks.length-1;
@@ -937,6 +979,7 @@ td.num, th.num { text-align: center; }
           if(res.ok){
             refreshBtn.textContent='✓ Done';
             refreshBtn.style.color='var(--green)';
+            loadConvBehavior();
             return loadData();
           } else {
             throw new Error(res.error||'refresh failed');
@@ -960,6 +1003,7 @@ td.num, th.num { text-align: center; }
   }
 
   loadData().catch(function(e){console.error('weekly.json load failed:',e);});
+  loadConvBehavior();
 })();
 </script>
 </body>
