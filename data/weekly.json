@@ -1,8 +1,8 @@
 {
   "_meta": {
     "source": "PostHog EU — project 100634",
-    "updated_at": "2026-03-26T13:37:00.000Z",
-    "updated_by": "PostHog HogQL + Google Ads DW + LinkedIn Ads DW",
+    "updated_at": "2026-03-26T13:54:05.718Z",
+    "updated_by": "fetch-week.js (PostHog HogQL + Google Ads DW + LinkedIn Ads DW)",
     "next_update": "2026-04-06T07:00:00.000Z",
     "version": 3,
     "notes": "v3: aligned with boostspace-tofu-report-instructions v2.md. PLG Signup = sign_up_lead_email only. sign_up (account creation) removed from lead totals — tracked separately as sign_up_account for funnel view. Total leads = plg_signup + demo_lead + callback + waiting_list + newsletter."
@@ -109,7 +109,7 @@
         "pageviews": 6141,
         "unique_visitors": 3655,
         "sessions": 4096,
-        "pages_per_session": 1.50
+        "pages_per_session": 1.5
       },
       "engagement": {
         "cta_clicks": 53,
@@ -197,23 +197,22 @@
       "range": "2026-03-23 – 2026-03-26",
       "start": "2026-03-23",
       "end": "2026-03-26",
-      "_note": "Partial week — 4 days (Mon–Thu). Full week ends Mar 29.",
       "reach": {
-        "pageviews": 3174,
-        "unique_visitors": 1681,
-        "sessions": 1852,
+        "pageviews": 3180,
+        "unique_visitors": 1683,
+        "sessions": 1856,
         "pages_per_session": 1.71
       },
       "engagement": {
         "cta_clicks": 0,
-        "cta_click_rate": 0.0,
-        "install_views": 177,
+        "cta_click_rate": 0,
+        "install_views": 178,
         "pricing_selections": 12
       },
       "leads": {
-        "total_leads": 71,
-        "cvr": 4.22,
-        "plg_signup": 54,
+        "total_leads": 72,
+        "cvr": 4.28,
+        "plg_signup": 55,
         "sign_up_account": 12,
         "demo_lead": 6,
         "callback": 7,
@@ -234,7 +233,7 @@
           "impressions": 2850,
           "clicks": 100,
           "lp_clicks": 9,
-          "spend_usd": 363,
+          "spend_usd": 362.72,
           "conversions": 0
         }
       }

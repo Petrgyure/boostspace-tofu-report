@@ -217,7 +217,8 @@ td.num, th.num { text-align: center; }
     </div>
     <div class="week-tabs" id="wk-tabs"></div>
   </div>
-  <span class="updated-label" id="updated-label">Feb 17 – Mar 22, 2026</span>
+  <button id="refresh-btn" style="background:none;border:1px solid var(--dim);color:var(--muted);font-family:var(--mono);font-size:0.55rem;text-transform:uppercase;letter-spacing:0.05em;padding:0.2rem 0.55rem;border-radius:2px;cursor:pointer;flex-shrink:0" title="Fetch latest data from PostHog (local server only)">↻ Refresh</button>
+  <span class="updated-label" id="updated-label">—</span>
 </div>
 
 <!-- PAGE 1 -->
@@ -911,12 +912,54 @@ td.num, th.num { text-align: center; }
 
   document.querySelectorAll('.pg-tab').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('.pg-tab').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});document.getElementById('page-'+btn.dataset.page).classList.add('active');});});
 
-  fetch('./data/weekly.json').then(function(r){return r.json();}).then(function(data){
-    weeks=data.weeks; activeIdx=weeks.length-1;
-    var meta=data._meta||{};
-    if(meta.updated_at)document.getElementById('footer-right').textContent='updated '+meta.updated_at.slice(0,10);
-    buildWeekTabs(); buildLiWeekly(); buildGaWeekly(); buildTrendChart(); refreshAll();
-  }).catch(function(e){console.error('weekly.json load failed:',e);});
+  function loadData(){
+    return fetch('./data/weekly.json?t='+Date.now()).then(function(r){return r.json();}).then(function(data){
+      weeks=data.weeks; activeIdx=weeks.length-1;
+      var meta=data._meta||{};
+      var upd=meta.updated_at?meta.updated_at.slice(0,10):'—';
+      document.getElementById('footer-right').textContent='updated '+upd;
+      document.getElementById('updated-label').textContent=
+        weeks.length?weeks[0].start.slice(0,7).replace('-',' ')+' – '+weeks[weeks.length-1].end:'—';
+      buildWeekTabs(); buildLiWeekly(); buildGaWeekly(); buildTrendChart(); refreshAll();
+      return data;
+    });
+  }
+
+  var refreshBtn=document.getElementById('refresh-btn');
+  if(refreshBtn){
+    refreshBtn.addEventListener('click',function(){
+      refreshBtn.textContent='↻ Fetching…';
+      refreshBtn.disabled=true;
+      refreshBtn.style.color='var(--accent)';
+      fetch('/api/refresh',{method:'POST'})
+        .then(function(r){return r.json();})
+        .then(function(res){
+          if(res.ok){
+            refreshBtn.textContent='✓ Done';
+            refreshBtn.style.color='var(--green)';
+            return loadData();
+          } else {
+            throw new Error(res.error||'refresh failed');
+          }
+        })
+        .catch(function(e){
+          // fallback: just reload JSON (GitHub Pages or offline)
+          refreshBtn.textContent='↻ Refresh';
+          refreshBtn.style.color='var(--error)';
+          refreshBtn.title='Error: '+e.message+' — reload page to retry';
+          console.warn('Refresh failed (local server required):',e.message);
+        })
+        .finally(function(){
+          setTimeout(function(){
+            refreshBtn.textContent='↻ Refresh';
+            refreshBtn.disabled=false;
+            refreshBtn.style.color='var(--muted)';
+          }, 3000);
+        });
+    });
+  }
+
+  loadData().catch(function(e){console.error('weekly.json load failed:',e);});
 })();
 </script>
 </body>
