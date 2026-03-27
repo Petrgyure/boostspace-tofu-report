@@ -21,23 +21,25 @@ html, body { min-height: 100%; background: var(--bg); color: var(--text); font-f
 /* TOOLBAR */
 .toolbar {
   position: sticky; top: 0; z-index: 50;
-  background: #09090B; border-bottom: var(--bw) solid var(--border);
+  background: #0f0f12; border-bottom: var(--bw) solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 1.5rem; height: 2.5rem; gap: 1rem; overflow-x: auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
-.toolbar-left { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
-.toolbar-brand { font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); white-space: nowrap; }
+.toolbar-left { display: flex; align-items: center; gap: 1.2rem; flex-shrink: 0; }
+.toolbar-brand { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--sub); font-weight: 500; white-space: nowrap; }
 .page-tabs, .week-tabs { display: flex; }
 .pg-tab, .wk-tab {
-  background: none; border: none; color: var(--dim); font-family: var(--mono);
-  font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.05em;
-  padding: 0.3rem 0.55rem; cursor: pointer; border-radius: 3px; white-space: nowrap;
-  transition: color 0.12s, background 0.12s;
+  background: none; border: none; color: var(--sub); font-family: var(--mono);
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 0.3rem 0.65rem; cursor: pointer; border-radius: 3px; white-space: nowrap;
+  transition: color 0.15s, background 0.15s;
+  font-weight: 500;
 }
-.pg-tab:hover, .wk-tab:hover { color: var(--muted); }
-.pg-tab.active { color: var(--text); background: #18181B; }
-.wk-tab.active { color: var(--accent); background: #18181B; }
-.updated-label { font-size: 0.575rem; color: var(--dim); letter-spacing: 0.04em; white-space: nowrap; flex-shrink: 0; }
+.pg-tab:hover, .wk-tab:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+.pg-tab.active { color: var(--text); background: rgba(200,230,74,0.12); border: 1px solid rgba(200,230,74,0.25); }
+.wk-tab.active { color: var(--accent); background: rgba(200,230,74,0.12); border: 1px solid rgba(200,230,74,0.25); }
+.updated-label { font-size: 0.6rem; color: var(--sub); letter-spacing: 0.04em; white-space: nowrap; flex-shrink: 0; font-weight: 500; }
 /* PAGES */
 .page { display: none; }
 .page.active { display: block; }
@@ -118,6 +120,9 @@ td.num, th.num { text-align: center; }
 .date-pick { background: none; border: 1px solid var(--dim); color: var(--muted); font-family: var(--mono); font-size: 0.55rem; padding: 0.18rem 0.4rem; border-radius: 2px; cursor: pointer; flex-shrink: 0; outline: none; }
 .date-pick::-webkit-calendar-picker-indicator { filter: invert(0.4); cursor: pointer; }
 .date-pick:focus { border-color: var(--accent); color: var(--accent); }
+.preset-btn { background: none; border: 1px solid var(--dim); color: var(--muted); font-family: var(--mono); font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.18rem 0.45rem; border-radius: 2px; cursor: pointer; flex-shrink: 0; }
+.preset-btn:hover { border-color: #52525B; color: var(--text); }
+.preset-btn.active { border-color: var(--accent); color: var(--accent); }
 /* REFRESH MODAL */
 .rmodal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: center; justify-content: center; }
 .rmodal-overlay.open { display: flex; }
@@ -279,33 +284,33 @@ td.num, th.num { text-align: center; }
     </div>
     <div class="week-tabs" id="wk-tabs"></div>
   </div>
-  <input type="date" id="fetch-date" class="date-pick" title="Select week start date (leave empty for current week)">
   <button id="refresh-btn" style="background:none;border:1px solid var(--dim);color:var(--muted);font-family:var(--mono);font-size:0.55rem;text-transform:uppercase;letter-spacing:0.05em;padding:0.2rem 0.55rem;border-radius:2px;cursor:pointer;flex-shrink:0" title="Fetch latest data from PostHog">↻ Refresh</button>
   <span class="updated-label" id="updated-label">—</span>
 </div>
 
-<!-- REFRESH MODAL -->
+<!-- RANGE MODAL -->
 <div class="rmodal-overlay" id="rmodal-overlay">
   <div class="rmodal">
-    <div class="rmodal-title">Fetching Latest Data</div>
-    <div class="rmodal-range" id="rmodal-range">Connecting…</div>
-    <div class="rmodal-steps" id="rmodal-steps">
-      <div class="rstep" id="rstep-1"><span class="rstep-icon">○</span><span class="rstep-label">Traffic (pageviews, unique visitors)</span><span class="rstep-value" id="rstep-1-val"></span></div>
-      <div class="rstep" id="rstep-2"><span class="rstep-icon">○</span><span class="rstep-label">Engagement (CTA, installs, pricing)</span><span class="rstep-value" id="rstep-2-val"></span></div>
-      <div class="rstep" id="rstep-3"><span class="rstep-icon">○</span><span class="rstep-label">Leads (PLG, Demo, Callback)</span><span class="rstep-value" id="rstep-3-val"></span></div>
-      <div class="rstep" id="rstep-4"><span class="rstep-icon">○</span><span class="rstep-label">MQL — Leady company identification</span><span class="rstep-value" id="rstep-4-val"></span></div>
-      <div class="rstep" id="rstep-5"><span class="rstep-icon">○</span><span class="rstep-label">Google Ads — spend & conversions</span><span class="rstep-value" id="rstep-5-val"></span></div>
-      <div class="rstep" id="rstep-6"><span class="rstep-icon">○</span><span class="rstep-label">LinkedIn Ads — spend & LP clicks</span><span class="rstep-value" id="rstep-6-val"></span></div>
-      <div class="rstep" id="rstep-7"><span class="rstep-icon">○</span><span class="rstep-label">Saving to weekly.json</span><span class="rstep-value"></span></div>
-    </div>
-    <div class="rmodal-error" id="rmodal-error"></div>
-    <div class="rmodal-result" id="rmodal-result">
-      <div class="rmodal-result-grid">
-        <div class="rresult-card"><div class="rresult-label">Week</div><div class="rresult-val" id="rres-week">—</div></div>
-        <div class="rresult-card"><div class="rresult-label">Unique Visitors</div><div class="rresult-val" id="rres-uv">—</div></div>
-        <div class="rresult-card"><div class="rresult-label">Total Leads</div><div class="rresult-val" id="rres-leads">—</div></div>
+    <div class="rmodal-title">View Date Range</div>
+    <div style="font-size:0.575rem;color:var(--dim);margin-bottom:0.5rem">Aggregate existing data for a custom period:</div>
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+      <input type="date" id="fetch-from" class="date-pick" title="From date">
+      <span style="color:var(--dim);font-size:0.6rem">→</span>
+      <input type="date" id="fetch-to" class="date-pick" title="To date">
+      <div style="display:flex;gap:4px;margin-left:4px">
+        <button class="preset-btn" data-days="7">7d</button>
+        <button class="preset-btn" data-days="14">14d</button>
+        <button class="preset-btn" data-days="30">30d</button>
+        <button class="preset-btn" data-days="60">60d</button>
       </div>
-      <button class="rmodal-close" id="rmodal-close">Close &amp; Reload</button>
+    </div>
+    <div id="rmodal-no-data" style="display:none;font-size:0.6rem;color:var(--error);margin-top:0.4rem">No data available for this range in weekly.json</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.75rem">
+      <button id="rmodal-reset" style="background:none;border:none;color:var(--dim);font-family:var(--mono);font-size:0.5rem;cursor:pointer;padding:0;text-decoration:underline">Reset to latest week</button>
+      <div style="display:flex;gap:8px">
+        <button id="rmodal-cancel" style="background:none;border:1px solid var(--dim);color:var(--muted);font-family:var(--mono);font-size:0.55rem;text-transform:uppercase;letter-spacing:0.05em;padding:0.25rem 0.7rem;border-radius:2px;cursor:pointer">Cancel</button>
+        <button id="rmodal-start" style="background:var(--accent);border:none;color:#000;font-family:var(--mono);font-size:0.55rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding:0.25rem 0.9rem;border-radius:2px;cursor:pointer">Apply Range</button>
+      </div>
     </div>
   </div>
 </div>
@@ -702,7 +707,50 @@ td.num, th.num { text-align: center; }
 
 <script>
 (function () {
-  var weeks = [], activeIdx = 0;
+  var weeks = [], activeIdx = 0, activePeriodOverride = null;
+
+  // ── Active period helpers ───────────────────────────────────────────────────
+  function getW(){ return activePeriodOverride || weeks[activeIdx]; }
+  function getP(){
+    var w=getW();
+    return w._prev||((!activePeriodOverride&&activeIdx>0)?weeks[activeIdx-1]:null);
+  }
+  function getPLabel(){ var p=getP(); return p?(activePeriodOverride||getW()._prev?'prior period':p.label):'—'; }
+  function isActiveRow(i){ return activePeriodOverride?(weeks[i].start<=activePeriodOverride.end&&weeks[i].end>=activePeriodOverride.start):(i===activeIdx); }
+
+  // ── Aggregate weekly.json entries over a date range (no API calls) ──────────
+  function aggregateRange(startDate, endDate, noPrev){
+    function sm(arr,fn){return arr.reduce(function(a,x){return a+(fn(x)||0);},0);}
+    function r2(v){return Math.round(v*100)/100;}
+    if(!startDate||!endDate)return null;
+    var rel=weeks.filter(function(w){return w.start<=endDate&&w.end>=startDate;});
+    if(!rel.length)return null;
+    var pv=sm(rel,function(w){return w.reach.pageviews;});
+    var uv=sm(rel,function(w){return w.reach.unique_visitors;});
+    var sess=sm(rel,function(w){return w.reach.sessions;});
+    var tl=sm(rel,function(w){return w.leads.total_leads;});
+    var days=Math.round((new Date(endDate)-new Date(startDate))/86400000)+1;
+    var fmtD=function(d){return new Date(d+'T12:00:00Z').toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'});};
+    var label=days<=7?(function(){var d=new Date(startDate+'T12:00:00Z');return d.toLocaleDateString('en-US',{month:'short',timeZone:'UTC'})+' W'+Math.ceil(d.getUTCDate()/7);})():fmtD(startDate)+'–'+fmtD(endDate);
+    var agg={
+      label:label,range:startDate+' – '+endDate,start:startDate,end:endDate,
+      reach:{pageviews:pv,unique_visitors:uv,sessions:sess,pages_per_session:sess>0?r2(pv/sess):0},
+      engagement:{cta_clicks:sm(rel,function(w){return w.engagement.cta_clicks;}),cta_click_rate:uv>0?r2(sm(rel,function(w){return w.engagement.cta_clicks;})/uv*100):0,install_views:sm(rel,function(w){return w.engagement.install_views;}),pricing_selections:sm(rel,function(w){return w.engagement.pricing_selections;})},
+      leads:{total_leads:tl,cvr:uv>0?r2(tl/uv*100):0,plg_signup:sm(rel,function(w){return w.leads.plg_signup;}),sign_up_account:sm(rel,function(w){return w.leads.sign_up_account;}),demo_lead:sm(rel,function(w){return w.leads.demo_lead;}),callback:sm(rel,function(w){return w.leads.callback;}),waiting_list:sm(rel,function(w){return w.leads.waiting_list;}),newsletter:sm(rel,function(w){return w.leads.newsletter;})},
+      mql:{leady_new_lead:sm(rel,function(w){return w.mql.leady_new_lead;})},
+      paid:{
+        google:{impressions:sm(rel,function(w){return w.paid.google.impressions;}),clicks:sm(rel,function(w){return w.paid.google.clicks;}),spend_czk:sm(rel,function(w){return w.paid.google.spend_czk;}),conversions:sm(rel,function(w){return w.paid.google.conversions;})},
+        linkedin:{impressions:sm(rel,function(w){return w.paid.linkedin.impressions;}),clicks:sm(rel,function(w){return w.paid.linkedin.clicks;}),lp_clicks:sm(rel,function(w){return w.paid.linkedin.lp_clicks;}),spend_usd:r2(sm(rel,function(w){return w.paid.linkedin.spend_usd;})),conversions:sm(rel,function(w){return w.paid.linkedin.conversions;})},
+      },
+    };
+    if(!noPrev){
+      var preD=new Date(new Date(startDate).getTime()-86400000);
+      var prsD=new Date(preD.getTime()-(days-1)*86400000);
+      var prev=aggregateRange(prsD.toISOString().slice(0,10),preD.toISOString().slice(0,10),true);
+      if(prev)agg._prev=prev;
+    }
+    return agg;
+  }
 
   var liStatic = [
     { label:'Feb W1', impr:155834, clicks:1735, lp:1019, spend:'$2,856', ctr:'1.11%', cpc:'$1.65', conv:0 },
@@ -722,12 +770,12 @@ td.num, th.num { text-align: center; }
   function setHdr(px,n){ for(var i=0;i<n;i++){var e=document.getElementById(px+i);if(e)e.textContent=i<weeks.length?weeks[i].label:'—';} }
 
   function buildKpi(){
-    var w=weeks[activeIdx], p=activeIdx>0?weeks[activeIdx-1]:null;
+    var w=getW(), p=getP(), pLabel=getPLabel();
     document.getElementById('k-uv').textContent=fmt(w.reach.unique_visitors);
-    document.getElementById('k-uv-d').innerHTML=p?dH(pct(w.reach.unique_visitors,p.reach.unique_visitors))+' vs '+p.label:'—';
+    document.getElementById('k-uv-d').innerHTML=p?dH(pct(w.reach.unique_visitors,p.reach.unique_visitors))+' vs '+pLabel:'—';
     document.getElementById('k-uv-p').textContent=p?'prev: '+fmt(p.reach.unique_visitors)+' UV · '+fmt(p.reach.pageviews)+' PV':'';
     document.getElementById('k-leads').textContent=w.leads.total_leads;
-    document.getElementById('k-leads-d').innerHTML=p?dH(pct(w.leads.total_leads,p.leads.total_leads))+' vs '+p.label:'—';
+    document.getElementById('k-leads-d').innerHTML=p?dH(pct(w.leads.total_leads,p.leads.total_leads))+' vs '+pLabel:'—';
     document.getElementById('k-leads-p').textContent=p?'prev: '+p.leads.total_leads+' leads':'';
     var lBreakdown=[
       {n:'PLG Signup',v:w.leads.plg_signup||0},
@@ -742,11 +790,11 @@ td.num, th.num { text-align: center; }
       +'<div class="kpi-tip-note">Source: weekly.json · fetch-week.js</div>';
     var cvr=w.leads.cvr||0;
     document.getElementById('k-cvr').textContent=cvr?cvr.toFixed(2)+'%':'—';
-    document.getElementById('k-cvr-d').innerHTML=(p&&p.leads.cvr)?dH(pct(cvr,p.leads.cvr))+' vs '+p.label:'—';
+    document.getElementById('k-cvr-d').innerHTML=(p&&p.leads.cvr)?dH(pct(cvr,p.leads.cvr))+' vs '+pLabel:'—';
     document.getElementById('k-cvr-p').textContent=(p&&p.leads.cvr)?'prev: '+p.leads.cvr.toFixed(2)+'%':'';
     var demo=w.leads.demo_lead||0, pdemo=p?p.leads.demo_lead||0:null;
     document.getElementById('k-demo').textContent=demo;
-    document.getElementById('k-demo-d').innerHTML=pdemo!==null?dH(pct(demo,pdemo))+' vs '+p.label:'—';
+    document.getElementById('k-demo-d').innerHTML=pdemo!==null?dH(pct(demo,pdemo))+' vs '+pLabel:'—';
     document.getElementById('k-demo-p').textContent=pdemo!==null?'prev: '+pdemo+' demo leads':'';
     var demoHistory=weeks.map(function(wk){return {label:wk.label,v:wk.leads.demo_lead||0};});
     var demoMax=Math.max.apply(null,demoHistory.map(function(r){return r.v;}))||1;
@@ -778,10 +826,10 @@ td.num, th.num { text-align: center; }
     var rth=document.querySelector('#reach-tbody').closest('table').querySelector('thead tr');
     if(rth)rth.innerHTML='<th>Week</th>'+metrics.map(function(m){return '<th class="num">'+m.l+'</th>';}).join('');
     document.getElementById('reach-tbody').innerHTML=weeks.map(function(w,i){
-      var ac=i===activeIdx;
+      var ac=isActiveRow(i);
       return '<tr><td class="metric-col'+(ac?' active-col':'')+'">'+w.label+'</td>'+metrics.map(function(m){return '<td class="num'+(ac?' active-col':'')+'">'+m.f(w)+'</td>';}).join('')+'</tr>';
     }).join('');
-    var w=weeks[activeIdx], p=activeIdx>0?weeks[activeIdx-1]:null;
+    var w=getW(), p=getP();
     var ins=document.getElementById('reach-insight');
     if(p){var d=pct(w.reach.unique_visitors,p.reach.unique_visitors); ins.textContent=w.label+': '+fmt(w.reach.unique_visitors)+' UV ('+(d!=null?(d>0?'+':'')+d.toFixed(1)+'% WoW':'—')+'), '+fmt(w.reach.pageviews)+' PV. LinkedIn LP clicks: '+fmt(w.paid.linkedin.lp_clicks)+'. Google clicks: '+fmt(w.paid.google.clicks||0)+'.';}
     else ins.textContent='Feb W3 baseline: '+fmt(w.reach.unique_visitors)+' UV, '+fmt(w.reach.pageviews)+' PV.';
@@ -849,7 +897,7 @@ td.num, th.num { text-align: center; }
     var eth=document.querySelector('#eng-tbody').closest('table').querySelector('thead tr');
     if(eth)eth.innerHTML='<th>Week</th>'+metrics.map(function(m){return '<th class="num">'+m.l+'</th>';}).join('');
     document.getElementById('eng-tbody').innerHTML=weeks.map(function(w,i){
-      var ac=i===activeIdx;
+      var ac=isActiveRow(i);
       return '<tr><td class="metric-col'+(ac?' active-col':'')+'">'+w.label+'</td>'+metrics.map(function(m){return '<td class="num'+(ac?' active-col':'')+'">'+m.f(w)+'</td>';}).join('')+'</tr>';
     }).join('');
   }
@@ -858,7 +906,7 @@ td.num, th.num { text-align: center; }
     var lth=document.querySelector('#lead-tbody').closest('table').querySelector('thead tr');
     if(lth)lth.innerHTML='<th>Week</th><th class="num">PLG Signup</th><th class="num">Demo Lead</th><th class="num">Callback</th><th class="num">Wait. List</th><th class="num">Newsletter</th><th class="num" style="font-weight:500">TOTAL</th><th class="num">CVR %</th><th class="num" style="color:var(--dim)">Acct.</th>';
     document.getElementById('lead-tbody').innerHTML=weeks.map(function(w,i){
-      var ac=i===activeIdx;
+      var ac=isActiveRow(i);
       return '<tr><td class="metric-col'+(ac?' active-col':'')+'">'+w.label+'</td>'
         +'<td class="num'+(ac?' active-col':'')+'">'+( w.leads.plg_signup||0)+'</td>'
         +'<td class="num'+(ac?' active-col':'')+'">'+( w.leads.demo_lead||0)+'</td>'
@@ -876,7 +924,7 @@ td.num, th.num { text-align: center; }
     var mth=document.querySelector('#mql-tbody').closest('table').querySelector('thead tr');
     if(mth)mth.innerHTML='<th>Week</th><th class="num">Demo Lead</th><th class="num">Callback</th><th class="num">Leady</th>';
     document.getElementById('mql-tbody').innerHTML=weeks.map(function(w,i){
-      var ac=i===activeIdx;
+      var ac=isActiveRow(i);
       return '<tr><td class="metric-col'+(ac?' active-col':'')+'">'+w.label+'</td>'
         +'<td class="num'+(ac?' active-col':'')+'">'+( w.leads.demo_lead||0)+'</td>'
         +'<td class="num'+(ac?' active-col':'')+'">'+( w.leads.callback||0)+'</td>'
@@ -886,7 +934,7 @@ td.num, th.num { text-align: center; }
   }
 
   function buildFunnel(){
-    var w=weeks[activeIdx], p=activeIdx>0?weeks[activeIdx-1]:null;
+    var w=getW(), p=getP();
     document.getElementById('funnel-wk').textContent=w.label;
     var uv=w.reach.unique_visitors;
 
@@ -1046,7 +1094,7 @@ td.num, th.num { text-align: center; }
   }
 
   function buildSplitBar(){
-    var w=weeks[activeIdx];
+    var w=getW();
     var demo=w.leads.demo_lead||0, cb=w.leads.callback||0, total=demo+cb;
     var bar=document.getElementById('slg-split-bar');
     if(!bar)return;
@@ -1060,7 +1108,7 @@ td.num, th.num { text-align: center; }
   }
 
   function buildPaidFlow(){
-    var w=weeks[activeIdx];
+    var w=getW();
     var g=w.paid.google, li=w.paid.linkedin;
     var CZK=21.1;
     var gCzk=g.spend_czk||0, liCzk=Math.round((li.spend_usd||0)*CZK);
@@ -1239,8 +1287,16 @@ td.num, th.num { text-align: center; }
 
   function buildWeekTabs(){
     var c=document.getElementById('wk-tabs');
-    c.innerHTML=weeks.map(function(w,i){return '<button class="wk-tab'+(i===activeIdx?' active':'')+'" data-idx="'+i+'">'+w.label+'</button>';}).join('');
-    c.querySelectorAll('.wk-tab').forEach(function(btn){btn.addEventListener('click',function(){activeIdx=parseInt(btn.dataset.idx);c.querySelectorAll('.wk-tab').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');refreshAll();});});
+    var tabs=weeks.map(function(w,i){return '<button class="wk-tab'+(!activePeriodOverride&&i===activeIdx?' active':'')+'" data-idx="'+i+'">'+w.label+'</button>';});
+    if(activePeriodOverride)tabs.push('<button class="wk-tab active" data-idx="range" style="color:var(--accent)">'+activePeriodOverride.label+'</button>');
+    c.innerHTML=tabs.join('');
+    c.querySelectorAll('.wk-tab').forEach(function(btn){btn.addEventListener('click',function(){
+      c.querySelectorAll('.wk-tab').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      if(btn.dataset.idx==='range'){ /* keep override */ }
+      else { activePeriodOverride=null; activeIdx=parseInt(btn.dataset.idx); }
+      refreshAll();
+    });});
   }
 
   document.querySelectorAll('.pg-tab').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('.pg-tab').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});document.getElementById('page-'+btn.dataset.page).classList.add('active');});});
@@ -1391,96 +1447,62 @@ td.num, th.num { text-align: center; }
     });
   }
 
-  // ── Refresh modal (SSE-driven) ─────────────────────────────────────────────
-  var refreshBtn=document.getElementById('refresh-btn');
-  var roverlay=document.getElementById('rmodal-overlay');
-  var rmodalClose=document.getElementById('rmodal-close');
+  // ── Range modal (client-side aggregation, no API calls) ────────────────────
+  var refreshBtn   = document.getElementById('refresh-btn');
+  var roverlay     = document.getElementById('rmodal-overlay');
+  var rmodalStart  = document.getElementById('rmodal-start');
+  var rmodalCancel = document.getElementById('rmodal-cancel');
+  var rmodalReset  = document.getElementById('rmodal-reset');
+  var rNoData      = document.getElementById('rmodal-no-data');
 
-  var STEPS={1:'rstep-1',2:'rstep-2',3:'rstep-3',4:'rstep-4',5:'rstep-5',6:'rstep-6',7:'rstep-7'};
+  if(refreshBtn){ refreshBtn.addEventListener('click',function(){ if(rNoData)rNoData.style.display='none'; roverlay.classList.add('open'); }); }
+  if(rmodalCancel){ rmodalCancel.addEventListener('click',function(){ roverlay.classList.remove('open'); }); }
 
-  function rsetStep(n, state, value){
-    var el=document.getElementById('rstep-'+n);
-    if(!el)return;
-    el.className='rstep '+state;
-    el.querySelector('.rstep-icon').textContent=state==='done'?'✓':state==='error'?'✗':state==='active'?'●':'○';
-    if(value!=null)el.querySelector('.rstep-value').textContent=value;
-  }
-  function rReset(){
-    for(var i=1;i<=7;i++)rsetStep(i,'','');
-    document.getElementById('rmodal-range').textContent='Connecting…';
-    document.getElementById('rmodal-result').classList.remove('show');
-    document.getElementById('rmodal-error').classList.remove('show');
-  }
-
-  if(refreshBtn){
-    refreshBtn.addEventListener('click',function(){
-      var startDate=document.getElementById('fetch-date').value||'';
-      rReset();
-      roverlay.classList.add('open');
-      refreshBtn.disabled=true;
-
-      var url='/api/refresh/stream'+(startDate?'?start='+startDate:'');
-      var es=new EventSource(url);
-
-      es.onmessage=function(e){
-        var d=JSON.parse(e.data);
-        if(d.type==='start'){
-          document.getElementById('rmodal-range').textContent=d.start+' → '+d.end;
-        } else if(d.type==='progress'){
-          // mark previous steps done
-          for(var i=1;i<d.step;i++)if(document.getElementById('rstep-'+i).classList.contains('active'))rsetStep(i,'done','');
-          rsetStep(d.step, d.value!=null?'done':'active', d.value||null);
-        } else if(d.type==='saving'){
-          rsetStep(7,'active',null);
-        } else if(d.type==='done'){
-          for(var i=1;i<=7;i++)rsetStep(i,'done','');
-          document.getElementById('rres-week').textContent=d.week||'—';
-          document.getElementById('rres-uv').textContent=(d.uv||0).toLocaleString();
-          document.getElementById('rres-leads').textContent=d.total_leads||'—';
-          document.getElementById('rmodal-result').classList.add('show');
-          es.close();
-        } else if(d.type==='error'){
-          document.getElementById('rmodal-error').textContent='Error: '+d.message;
-          document.getElementById('rmodal-error').classList.add('show');
-          es.close();
-          refreshBtn.disabled=false;
-        }
-      };
-      es.onerror=function(){
-        document.getElementById('rmodal-error').textContent='Connection lost — is the local server running?';
-        document.getElementById('rmodal-error').classList.add('show');
-        es.close();
-        refreshBtn.disabled=false;
-      };
+  // Preset buttons — fill from/to inputs
+  document.querySelectorAll('.preset-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('.preset-btn').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      var days=parseInt(btn.dataset.days,10);
+      var to=new Date(), from=new Date(+to-days*86400000);
+      document.getElementById('fetch-to').value  =to.toISOString().slice(0,10);
+      document.getElementById('fetch-from').value=from.toISOString().slice(0,10);
+      if(rNoData)rNoData.style.display='none';
     });
-  }
-
-  if(rmodalClose){
-    rmodalClose.addEventListener('click',function(){
-      roverlay.classList.remove('open');
-      refreshBtn.disabled=false;
-      loadConvBehavior();
-      loadPaidParticipation();
-      attrCache={};
-      var activeModel=(document.getElementById('attr-model-select')||{}).value||'last';
-      loadAttribution(activeModel);
-      loadData();
-    });
-  }
-
-  roverlay&&roverlay.addEventListener('click',function(e){
-    if(e.target===roverlay&&document.getElementById('rmodal-result').classList.contains('show')){
-      rmodalClose.click();
-    }
   });
 
-  // Hide refresh controls on static hosts (GitHub Pages etc.)
+  // Apply Range — aggregate from weekly.json data, no API call
+  function applyRange(){
+    var from=document.getElementById('fetch-from').value;
+    var to  =document.getElementById('fetch-to').value;
+    if(!from||!to){ roverlay.classList.remove('open'); return; }
+    var agg=aggregateRange(from,to);
+    if(!agg||!agg.reach.unique_visitors){ if(rNoData)rNoData.style.display='block'; return; }
+    activePeriodOverride=agg;
+    roverlay.classList.remove('open');
+    buildWeekTabs(); refreshAll();
+  }
+  if(rmodalStart){ rmodalStart.addEventListener('click',applyRange); }
+
+  // Reset — clear range override, go back to latest week
+  if(rmodalReset){
+    rmodalReset.addEventListener('click',function(){
+      activePeriodOverride=null;
+      document.getElementById('fetch-from').value='';
+      document.getElementById('fetch-to').value='';
+      document.querySelectorAll('.preset-btn').forEach(function(b){b.classList.remove('active');});
+      roverlay.classList.remove('open');
+      buildWeekTabs(); refreshAll();
+    });
+  }
+
+  roverlay&&roverlay.addEventListener('click',function(e){ if(e.target===roverlay)roverlay.classList.remove('open'); });
+
+  // Hide refresh button on static hosts (GitHub Pages etc.)
   var isStatic = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
   if (isStatic) {
     var rbtn = document.getElementById('refresh-btn');
-    var fdate = document.getElementById('fetch-date');
-    if (rbtn)  rbtn.style.display  = 'none';
-    if (fdate) fdate.style.display = 'none';
+    if (rbtn) rbtn.style.display = 'none';
   }
 
   loadData().catch(function(e){console.error('weekly.json load failed:',e);});
