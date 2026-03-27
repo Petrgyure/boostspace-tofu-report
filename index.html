@@ -61,6 +61,16 @@ html, body { min-height: 100%; background: var(--bg); color: var(--text); font-f
 .kpi-delta .dn { color: var(--error); }
 .kpi-delta .flat { color: var(--dim); }
 .kpi-prev { font-size: 0.575rem; color: var(--dim); }
+/* KPI TOOLTIP */
+.kpi-has-tip { position: relative; }
+.kpi-tip-icon { display: inline-flex; align-items: center; justify-content: center; width: 0.9rem; height: 0.9rem; border-radius: 50%; border: 1px solid currentColor; font-size: 0.5rem; opacity: 0.5; cursor: help; vertical-align: middle; margin-left: 0.25rem; }
+.kpi-tooltip { display: none; position: absolute; top: calc(100% + 6px); left: 0; z-index: 100; background: #18181B; border: 1px solid rgb(39,39,42); border-radius: 4px; padding: 0.6rem 0.75rem; min-width: 260px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
+.kpi-has-tip:hover .kpi-tooltip { display: block; }
+.kpi-tip-title { font-size: 0.575rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.4rem; }
+.kpi-tip-row { font-size: 0.675rem; color: var(--sub); padding: 0.2rem 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(39,39,42,0.6); }
+.kpi-tip-row:last-of-type { border-bottom: none; }
+.kpi-tip-val { color: var(--text); font-size: 0.75rem; min-width: 2rem; text-align: right; }
+.kpi-tip-note { font-size: 0.525rem; color: var(--dim); margin-top: 0.4rem; padding-top: 0.35rem; border-top: 1px solid rgb(39,39,42); }
 .badge-crit {
   display: inline-block; background: var(--error); color: #fff;
   font-size: 0.47rem; letter-spacing: 0.06em; text-transform: uppercase;
@@ -104,19 +114,49 @@ td.num, th.num { text-align: center; }
 .data-table tbody tr.total-row td { color: var(--text); font-weight: 500; border-top: var(--bw) solid var(--border); }
 .sub-section { padding: 0 1.5rem 0.7rem; }
 .sub-title { font-size: 0.525rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--dim); padding: 0.45rem 0 0.25rem; }
+/* DATE PICKER */
+.date-pick { background: none; border: 1px solid var(--dim); color: var(--muted); font-family: var(--mono); font-size: 0.55rem; padding: 0.18rem 0.4rem; border-radius: 2px; cursor: pointer; flex-shrink: 0; outline: none; }
+.date-pick::-webkit-calendar-picker-indicator { filter: invert(0.4); cursor: pointer; }
+.date-pick:focus { border-color: var(--accent); color: var(--accent); }
+/* REFRESH MODAL */
+.rmodal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: center; justify-content: center; }
+.rmodal-overlay.open { display: flex; }
+.rmodal { background: #111113; border: 1px solid rgb(39,39,42); border-radius: 6px; width: 420px; max-width: 94vw; padding: 1.4rem 1.6rem; display: flex; flex-direction: column; gap: 0.85rem; }
+.rmodal-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text); }
+.rmodal-range { font-size: 0.6rem; color: var(--muted); margin-top: -0.5rem; }
+.rmodal-steps { display: flex; flex-direction: column; gap: 0.35rem; }
+.rstep { display: flex; align-items: center; gap: 0.65rem; font-size: 0.68rem; color: var(--dim); }
+.rstep.active { color: var(--accent); }
+.rstep.done { color: var(--green); }
+.rstep.error { color: var(--error); }
+.rstep-icon { width: 1rem; text-align: center; flex-shrink: 0; font-size: 0.75rem; }
+.rstep-label { flex: 1; }
+.rstep-value { font-size: 0.6rem; color: var(--muted); text-align: right; }
+.rstep.active .rstep-value { color: var(--accent); }
+.rstep.done .rstep-value { color: var(--green); opacity: 0.7; }
+.rmodal-result { border-top: 1px solid rgb(39,39,42); padding-top: 0.75rem; display: none; }
+.rmodal-result.show { display: block; }
+.rmodal-result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 0.75rem; }
+.rresult-card { background: rgba(255,255,255,0.03); border: 1px solid rgb(39,39,42); border-radius: 3px; padding: 0.4rem 0.6rem; }
+.rresult-label { font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.rresult-val { font-size: 1rem; color: var(--text); font-weight: 500; }
+.rmodal-close { background: var(--dim); border: none; color: var(--text); font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.35rem 0.9rem; border-radius: 3px; cursor: pointer; align-self: flex-end; }
+.rmodal-close:hover { background: #52525B; }
+.rmodal-error { color: var(--error); font-size: 0.7rem; display: none; }
+.rmodal-error.show { display: block; }
+/* PAID PICKER */
+.paid-picker-wrap { padding: 0 1.5rem 0.75rem; }
+.paid-picker-tabs { display: flex; gap: 0; border-bottom: var(--bw) solid var(--border); margin-bottom: 0.75rem; }
+.paid-tab { background: none; border: none; border-bottom: 2px solid transparent; color: var(--muted); font-family: var(--mono); font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.35rem 0.85rem; cursor: pointer; margin-bottom: -1px; transition: color 0.12s, border-color 0.12s; }
+.paid-tab:hover { color: var(--sub); }
+.paid-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 /* FUNNEL */
 .funnel-pair { display: grid; grid-template-columns: 1fr 1fr; border-top: var(--bw) solid var(--border); gap: 0; }
 .funnel-col { border-right: var(--bw) solid var(--border); }
 .funnel-col:last-child { border-right: none; }
 .funnel-col-hdr { font-size: 0.475rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--dim); padding: 0.4rem 0.75rem 0.25rem; border-bottom: var(--bw) solid var(--border); }
-.funnel-row { display: grid; grid-template-columns: repeat(4, 1fr); }
-.funnel-cell { padding: 0.7rem 0.75rem; text-align: center; border-right: var(--bw) solid var(--border); }
-.funnel-cell:last-child { border-right: none; }
-.funnel-stage { font-size: 0.475rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--dim); margin-bottom: 0.15rem; }
-.funnel-vol { font-size: 1.1rem; font-weight: 500; color: var(--text); }
-.funnel-vol.crit { color: var(--error); }
-.funnel-cvr { font-size: 0.575rem; color: var(--muted); margin-top: 0.08rem; }
-.funnel-trend { font-size: 0.55rem; color: var(--muted); margin-top: 0.1rem; }
+.funnel-row { display: block; padding: 0.6rem 0.85rem 0.5rem; }
+.funnel-row svg { display: block; width: 100%; overflow: visible; }
 /* SPLIT BAR (SLG funnel) */
 .split-bar-wrap { padding: 0.55rem 1.5rem 0.7rem; }
 .split-bar-track { height: 22px; background: var(--card2); border-radius: 3px; overflow: hidden; display: flex; border: var(--bw) solid var(--border); }
@@ -239,8 +279,35 @@ td.num, th.num { text-align: center; }
     </div>
     <div class="week-tabs" id="wk-tabs"></div>
   </div>
-  <button id="refresh-btn" style="background:none;border:1px solid var(--dim);color:var(--muted);font-family:var(--mono);font-size:0.55rem;text-transform:uppercase;letter-spacing:0.05em;padding:0.2rem 0.55rem;border-radius:2px;cursor:pointer;flex-shrink:0" title="Fetch latest data from PostHog (local server only)">↻ Refresh</button>
+  <input type="date" id="fetch-date" class="date-pick" title="Select week start date (leave empty for current week)">
+  <button id="refresh-btn" style="background:none;border:1px solid var(--dim);color:var(--muted);font-family:var(--mono);font-size:0.55rem;text-transform:uppercase;letter-spacing:0.05em;padding:0.2rem 0.55rem;border-radius:2px;cursor:pointer;flex-shrink:0" title="Fetch latest data from PostHog">↻ Refresh</button>
   <span class="updated-label" id="updated-label">—</span>
+</div>
+
+<!-- REFRESH MODAL -->
+<div class="rmodal-overlay" id="rmodal-overlay">
+  <div class="rmodal">
+    <div class="rmodal-title">Fetching Latest Data</div>
+    <div class="rmodal-range" id="rmodal-range">Connecting…</div>
+    <div class="rmodal-steps" id="rmodal-steps">
+      <div class="rstep" id="rstep-1"><span class="rstep-icon">○</span><span class="rstep-label">Traffic (pageviews, unique visitors)</span><span class="rstep-value" id="rstep-1-val"></span></div>
+      <div class="rstep" id="rstep-2"><span class="rstep-icon">○</span><span class="rstep-label">Engagement (CTA, installs, pricing)</span><span class="rstep-value" id="rstep-2-val"></span></div>
+      <div class="rstep" id="rstep-3"><span class="rstep-icon">○</span><span class="rstep-label">Leads (PLG, Demo, Callback)</span><span class="rstep-value" id="rstep-3-val"></span></div>
+      <div class="rstep" id="rstep-4"><span class="rstep-icon">○</span><span class="rstep-label">MQL — Leady company identification</span><span class="rstep-value" id="rstep-4-val"></span></div>
+      <div class="rstep" id="rstep-5"><span class="rstep-icon">○</span><span class="rstep-label">Google Ads — spend & conversions</span><span class="rstep-value" id="rstep-5-val"></span></div>
+      <div class="rstep" id="rstep-6"><span class="rstep-icon">○</span><span class="rstep-label">LinkedIn Ads — spend & LP clicks</span><span class="rstep-value" id="rstep-6-val"></span></div>
+      <div class="rstep" id="rstep-7"><span class="rstep-icon">○</span><span class="rstep-label">Saving to weekly.json</span><span class="rstep-value"></span></div>
+    </div>
+    <div class="rmodal-error" id="rmodal-error"></div>
+    <div class="rmodal-result" id="rmodal-result">
+      <div class="rmodal-result-grid">
+        <div class="rresult-card"><div class="rresult-label">Week</div><div class="rresult-val" id="rres-week">—</div></div>
+        <div class="rresult-card"><div class="rresult-label">Unique Visitors</div><div class="rresult-val" id="rres-uv">—</div></div>
+        <div class="rresult-card"><div class="rresult-label">Total Leads</div><div class="rresult-val" id="rres-leads">—</div></div>
+      </div>
+      <button class="rmodal-close" id="rmodal-close">Close &amp; Reload</button>
+    </div>
+  </div>
 </div>
 
 <!-- PAGE 1 -->
@@ -253,11 +320,12 @@ td.num, th.num { text-align: center; }
       <div class="kpi-delta" id="k-uv-d"></div>
       <div class="kpi-prev" id="k-uv-p"></div>
     </div>
-    <div class="kpi-card accent">
-      <div class="kpi-label">Total Leads</div>
+    <div class="kpi-card accent kpi-has-tip">
+      <div class="kpi-label">Total Leads <span class="kpi-tip-icon">?</span></div>
       <div class="kpi-num" id="k-leads">—</div>
       <div class="kpi-delta" id="k-leads-d"></div>
       <div class="kpi-prev" id="k-leads-p"></div>
+      <div class="kpi-tooltip" id="leads-tooltip"></div>
     </div>
     <div class="kpi-card orange">
       <div class="kpi-label">CVR %</div>
@@ -265,16 +333,17 @@ td.num, th.num { text-align: center; }
       <div class="kpi-delta" id="k-cvr-d"></div>
       <div class="kpi-prev" id="k-cvr-p"></div>
     </div>
-    <div class="kpi-card green" id="k-demo-card">
-      <div class="kpi-label">Demo Leads</div>
+    <div class="kpi-card green kpi-has-tip" id="k-demo-card">
+      <div class="kpi-label">Demo Leads <span class="kpi-tip-icon">?</span></div>
       <div class="kpi-num" id="k-demo">—</div>
       <div class="kpi-delta" id="k-demo-d"></div>
       <div class="kpi-prev" id="k-demo-p"></div>
+      <div class="kpi-tooltip" id="demo-tooltip"></div>
     </div>
   </div>
 
   <div class="chart-card">
-    <div class="chart-hdr">Weekly Trend — Unique Visitors · Total Leads · CTA Rate %</div>
+    <div class="chart-hdr">Weekly Trend — Unique Visitors · Investment (USD) · Leads</div>
     <div class="chart-body"><canvas id="trend-chart"></canvas></div>
   </div>
 
@@ -297,7 +366,7 @@ td.num, th.num { text-align: center; }
   </div>
 
   <div class="section">
-    <div class="section-hdr"><span class="section-tag blue">Layer 1</span><span class="section-title">Reach — Traffic Volume</span></div>
+    <div class="section-hdr"><span class="section-tag blue">Reach</span><span class="section-title">How many people are we reaching?</span></div>
     <div class="insight info">Awareness and traffic volume metrics. How many people are we putting Boost.space in front of?</div>
     <div class="tbl-wrap">
       <table class="data-table">
@@ -306,67 +375,41 @@ td.num, th.num { text-align: center; }
       </table>
     </div>
     <div class="insight warn" id="reach-insight"></div>
-    <div class="sub-section">
-      <div class="sub-title">Traffic Sources — Estimated (Active Week)</div>
-      <table class="data-table" style="margin-top:0.2rem">
-        <thead><tr><th>Source / Medium</th><th class="num">Volume</th><th class="num">% of Total</th></tr></thead>
-        <tbody id="sources-tbody"></tbody>
-      </table>
-    </div>
   </div>
 
   <div class="section">
     <div class="section-hdr"><span class="section-tag accent">Paid</span><span class="section-title">Paid Channel Performance</span></div>
-    <div class="insight info">Ad platform data synced via PostHog Data Warehouse. LinkedIn Ads + Google Ads.</div>
-    <div class="sub-section">
-      <div class="sub-title">LinkedIn Ads — Weekly Summary (USD) · includes Feb W1/W2 historical</div>
-      <table class="data-table">
-        <thead><tr><th>Week</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">LP Clicks</th><th class="num">Spend</th><th class="num">CTR</th><th class="num">CPC</th><th class="num">Conv.</th></tr></thead>
-        <tbody id="li-weekly-tbody"></tbody>
-      </table>
-    </div>
-    <div class="insight warn">Zero <code>external_website_conversions</code> tracked across all weeks — LinkedIn pixel not configured. Mar W3 LP clicks collapsed to 18 — campaign mix fully shifted to Post Engagement.</div>
-    <div class="sub-section" style="margin-top:0.5rem">
-      <div class="sub-title">LinkedIn Ads — Top Campaigns Mar W2 (by spend)</div>
-      <table class="data-table">
-        <thead><tr><th>Campaign</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">Spend</th><th class="num">CTR</th><th class="num">CPC</th></tr></thead>
-        <tbody>
-          <tr><td>BOFU | Remarketing | Post Engagement</td><td class="num">18,615</td><td class="num">438</td><td class="num">$354</td><td class="num">2.35%</td><td class="num">$0.81</td></tr>
-          <tr><td>TOFU | DACH | Website visit</td><td class="num">1,154</td><td class="num">11</td><td class="num">$264</td><td class="num">0.95%</td><td class="num crit">$24.00</td></tr>
-          <tr><td>Engagement — Mar 2, 2026</td><td class="num">9,423</td><td class="num">359</td><td class="num">$254</td><td class="num">3.81%</td><td class="num">$0.71</td></tr>
-          <tr><td>UKI | Supplier Updates Without Chaos</td><td class="num">6,596</td><td class="num">96</td><td class="num">$224</td><td class="num">1.46%</td><td class="num">$2.33</td></tr>
-          <tr><td>UKI | GEO — AI-Discoverable Catalog</td><td class="num">8,676</td><td class="num">88</td><td class="num">$222</td><td class="num">1.01%</td><td class="num">$2.52</td></tr>
-          <tr><td>UKI | Marketplace Expansion</td><td class="num">8,198</td><td class="num">100</td><td class="num">$221</td><td class="num">1.22%</td><td class="num">$2.21</td></tr>
-          <tr><td>UKI | AI Enrichment at Scale</td><td class="num">6,460</td><td class="num">69</td><td class="num">$215</td><td class="num">1.07%</td><td class="num">$3.12</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="sub-section" style="margin-top:0.5rem">
-      <div class="sub-title">Google Ads — Weekly Summary (CZK, ~25 CZK/USD)</div>
-      <table class="data-table">
-        <thead><tr><th>Week</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">Spend CZK</th><th class="num">CTR</th><th class="num">CPC CZK</th><th class="num">Conv.</th></tr></thead>
-        <tbody id="ga-weekly-tbody"></tbody>
-      </table>
-    </div>
-    <div class="insight warn">Mar W3: 27 conversions — 13.5× jump vs Mar W2. CPC rose to 56 CZK. BSP Commerce campaigns maturing. Mar W2 was a trough after restructure.</div>
-    <div class="sub-section">
-      <div class="sub-title">Google Ads — Top Campaigns Mar W2 (by spend)</div>
-      <table class="data-table">
-        <thead><tr><th>Campaign</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">Spend CZK</th><th class="num">Conv.</th><th class="num">CTR</th></tr></thead>
-        <tbody>
-          <tr><td>BSP | Commerce - GEO Catalog</td><td class="num">4,221</td><td class="num">338</td><td class="num">15,999</td><td class="num good">2</td><td class="num">10.61%</td></tr>
-          <tr><td>BSP | Commerce - Marketplace Expansion</td><td class="num">1,509</td><td class="num">47</td><td class="num">4,775</td><td class="num">0</td><td class="num">3.57%</td></tr>
-          <tr><td>Search - Database for Make</td><td class="num">4,933</td><td class="num">93</td><td class="num">4,158</td><td class="num">0</td><td class="num">1.32%</td></tr>
-          <tr><td>BSP | Commerce - Dynamic Pricing</td><td class="num">810</td><td class="num">51</td><td class="num">2,728</td><td class="num">0</td><td class="num">11.67%</td></tr>
-          <tr><td>BSP | Commerce - AI Enrichment</td><td class="num">88</td><td class="num">6</td><td class="num">417</td><td class="num">0</td><td class="num">6.18%</td></tr>
-        </tbody>
-      </table>
+    <div class="paid-picker-wrap">
+      <div class="paid-picker-tabs">
+        <button class="paid-tab active" data-paid="all">All</button>
+        <button class="paid-tab" data-paid="linkedin">LinkedIn</button>
+        <button class="paid-tab" data-paid="google">Google</button>
+      </div>
+      <div class="paid-panel" id="paid-panel-all">
+        <table class="data-table">
+          <thead><tr><th>Week</th><th class="num">LinkedIn $</th><th class="num">Google ~$</th><th class="num">Total $</th><th class="num">LinkedIn %</th><th class="num">Google %</th><th class="num">LI Conv.</th><th class="num">G Conv.</th></tr></thead>
+          <tbody id="paid-split-tbody"></tbody>
+        </table>
+      </div>
+      <div class="paid-panel" id="paid-panel-linkedin" style="display:none">
+        <table class="data-table">
+          <thead><tr><th>Week</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">LP Clicks</th><th class="num">Spend</th><th class="num">CTR</th><th class="num">CPC</th><th class="num">Conv.</th></tr></thead>
+          <tbody id="li-weekly-tbody"></tbody>
+        </table>
+        <div class="insight warn" style="margin:0.5rem 0 0">Zero <code>external_website_conversions</code> tracked across all weeks — LinkedIn pixel not configured. Mar W3 LP clicks collapsed to 18 — campaign mix fully shifted to Post Engagement.</div>
+      </div>
+      <div class="paid-panel" id="paid-panel-google" style="display:none">
+        <table class="data-table">
+          <thead><tr><th>Week</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">Spend CZK</th><th class="num">CTR</th><th class="num">CPC CZK</th><th class="num">Conv.</th></tr></thead>
+          <tbody id="ga-weekly-tbody"></tbody>
+        </table>
+        <div class="insight warn" style="margin:0.5rem 0 0">Mar W3: 27 conversions — 13.5× jump vs Mar W2. CPC rose to 56 CZK. BSP Commerce campaigns maturing. Mar W2 was a trough after restructure.</div>
+      </div>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-hdr"><span class="section-tag orange">Layer 2</span><span class="section-title">Engagement — On-Site Behavior</span></div>
-    <div class="insight info">Are visitors taking meaningful actions? Are we attracting the right audience?</div>
+    <div class="section-hdr"><span class="section-tag orange">Engagement</span><span class="section-title">Are visitors taking meaningful actions?</span></div>
     <div class="tbl-wrap">
       <table class="data-table">
         <thead><tr><th>Metric</th><th class="num" id="th-e0">—</th><th class="num" id="th-e1">—</th><th class="num" id="th-e2">—</th><th class="num" id="th-e3">—</th><th class="num" id="th-e4">—</th></tr></thead>
@@ -377,7 +420,7 @@ td.num, th.num { text-align: center; }
   </div>
 
   <div class="section">
-    <div class="section-hdr"><span class="section-tag accent">Layer 3</span><span class="section-title">Lead Capture — Visitor → Lead Conversion</span></div>
+    <div class="section-hdr"><span class="section-tag accent">Leads</span><span class="section-title">Visitor → Lead conversion</span></div>
     <div class="insight info">Visitor → Lead conversion. How many visitors are we converting into identifiable leads?</div>
     <div class="tbl-wrap">
       <table class="data-table">
@@ -389,7 +432,7 @@ td.num, th.num { text-align: center; }
   </div>
 
   <div class="section">
-    <div class="section-hdr"><span class="section-tag red">Layer 4</span><span class="section-title">Demo Lead — MQL Signal</span></div>
+    <div class="section-hdr"><span class="section-tag red">Sales Pipeline</span><span class="section-title">Demo Leads — Sales qualified signal</span></div>
     <div class="insight info">
       <strong>Demo Lead</strong> = combined <code>demo_meeting_booked</code> OR <code>be_form_submit_demo_lead</code>. The form was redesigned on ~Mar 2, 2026 — old Calendly widget replaced by a standard lead form. Both events represent the same intent: a visitor requesting a demo. The sales team follows up to schedule meetings. Leady (<code>leady_new_lead</code>) is the company identification layer — available from Mar 8.
     </div>
@@ -431,7 +474,7 @@ td.num, th.num { text-align: center; }
   </div>
 
   <div class="section">
-    <div class="section-hdr"><span class="section-tag">§10</span><span class="section-title">Conversion Behavior — Time &amp; Session Depth</span></div>
+    <div class="section-hdr"><span class="section-tag">Behavior</span><span class="section-title">Conversion Behavior — Time &amp; Session Depth</span></div>
     <div class="insight info">How long does it take people to convert? How many sessions before they submit? Split by PLG Signup vs Demo + Callback. Live PostHog query — 90-day lookback. <span id="cb-status" style="color:var(--dim);font-style:italic">Loading…</span></div>
     <div class="conv-behavior-grid" id="conv-behavior-grid">
       <div class="cb-card">
@@ -469,7 +512,7 @@ td.num, th.num { text-align: center; }
   </div>
 
   <div class="section">
-    <div class="section-hdr"><span class="section-tag">§10.3</span><span class="section-title">Paid Channel Participation in Converting Visits</span></div>
+    <div class="section-hdr"><span class="section-tag accent">Paid Impact</span><span class="section-title">Paid Channel Participation in Converting Visits</span></div>
     <div class="insight info">Any-touch: of all sessions by converters in a 90-day window, what share came from paid channels? <span id="pp-status" style="color:var(--dim);font-style:italic">Loading…</span></div>
     <div class="cb-tabs" style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:1rem">
       <button class="cb-tab-btn active" data-pp="plg" style="background:none;border:none;border-bottom:2px solid var(--accent);color:var(--text);font-size:0.85rem;padding:0.5rem 1rem;cursor:pointer;margin-bottom:-1px">Signup</button>
@@ -607,7 +650,7 @@ td.num, th.num { text-align: center; }
   </div>
 
   <div class="src-section">
-    <div class="section-hdr"><span class="section-tag accent">§11</span><span class="section-title">Conversion Paths by Channel — Attribution</span></div>
+    <div class="section-hdr"><span class="section-tag accent">Attribution</span><span class="section-title">Conversion Paths by Channel</span></div>
     <div class="attr-path-tabs">
       <button class="attr-path-btn active" data-apath="plg">Signup</button>
       <button class="attr-path-btn" data-apath="dc">Demo + Callback</button>
@@ -626,7 +669,7 @@ td.num, th.num { text-align: center; }
   </div>
 
   <div class="src-section">
-    <div class="section-hdr"><span class="section-tag red">§12</span><span class="section-title">Paid Channel Flow — Spend → Sessions → Conversions</span></div>
+    <div class="section-hdr"><span class="section-tag red">Paid Flow</span><span class="section-title">Spend → Sessions → Conversions</span></div>
     <div class="insight info">All spend normalized to CZK (~21.1 CZK/USD for Mar 2026). Sessions = platform-reported clicks / LP clicks (proxy — PostHog UTM broken). Conversions = active week totals.</div>
     <div class="sankey-wrap"><svg class="sankey-svg" id="sankey-svg" viewBox="0 0 700 240" style="height:auto"></svg></div>
     <div class="tbl-wrap" style="padding-top:0.3rem">
@@ -686,6 +729,17 @@ td.num, th.num { text-align: center; }
     document.getElementById('k-leads').textContent=w.leads.total_leads;
     document.getElementById('k-leads-d').innerHTML=p?dH(pct(w.leads.total_leads,p.leads.total_leads))+' vs '+p.label:'—';
     document.getElementById('k-leads-p').textContent=p?'prev: '+p.leads.total_leads+' leads':'';
+    var lBreakdown=[
+      {n:'PLG Signup',v:w.leads.plg_signup||0},
+      {n:'Demo Lead',v:w.leads.demo_lead||0},
+      {n:'Callback',v:w.leads.callback||0},
+      {n:'Waiting List',v:w.leads.waiting_list||0},
+      {n:'Newsletter',v:w.leads.newsletter||0},
+    ];
+    document.getElementById('leads-tooltip').innerHTML=
+      '<div class="kpi-tip-title">'+w.label+' · breakdown</div>'
+      +lBreakdown.map(function(r){return '<div class="kpi-tip-row"><span>'+r.n+'</span><span class="kpi-tip-val">'+r.v+'</span></div>';}).join('')
+      +'<div class="kpi-tip-note">Source: weekly.json · fetch-week.js</div>';
     var cvr=w.leads.cvr||0;
     document.getElementById('k-cvr').textContent=cvr?cvr.toFixed(2)+'%':'—';
     document.getElementById('k-cvr-d').innerHTML=(p&&p.leads.cvr)?dH(pct(cvr,p.leads.cvr))+' vs '+p.label:'—';
@@ -694,19 +748,38 @@ td.num, th.num { text-align: center; }
     document.getElementById('k-demo').textContent=demo;
     document.getElementById('k-demo-d').innerHTML=pdemo!==null?dH(pct(demo,pdemo))+' vs '+p.label:'—';
     document.getElementById('k-demo-p').textContent=pdemo!==null?'prev: '+pdemo+' demo leads':'';
+    var demoHistory=weeks.map(function(wk){return {label:wk.label,v:wk.leads.demo_lead||0};});
+    var demoMax=Math.max.apply(null,demoHistory.map(function(r){return r.v;}))||1;
+    document.getElementById('demo-tooltip').innerHTML=
+      '<div class="kpi-tip-title">Demo Lead</div>'
+      +'<div style="font-size:0.7rem;color:var(--sub);line-height:1.6;padding:0.1rem 0 0.5rem">Visitor requesting a demo. Combines two events fired at different times due to a form redesign on ~Mar 2, 2026 — both represent the same intent. Sales team follows up to schedule the meeting.</div>'
+      +'<div class="kpi-tip-title" style="margin-bottom:0.35rem">Historical</div>'
+      +demoHistory.map(function(r){
+        var barW=Math.round(r.v/demoMax*100);
+        var isActive=r.label===w.label;
+        return '<div style="display:flex;align-items:center;gap:0.5rem;padding:0.12rem 0">'
+          +'<span style="min-width:3.2rem;font-size:0.6rem;color:'+(isActive?'var(--text)':'var(--muted)')+'">'+r.label+'</span>'
+          +'<div style="flex:1;height:6px;background:rgba(39,39,42,0.8);border-radius:2px;overflow:hidden">'
+          +'<div style="width:'+barW+'%;height:100%;background:'+(isActive?'var(--green)':'rgba(126,231,135,0.35)')+';border-radius:2px"></div>'
+          +'</div>'
+          +'<span style="min-width:1.5rem;font-size:0.65rem;color:'+(isActive?'var(--text)':'var(--muted)')+';text-align:right">'+r.v+'</span>'
+          +'</div>';
+      }).join('')
+      +'<div class="kpi-tip-note" style="margin-top:0.4rem">demo_meeting_booked (pre Mar 2) · be_form_submit_demo_lead (post Mar 2)</div>';
   }
 
   function buildReach(){
-    var n=weeks.length;
-    setHdr('th-r',5); setAct('th-r',5);
-    var rows=[
-      {l:'Pageviews', f:function(w){return fmt(w.reach.pageviews);}},
+    var metrics=[
+      {l:'Pageviews',       f:function(w){return fmt(w.reach.pageviews);}},
       {l:'Unique Visitors', f:function(w){return fmt(w.reach.unique_visitors);}},
-      {l:'Sessions', f:function(w){return fmt(w.reach.sessions);}},
-      {l:'Pages / Session', f:function(w){return d2(w.reach.pages_per_session);}},
+      {l:'Sessions',        f:function(w){return fmt(w.reach.sessions);}},
+      {l:'Pages / UV',     f:function(w){return w.reach.unique_visitors>0?d2(w.reach.pageviews/w.reach.unique_visitors):'—';}},
     ];
-    document.getElementById('reach-tbody').innerHTML=rows.map(function(r){
-      return '<tr><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+'">'+r.f(w)+'</td>';}).join('')+'</tr>';
+    var rth=document.querySelector('#reach-tbody').closest('table').querySelector('thead tr');
+    if(rth)rth.innerHTML='<th>Week</th>'+metrics.map(function(m){return '<th class="num">'+m.l+'</th>';}).join('');
+    document.getElementById('reach-tbody').innerHTML=weeks.map(function(w,i){
+      var ac=i===activeIdx;
+      return '<tr><td class="metric-col'+(ac?' active-col':'')+'">'+w.label+'</td>'+metrics.map(function(m){return '<td class="num'+(ac?' active-col':'')+'">'+m.f(w)+'</td>';}).join('')+'</tr>';
     }).join('');
     var w=weeks[activeIdx], p=activeIdx>0?weeks[activeIdx-1]:null;
     var ins=document.getElementById('reach-insight');
@@ -714,75 +787,101 @@ td.num, th.num { text-align: center; }
     else ins.textContent='Feb W3 baseline: '+fmt(w.reach.unique_visitors)+' UV, '+fmt(w.reach.pageviews)+' PV.';
   }
 
-  function buildSources(){
-    var w=weeks[activeIdx],pv=w.reach.pageviews,li=w.paid.linkedin.lp_clicks,ga=w.paid.google.clicks||0,other=Math.max(0,Math.round(pv*0.02)),direct=Math.max(0,pv-li-ga-other);
-    document.getElementById('sources-tbody').innerHTML=[
-      {n:'Direct / None',v:direct},{n:'LinkedIn Paid (LP Clicks)',v:li},{n:'Google Search (Clicks)',v:ga},{n:'Other / Organic',v:other}
-    ].map(function(r){var p=pv>0?Math.round(r.v/pv*100):0;return '<tr><td>'+r.n+'</td><td class="num">~'+fmt(r.v)+'</td><td class="num">~'+p+'%</td></tr>';}).join('');
-    document.getElementById('s-direct').textContent='~'+fmt(direct);
-    document.getElementById('s-direct-p').textContent='~'+(pv>0?Math.round(direct/pv*100):0)+'% of PV';
-    document.getElementById('s-li').textContent=fmt(li);
-    document.getElementById('s-li-p').textContent='~'+(pv>0?Math.round(li/pv*100):0)+'% of PV';
-    document.getElementById('s-ga').textContent=fmt(ga);
-    document.getElementById('s-ga-p').textContent='~'+(pv>0?Math.round(ga/pv*100):0)+'% of PV';
-    document.getElementById('s-other').textContent='~'+fmt(other);
-    document.getElementById('s-other-p').textContent='~2% of PV';
+  function buildSources(){}
+
+  function buildPaidSplit(){
+    var staticRows=[
+      {label:'Feb W1',li:2856,g:0,liConv:null,gConv:null},
+      {label:'Feb W2',li:8961,g:0,liConv:null,gConv:null},
+    ];
+    var dynRows=weeks.map(function(w){
+      return {label:w.label,li:w.paid.linkedin.spend_usd||0,g:Math.round((w.paid.google.spend_czk||0)/25),liConv:w.paid.linkedin.conversions||0,gConv:w.paid.google.conversions||0};
+    });
+    var all=staticRows.concat(dynRows);
+    var thead=document.querySelector('#paid-panel-all thead tr');
+    if(thead)thead.innerHTML='<th>Week</th><th class="num" style="color:rgba(96,165,250,0.7)">LinkedIn $</th><th class="num" style="color:rgba(200,230,74,0.7)">Google ~$</th><th class="num">Total $</th><th class="num" style="color:rgba(96,165,250,0.5)">LI %</th><th class="num" style="color:rgba(200,230,74,0.5)">G %</th><th class="num">LI Conv.</th><th class="num">G Conv.</th>';
+    document.getElementById('paid-split-tbody').innerHTML=all.map(function(r,i){
+      var ac=i>=2&&(i-2)===activeIdx;
+      var total=r.li+r.g;
+      var liPct=total>0?(r.li/total*100).toFixed(0)+'%':'—';
+      var gPct=total>0?(r.g/total*100).toFixed(0)+'%':'—';
+      return '<tr><td class="metric-col'+(ac?' active-col':'')+'">'+r.label+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'" style="color:rgba(96,165,250,0.8)">$'+r.li.toLocaleString()+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'" style="color:rgba(200,230,74,0.8)">'+(r.g>0?'~$'+r.g.toLocaleString():'—')+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'">$'+total.toLocaleString()+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'" style="color:rgba(96,165,250,0.6)">'+liPct+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'" style="color:rgba(200,230,74,0.6)">'+gPct+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'" style="color:rgba(96,165,250,0.5)">'+(r.liConv!=null?r.liConv:'—')+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'" style="'+(r.gConv>10?'color:var(--green);font-weight:500':'')+'">'+(r.gConv!=null?r.gConv:'—')+'</td>'
+        +'</tr>';
+    }).join('');
   }
 
   function buildLiWeekly(){
     var dyn=weeks.map(function(w){var li=w.paid.linkedin,ctr=li.impressions>0?(li.clicks/li.impressions*100).toFixed(2)+'%':'—',cpc=li.clicks>0?'$'+(li.spend_usd/li.clicks).toFixed(2):'—';return{label:w.label,impr:li.impressions,clicks:li.clicks,lp:li.lp_clicks,spend:'$'+li.spend_usd.toLocaleString(),ctr:ctr,cpc:cpc,conv:li.conversions};});
-    document.getElementById('li-weekly-tbody').innerHTML=liStatic.concat(dyn).map(function(r){
-      return '<tr><td>'+r.label+'</td><td class="num">'+fmt(r.impr)+'</td><td class="num">'+fmt(r.clicks)+'</td><td class="num">'+fmt(r.lp)+'</td><td class="num">'+r.spend+'</td><td class="num">'+r.ctr+'</td><td class="num">'+r.cpc+'</td><td class="num">'+r.conv+'</td></tr>';
+    var all=liStatic.concat(dyn);
+    var thead=document.querySelector('#paid-panel-linkedin thead tr');
+    if(thead)thead.innerHTML='<th>Week</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">LP Clicks</th><th class="num">Spend</th><th class="num">CTR</th><th class="num">CPC</th><th class="num">Conv.</th>';
+    document.getElementById('li-weekly-tbody').innerHTML=all.map(function(r,i){
+      var ac=i>=2&&(i-2)===activeIdx;
+      return '<tr><td class="metric-col'+(ac?' active-col':'')+'">'+r.label+'</td><td class="num'+(ac?' active-col':'')+'">'+fmt(r.impr)+'</td><td class="num'+(ac?' active-col':'')+'">'+fmt(r.clicks)+'</td><td class="num'+(ac?' active-col':'')+'">'+fmt(r.lp)+'</td><td class="num'+(ac?' active-col':'')+'">'+r.spend+'</td><td class="num'+(ac?' active-col':'')+'">'+r.ctr+'</td><td class="num'+(ac?' active-col':'')+'">'+r.cpc+'</td><td class="num'+(ac?' active-col':'')+'">'+r.conv+'</td></tr>';
     }).join('');
   }
 
   function buildGaWeekly(){
+    var thead=document.querySelector('#paid-panel-google thead tr');
+    if(thead)thead.innerHTML='<th>Week</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">Spend CZK</th><th class="num">CTR</th><th class="num">CPC CZK</th><th class="num">Conv.</th>';
     document.getElementById('ga-weekly-tbody').innerHTML=weeks.filter(function(w){return w.paid.google.impressions>0;}).map(function(w){
       var g=w.paid.google,ctr=g.clicks>0?(g.clicks/g.impressions*100).toFixed(2)+'%':'—',cpc=g.clicks>0?(g.spend_czk/g.clicks).toFixed(2):'—';
-      return '<tr><td>'+w.label+'</td><td class="num">'+fmt(g.impressions)+'</td><td class="num">'+fmt(g.clicks)+'</td><td class="num">'+fmt(g.spend_czk)+'</td><td class="num">'+ctr+'</td><td class="num">'+cpc+'</td><td class="num'+(g.conversions>10?' good':'')+'">'+g.conversions+'</td></tr>';
+      var ac=weeks.indexOf(w)===activeIdx;
+      return '<tr><td class="metric-col'+(ac?' active-col':'')+'">'+w.label+'</td><td class="num'+(ac?' active-col':'')+'">'+fmt(g.impressions)+'</td><td class="num'+(ac?' active-col':'')+'">'+fmt(g.clicks)+'</td><td class="num'+(ac?' active-col':'')+'">'+fmt(g.spend_czk)+'</td><td class="num'+(ac?' active-col':'')+'">'+ctr+'</td><td class="num'+(ac?' active-col':'')+'">'+cpc+'</td><td class="num'+(ac?' active-col':'')+(g.conversions>10?' good':'')+'">'+g.conversions+'</td></tr>';
     }).join('');
   }
 
   function buildEng(){
-    setHdr('th-e',5); setAct('th-e',5);
-    var rows=[
-      {l:'CTA Clicks', f:function(w){return fmt(w.engagement.cta_clicks);}},
-      {l:'CTA Click Rate', f:function(w){return d2(w.engagement.cta_click_rate)+'%';}},
+    var metrics=[
+      {l:'CTA Clicks',    f:function(w){return fmt(w.engagement.cta_clicks);}},
+      {l:'CTA Rate',      f:function(w){return d2(w.engagement.cta_click_rate)+'%';}},
       {l:'Install Views', f:function(w){return fmt(w.engagement.install_views);}},
-      {l:'Pricing Selections', f:function(w){return w.engagement.pricing_selections;}},
-      {l:'Pages / Session', f:function(w){return d2(w.reach.pages_per_session);}},
+      {l:'Pricing Sel.',  f:function(w){return w.engagement.pricing_selections;}},
+      {l:'Pages / UV',    f:function(w){return w.reach.unique_visitors>0?d2(w.reach.pageviews/w.reach.unique_visitors):'—';}},
     ];
-    document.getElementById('eng-tbody').innerHTML=rows.map(function(r){
-      return '<tr><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+'">'+r.f(w)+'</td>';}).join('')+'</tr>';
+    var eth=document.querySelector('#eng-tbody').closest('table').querySelector('thead tr');
+    if(eth)eth.innerHTML='<th>Week</th>'+metrics.map(function(m){return '<th class="num">'+m.l+'</th>';}).join('');
+    document.getElementById('eng-tbody').innerHTML=weeks.map(function(w,i){
+      var ac=i===activeIdx;
+      return '<tr><td class="metric-col'+(ac?' active-col':'')+'">'+w.label+'</td>'+metrics.map(function(m){return '<td class="num'+(ac?' active-col':'')+'">'+m.f(w)+'</td>';}).join('')+'</tr>';
     }).join('');
   }
 
   function buildLeads(){
-    setHdr('th-l',5); setAct('th-l',5);
-    var rows=[
-      {l:'PLG Signup (sign_up_lead_email)', f:function(w){return w.leads.plg_signup||0;}},
-      {l:'Demo Lead', f:function(w){return w.leads.demo_lead||0;}},
-      {l:'Callback', f:function(w){return w.leads.callback||0;}},
-      {l:'Waiting List', f:function(w){return w.leads.waiting_list||0;}},
-      {l:'Newsletter', f:function(w){return w.leads.newsletter||0;}},
-      {l:'TOTAL Leads', f:function(w){return w.leads.total_leads;}, tot:true},
-      {l:'CVR % (total leads / unique visitors)', f:function(w){return w.leads.cvr?d2(w.leads.cvr)+'%':'—';}},
-      {l:'Account Creations (sign_up, funnel only)', f:function(w){return w.leads.sign_up_account||0;}, dim:true},
-    ];
-    document.getElementById('lead-tbody').innerHTML=rows.map(function(r){
-      return '<tr'+(r.tot?' class="total-row"':'')+'><td class="metric-col"'+(r.dim?' style="color:var(--dim)"':'')+'>'+r.l+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+(r.dim?' style="color:var(--dim)"':'')+'">'+(r.dim?'('+r.f(w)+')':r.f(w))+'</td>';}).join('')+'</tr>';
+    var lth=document.querySelector('#lead-tbody').closest('table').querySelector('thead tr');
+    if(lth)lth.innerHTML='<th>Week</th><th class="num">PLG Signup</th><th class="num">Demo Lead</th><th class="num">Callback</th><th class="num">Wait. List</th><th class="num">Newsletter</th><th class="num" style="font-weight:500">TOTAL</th><th class="num">CVR %</th><th class="num" style="color:var(--dim)">Acct.</th>';
+    document.getElementById('lead-tbody').innerHTML=weeks.map(function(w,i){
+      var ac=i===activeIdx;
+      return '<tr><td class="metric-col'+(ac?' active-col':'')+'">'+w.label+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'">'+( w.leads.plg_signup||0)+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'">'+( w.leads.demo_lead||0)+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'">'+( w.leads.callback||0)+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'">'+( w.leads.waiting_list||0)+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'">'+( w.leads.newsletter||0)+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'" style="font-weight:500">'+w.leads.total_leads+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'">'+( w.leads.cvr?d2(w.leads.cvr)+'%':'—')+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'" style="color:var(--dim)">'+'('+(w.leads.sign_up_account||0)+')'+'</td>'
+        +'</tr>';
     }).join('');
   }
 
   function buildMql(){
-    setHdr('th-m',5); setAct('th-m',5);
-    var rows=[
-      {l:'Demo Lead (combined)', f:function(w){return w.leads.demo_lead||0;}},
-      {l:'Callback', f:function(w){return w.leads.callback||0;}},
-      {l:'Leady New Leads', f:function(w){return w.mql.leady_new_lead>0?w.mql.leady_new_lead:'—';}},
-    ];
-    document.getElementById('mql-tbody').innerHTML=rows.map(function(r){
-      return '<tr><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){var v=r.f(w),c='num'+(i===activeIdx?' active-col':'');return '<td class="'+c+'">'+v+'</td>';}).join('')+'</tr>';
+    var mth=document.querySelector('#mql-tbody').closest('table').querySelector('thead tr');
+    if(mth)mth.innerHTML='<th>Week</th><th class="num">Demo Lead</th><th class="num">Callback</th><th class="num">Leady</th>';
+    document.getElementById('mql-tbody').innerHTML=weeks.map(function(w,i){
+      var ac=i===activeIdx;
+      return '<tr><td class="metric-col'+(ac?' active-col':'')+'">'+w.label+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'">'+( w.leads.demo_lead||0)+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'">'+( w.leads.callback||0)+'</td>'
+        +'<td class="num'+(ac?' active-col':'')+'">'+( w.mql.leady_new_lead>0?w.mql.leady_new_lead:'—')+'</td>'
+        +'</tr>';
     }).join('');
   }
 
@@ -790,25 +889,62 @@ td.num, th.num { text-align: center; }
     var w=weeks[activeIdx], p=activeIdx>0?weeks[activeIdx-1]:null;
     document.getElementById('funnel-wk').textContent=w.label;
     var uv=w.reach.unique_visitors;
-    function cell(s,v,sub,trend){return '<div class="funnel-cell"><div class="funnel-stage">'+s+'</div><div class="funnel-vol">'+v+'</div>'+(sub?'<div class="funnel-cvr">'+sub+'</div>':'')+(trend?'<div class="funnel-trend">'+trend+'</div>':'')+'</div>';}
 
-    // PLG: UV → Install View → PLG Signup (email) → Account Created
+    // SVG helpers
+    function nd(x,y,nw,nh,stroke,stageLabel,val,cvr,wow){
+      var wc=wow?(wow.charAt(0)==='-'?'#F87171':wow.charAt(0)==='+'?'#4ADE80':'#71717A'):'';
+      return '<g>'
+        +'<rect x="'+x+'" y="'+y+'" width="'+nw+'" height="'+nh+'" rx="6" fill="#18181B" stroke="'+stroke+'" stroke-width="1.5"/>'
+        +'<text x="'+(x+nw/2)+'" y="'+(y+14)+'" text-anchor="middle" fill="#52525B" font-size="8.5" font-family="JetBrains Mono,monospace" letter-spacing="0.8">'+stageLabel+'</text>'
+        +'<text x="'+(x+nw/2)+'" y="'+(y+36)+'" text-anchor="middle" fill="#E8E8E8" font-size="17" font-weight="bold" font-family="JetBrains Mono,monospace">'+val+'</text>'
+        +(cvr?'<text x="'+(x+nw/2)+'" y="'+(y+52)+'" text-anchor="middle" fill="#71717A" font-size="9" font-family="JetBrains Mono,monospace">'+cvr+'</text>':'')
+        +(wow&&wc?'<text x="'+(x+nw/2)+'" y="'+(y+66)+'" text-anchor="middle" fill="'+wc+'" font-size="9" font-family="JetBrains Mono,monospace">'+wow+'</text>':'')
+        +'</g>';
+    }
+    function bz(x1,y1,x2,y2,color,sw){
+      var mx=(x1+x2)/2;
+      return '<path d="M '+x1+','+y1+' C '+mx+','+y1+' '+mx+','+y2+' '+x2+','+y2+'" fill="none" stroke="'+color+'" stroke-width="'+(sw||2)+'" opacity="0.45"/>';
+    }
+    function wt(cur,prev){
+      if(prev===null||prev===undefined)return '';
+      var diff=cur-(prev||0), pp=prev>0?((cur-prev)/prev*100).toFixed(1):'∞';
+      if(diff===0&&cur===0)return '';
+      return (diff>=0?'+':'')+diff+' ('+pp+'%)';
+    }
+
+    // PLG: Landing Page → Install View → PLG Signup → Account Created
     var inst=w.engagement.install_views||0, plg=w.leads.plg_signup||0, acct=w.leads.sign_up_account||0;
-    var pInst=p?p.engagement.install_views||0:null, pPlg=p?p.leads.plg_signup||0:null, pAcct=p?p.leads.sign_up_account||0:null;
-    document.getElementById('funnel-plg').innerHTML=
-      cell('Landing Page',fmt(uv),'',p?dH(pct(uv,p.reach.unique_visitors))+' WoW':'')+
-      cell('Install View',fmt(inst),(uv>0?(inst/uv*100).toFixed(1):0)+'% of UV',pInst!==null?dH(pct(inst,pInst))+' WoW':'')+
-      cell('PLG Signup Email',fmt(plg),(inst>0?(plg/inst*100).toFixed(0):0)+'% of installs',pPlg!==null?dH(pct(plg,pPlg))+' WoW':'')+
-      cell('Account Created',fmt(acct),(plg>0?(acct/plg*100).toFixed(0):0)+'% of signups',pAcct!==null?dH(pct(acct,pAcct))+' WoW':'');
+    var pUv=p?p.reach.unique_visitors:null, pInst=p?p.engagement.install_views:null, pPlg=p?p.leads.plg_signup:null, pAcct=p?p.leads.sign_up_account:null;
+    var NW=150,NH=78,SY=11,VBH=100;
+    var xs=[0,200,400,600],cy=SY+NH/2;
+    var bc='rgba(96,165,250,0.55)';
+    var svg='<svg viewBox="0 0 760 '+VBH+'" xmlns="http://www.w3.org/2000/svg">';
+    svg+=bz(xs[0]+NW,cy,xs[1],cy,bc,2);
+    svg+=bz(xs[1]+NW,cy,xs[2],cy,bc,2);
+    svg+=bz(xs[2]+NW,cy,xs[3],cy,bc,2);
+    svg+=nd(xs[0],SY,NW,NH,'rgba(96,165,250,0.45)','LANDING PAGE',fmt(uv),'',wt(uv,pUv));
+    svg+=nd(xs[1],SY,NW,NH,'rgba(96,165,250,0.3)','INSTALL VIEW',fmt(inst),uv>0?(inst/uv*100).toFixed(1)+'% of UV':'',wt(inst,pInst));
+    svg+=nd(xs[2],SY,NW,NH,'rgba(96,165,250,0.3)','PLG SIGNUP',fmt(plg),inst>0?(plg/inst*100).toFixed(0)+'% of installs':'',wt(plg,pPlg));
+    svg+=nd(xs[3],SY,NW,NH,'rgba(96,165,250,0.2)','ACCT CREATED',fmt(acct),plg>0?(acct/plg*100).toFixed(0)+'% of signups':'',wt(acct,pAcct));
+    svg+='</svg>';
+    document.getElementById('funnel-plg').innerHTML=svg;
 
-    // SLG: UV → Demo Lead + Callback
+    // SLG: Landing Page → Demo Lead + Callback → Total SLG
     var demo=w.leads.demo_lead||0, cb=w.leads.callback||0, slgTotal=demo+cb;
-    var pDemo=p?p.leads.demo_lead||0:null, pCb=p?p.leads.callback||0:null;
-    document.getElementById('funnel-slg').innerHTML=
-      cell('Landing Page',fmt(uv),'',p?dH(pct(uv,p.reach.unique_visitors))+' WoW':'')+
-      cell('Demo Lead',fmt(demo),(uv>0?(demo/uv*100).toFixed(2):0)+'% CVR',pDemo!==null?dH(pct(demo,pDemo||1))+' WoW':'')+
-      cell('Callback',fmt(cb),(uv>0?(cb/uv*100).toFixed(2):0)+'% CVR',pCb!==null?dH(pct(cb,pCb||1))+' WoW':'')+
-      cell('Total SLG',fmt(slgTotal),(uv>0?(slgTotal/uv*100).toFixed(2):0)+'% CVR','');
+    var pDemo=p?p.leads.demo_lead:null, pCb=p?p.leads.callback:null;
+    var lpY=50,demoY=5,cbY=94,totY=50;
+    var lpCY=lpY+NH/2, demoCY=demoY+NH/2, cbCY=cbY+NH/2, totCY=totY+NH/2;
+    var svg2='<svg viewBox="0 0 760 178" xmlns="http://www.w3.org/2000/svg">';
+    svg2+=bz(NW,lpCY,290,demoCY,'rgba(139,92,246,0.5)',2);
+    svg2+=bz(NW,lpCY,290,cbCY,'rgba(249,115,22,0.5)',2);
+    svg2+=bz(290+NW,demoCY,580,totCY,'rgba(139,92,246,0.4)',2);
+    svg2+=bz(290+NW,cbCY,580,totCY,'rgba(249,115,22,0.4)',2);
+    svg2+=nd(0,lpY,NW,NH,'rgba(96,165,250,0.45)','LANDING PAGE',fmt(uv),'',wt(uv,pUv));
+    svg2+=nd(290,demoY,NW,NH,'rgba(139,92,246,0.5)','DEMO LEAD',fmt(demo),uv>0?(demo/uv*100).toFixed(2)+'% CVR':'',wt(demo,pDemo));
+    svg2+=nd(290,cbY,NW,NH,'rgba(249,115,22,0.5)','CALLBACK',fmt(cb),uv>0?(cb/uv*100).toFixed(2)+'% CVR':'',wt(cb,pCb));
+    svg2+=nd(580,totY,NW,NH,'rgba(34,197,94,0.4)','TOTAL SLG',fmt(slgTotal),uv>0?(slgTotal/uv*100).toFixed(2)+'% CVR':'','');
+    svg2+='</svg>';
+    document.getElementById('funnel-slg').innerHTML=svg2;
   }
 
   var tChart=null;
@@ -816,17 +952,17 @@ td.num, th.num { text-align: center; }
     var ctx=document.getElementById('trend-chart').getContext('2d');
     if(tChart)tChart.destroy();
     tChart=new Chart(ctx,{type:'bar',data:{labels:weeks.map(function(w){return w.label;}),datasets:[
-      {label:'Unique Visitors',data:weeks.map(function(w){return w.reach.unique_visitors;}),backgroundColor:'rgba(96,165,250,0.22)',borderColor:'rgba(96,165,250,0.7)',borderWidth:1,yAxisID:'y',order:2},
-      {label:'Total Leads (v2)',data:weeks.map(function(w){return w.leads.total_leads;}),backgroundColor:'rgba(200,230,74,0.22)',borderColor:'rgba(200,230,74,0.7)',borderWidth:1,yAxisID:'y',order:3},
-      {label:'CTA Rate %',data:weeks.map(function(w){return w.engagement.cta_click_rate;}),type:'line',borderColor:'rgba(249,115,22,0.8)',backgroundColor:'transparent',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'rgba(249,115,22,0.8)',tension:0.3,yAxisID:'y2',order:1},
+      {label:'Unique Visitors',data:weeks.map(function(w){return w.reach.unique_visitors;}),backgroundColor:'rgba(96,165,250,0.18)',borderColor:'rgba(96,165,250,0.6)',borderWidth:1,yAxisID:'y',order:3},
+      {label:'Investment',data:weeks.map(function(w){return Math.round((w.paid.google.spend_czk||0)/25+(w.paid.linkedin.spend_usd||0));}),type:'line',borderColor:'rgba(249,115,22,0.85)',backgroundColor:'transparent',borderWidth:2,pointRadius:4,pointBackgroundColor:'rgba(249,115,22,0.85)',tension:0.3,yAxisID:'y',order:1},
+      {label:'Leads',data:weeks.map(function(w){return (w.leads.plg_signup||0)+(w.leads.demo_lead||0)+(w.leads.callback||0);}),type:'line',borderColor:'rgba(200,230,74,0.9)',backgroundColor:'transparent',borderWidth:2,pointRadius:4,pointBackgroundColor:'rgba(200,230,74,0.9)',tension:0.3,yAxisID:'y2',order:2},
     ]},options:{responsive:true,maintainAspectRatio:false,plugins:{
       legend:{labels:{color:'#71717A',font:{family:'JetBrains Mono',size:10},boxWidth:10}},
-      tooltip:{backgroundColor:'#18181B',titleColor:'#E8E8E8',bodyColor:'#A1A1AA',borderColor:'rgb(39,39,42)',borderWidth:1}
+      tooltip:{backgroundColor:'#18181B',titleColor:'#E8E8E8',bodyColor:'#A1A1AA',borderColor:'rgb(39,39,42)',borderWidth:1,callbacks:{label:function(c){var v=c.parsed.y,l=c.dataset.label;if(l==='Investment')return ' Investment: $'+v.toLocaleString();if(l==='Leads')return ' Leads: '+v;return ' '+l+': '+v.toLocaleString();}}}
     },scales:{
       x:{ticks:{color:'#71717A',font:{family:'JetBrains Mono',size:10}},grid:{color:'rgba(39,39,42,0.5)'}},
-      y:{ticks:{color:'#71717A',font:{family:'JetBrains Mono',size:10}},grid:{color:'rgba(39,39,42,0.5)'},position:'left'},
-      y2:{ticks:{color:'#F97316',font:{family:'JetBrains Mono',size:10},callback:function(v){return v.toFixed(1)+'%';}},grid:{display:false},position:'right'}
-    }}});
+      y:{ticks:{color:'#71717A',font:{family:'JetBrains Mono',size:10},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'k':v;}},grid:{color:'rgba(39,39,42,0.5)'},position:'left',title:{display:true,text:'Visitors / Investment $',color:'#52525B',font:{family:'JetBrains Mono',size:9}}},
+      y2:{ticks:{color:'rgba(200,230,74,0.8)',font:{family:'JetBrains Mono',size:10}},grid:{display:false},position:'right',title:{display:true,text:'Leads',color:'rgba(200,230,74,0.6)',font:{family:'JetBrains Mono',size:9}},beginAtZero:true}
+    }}})
   }
 
   var sChart=null;
@@ -842,21 +978,33 @@ td.num, th.num { text-align: center; }
       {n:'Unique Visitors', f:function(w){return fmt(w.reach.unique_visitors);}},
     ].map(function(r){return '<tr><td class="metric-col">'+r.n+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+'">'+r.f(w)+'</td>';}).join('')+'</tr>';}).join('');
 
-    document.getElementById('src-eng-tbody').innerHTML=[
-      {l:'CTA Click Rate (all traffic)', f:function(w){return d2(w.engagement.cta_click_rate)+'%';}},
-      {l:'LinkedIn LP % (LP÷PV)', f:function(w){return w.reach.pageviews>0?(w.paid.linkedin.lp_clicks/w.reach.pageviews*100).toFixed(1)+'%':'—';}},
-      {l:'Google Clicks % (Clicks÷PV)', f:function(w){return w.reach.pageviews>0?((w.paid.google.clicks||0)/w.reach.pageviews*100).toFixed(1)+'%':'—';}},
-      {l:'Install Views', f:function(w){return fmt(w.engagement.install_views);}},
-      {l:'Pricing Selections', f:function(w){return w.engagement.pricing_selections;}},
-    ].map(function(r){return '<tr><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+'">'+r.f(w)+'</td>';}).join('')+'</tr>';}).join('');
+    var seM=[
+      {l:'CTA Rate',   f:function(w){return d2(w.engagement.cta_click_rate)+'%';}},
+      {l:'LI LP %',    f:function(w){return w.reach.pageviews>0?(w.paid.linkedin.lp_clicks/w.reach.pageviews*100).toFixed(1)+'%':'—';}},
+      {l:'G Clicks %', f:function(w){return w.reach.pageviews>0?((w.paid.google.clicks||0)/w.reach.pageviews*100).toFixed(1)+'%':'—';}},
+      {l:'Installs',   f:function(w){return fmt(w.engagement.install_views);}},
+      {l:'Pricing',    f:function(w){return w.engagement.pricing_selections;}},
+    ];
+    var seth=document.querySelector('#src-eng-tbody').closest('table').querySelector('thead tr');
+    if(seth)seth.innerHTML='<th>Week</th>'+seM.map(function(m){return '<th class="num">'+m.l+'</th>';}).join('');
+    document.getElementById('src-eng-tbody').innerHTML=weeks.map(function(w,i){
+      var ac=i===activeIdx;
+      return '<tr><td class="metric-col'+(ac?' active-col':'')+'">'+w.label+'</td>'+seM.map(function(m){return '<td class="num'+(ac?' active-col':'')+'">'+m.f(w)+'</td>';}).join('')+'</tr>';
+    }).join('');
 
-    document.getElementById('src-lead-tbody').innerHTML=[
+    var slM=[
       {l:'Total Leads', f:function(w){return w.leads.total_leads;}},
-      {l:'Google Paid Conv. (tracked)', f:function(w){return w.paid.google.conversions||'—';}},
-      {l:'LinkedIn Conv. (pixel gap)', f:function(){return '?';}},
-      {l:'CVR % (visitors → form)', f:function(w){return w.leads.cvr?d2(w.leads.cvr)+'%':'—';}},
-      {l:'Leady / RB2B Leads', f:function(w){return w.mql.leady_new_lead||'—';}},
-    ].map(function(r){return '<tr><td class="metric-col">'+r.l+'</td>'+weeks.map(function(w,i){return '<td class="num'+(i===activeIdx?' active-col':'')+'">'+r.f(w)+'</td>';}).join('')+'</tr>';}).join('');
+      {l:'G Conv.',     f:function(w){return w.paid.google.conversions||'—';}},
+      {l:'LI Conv.',    f:function(){return '?';}},
+      {l:'CVR %',       f:function(w){return w.leads.cvr?d2(w.leads.cvr)+'%':'—';}},
+      {l:'Leady',       f:function(w){return w.mql.leady_new_lead||'—';}},
+    ];
+    var slth=document.querySelector('#src-lead-tbody').closest('table').querySelector('thead tr');
+    if(slth)slth.innerHTML='<th>Week</th>'+slM.map(function(m){return '<th class="num">'+m.l+'</th>';}).join('');
+    document.getElementById('src-lead-tbody').innerHTML=weeks.map(function(w,i){
+      var ac=i===activeIdx;
+      return '<tr><td class="metric-col'+(ac?' active-col':'')+'">'+w.label+'</td>'+slM.map(function(m){return '<td class="num'+(ac?' active-col':'')+'">'+m.f(w)+'</td>';}).join('')+'</tr>';
+    }).join('');
 
     document.getElementById('src-mql-tbody').innerHTML=weeks.map(function(w){
       var li=w.paid.linkedin,g=w.paid.google;
@@ -868,10 +1016,13 @@ td.num, th.num { text-align: center; }
         (g.impressions>0?'<tr style="color:rgba(200,230,74,0.8)"><td>Google · '+w.label+'</td><td class="num">'+gSpend+'</td><td class="num">'+fmt(g.clicks)+' clicks</td><td class="num">'+gCpl+'</td><td class="num'+(g.conversions>10?' good':'')+'">'+g.conversions+'</td><td class="num">'+gCpa+'</td></tr>':'');
     }).join('');
 
-    // LinkedIn trend table
+    // LinkedIn trend table — weeks in rows, metrics in columns
     var dynTrend=weeks.map(function(w){var li=w.paid.linkedin,cpl=li.lp_clicks>0?'$'+(li.spend_usd/li.lp_clicks).toFixed(2):'—',ctr=li.impressions>0?(li.clicks/li.impressions*100).toFixed(2)+'%':'—';return{label:w.label,spend:'$'+li.spend_usd.toLocaleString(),lp:li.lp_clicks,cpl:cpl,impr:li.impressions,ctr:ctr};});
-    document.getElementById('li-trend-tbody').innerHTML=liTrendStatic.concat(dynTrend).map(function(r,i){
-      return '<tr><td>'+r.label+'</td><td class="num">'+r.spend+'</td><td class="num">'+fmt(r.lp)+'</td><td class="num'+(r.crit?' crit':'')+'">'+r.cpl+'</td><td class="num">'+fmt(r.impr)+'</td><td class="num">'+r.ctr+'</td><td class="num">'+(r.note||'—')+'</td></tr>';
+    var ltAll=liTrendStatic.concat(dynTrend);
+    var ltThead=document.querySelector('#li-trend-tbody').closest('table').querySelector('thead tr');
+    if(ltThead)ltThead.innerHTML='<th>Week</th><th class="num">Spend</th><th class="num">LP Clicks</th><th class="num">$/LP Click</th><th class="num">Impressions</th><th class="num">CTR</th><th class="num">Note</th>';
+    document.getElementById('li-trend-tbody').innerHTML=ltAll.map(function(r){
+      return '<tr><td class="metric-col">'+r.label+'</td><td class="num">'+r.spend+'</td><td class="num">'+fmt(r.lp)+'</td><td class="num'+(r.crit?' crit':'')+'">'+r.cpl+'</td><td class="num">'+fmt(r.impr)+'</td><td class="num">'+r.ctr+'</td><td class="num">'+(r.note||'—')+'</td></tr>';
     }).join('');
 
     // Stacked source chart
@@ -1215,6 +1366,15 @@ td.num, th.num { text-align: center; }
     });
   });
 
+  document.querySelectorAll('.paid-tab').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.paid-tab').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.querySelectorAll('.paid-panel').forEach(function(p) { p.style.display = 'none'; });
+      document.getElementById('paid-panel-' + btn.dataset.paid).style.display = '';
+    });
+  });
+
   var staticLive = {};
 
   function loadData(){
@@ -1226,49 +1386,93 @@ td.num, th.num { text-align: center; }
       document.getElementById('footer-right').textContent='updated '+upd;
       document.getElementById('updated-label').textContent=
         weeks.length?weeks[0].start.slice(0,7).replace('-',' ')+' – '+weeks[weeks.length-1].end:'—';
-      buildWeekTabs(); buildLiWeekly(); buildGaWeekly(); buildTrendChart(); refreshAll();
+      buildWeekTabs(); buildPaidSplit(); buildLiWeekly(); buildGaWeekly(); buildTrendChart(); refreshAll();
       return data;
     });
   }
 
+  // ── Refresh modal (SSE-driven) ─────────────────────────────────────────────
   var refreshBtn=document.getElementById('refresh-btn');
+  var roverlay=document.getElementById('rmodal-overlay');
+  var rmodalClose=document.getElementById('rmodal-close');
+
+  var STEPS={1:'rstep-1',2:'rstep-2',3:'rstep-3',4:'rstep-4',5:'rstep-5',6:'rstep-6',7:'rstep-7'};
+
+  function rsetStep(n, state, value){
+    var el=document.getElementById('rstep-'+n);
+    if(!el)return;
+    el.className='rstep '+state;
+    el.querySelector('.rstep-icon').textContent=state==='done'?'✓':state==='error'?'✗':state==='active'?'●':'○';
+    if(value!=null)el.querySelector('.rstep-value').textContent=value;
+  }
+  function rReset(){
+    for(var i=1;i<=7;i++)rsetStep(i,'','');
+    document.getElementById('rmodal-range').textContent='Connecting…';
+    document.getElementById('rmodal-result').classList.remove('show');
+    document.getElementById('rmodal-error').classList.remove('show');
+  }
+
   if(refreshBtn){
     refreshBtn.addEventListener('click',function(){
-      refreshBtn.textContent='↻ Fetching…';
+      var startDate=document.getElementById('fetch-date').value||'';
+      rReset();
+      roverlay.classList.add('open');
       refreshBtn.disabled=true;
-      refreshBtn.style.color='var(--accent)';
-      fetch('/api/refresh',{method:'POST'})
-        .then(function(r){return r.json();})
-        .then(function(res){
-          if(res.ok){
-            refreshBtn.textContent='✓ Done';
-            refreshBtn.style.color='var(--green)';
-            loadConvBehavior();
-            loadPaidParticipation();
-            attrCache = {};
-            var activeModel = (document.getElementById('attr-model-select')||{}).value || 'last';
-            loadAttribution(activeModel);
-            return loadData();
-          } else {
-            throw new Error(res.error||'refresh failed');
-          }
-        })
-        .catch(function(e){
-          // fallback: just reload JSON (GitHub Pages or offline)
-          refreshBtn.textContent='↻ Refresh';
-          refreshBtn.style.color='var(--error)';
-          refreshBtn.title='Error: '+e.message+' — reload page to retry';
-          console.warn('Refresh failed (local server required):',e.message);
-        })
-        .finally(function(){
-          setTimeout(function(){
-            refreshBtn.textContent='↻ Refresh';
-            refreshBtn.disabled=false;
-            refreshBtn.style.color='var(--muted)';
-          }, 3000);
-        });
+
+      var url='/api/refresh/stream'+(startDate?'?start='+startDate:'');
+      var es=new EventSource(url);
+
+      es.onmessage=function(e){
+        var d=JSON.parse(e.data);
+        if(d.type==='start'){
+          document.getElementById('rmodal-range').textContent=d.start+' → '+d.end;
+        } else if(d.type==='progress'){
+          // mark previous steps done
+          for(var i=1;i<d.step;i++)if(document.getElementById('rstep-'+i).classList.contains('active'))rsetStep(i,'done','');
+          rsetStep(d.step, d.value!=null?'done':'active', d.value||null);
+        } else if(d.type==='saving'){
+          rsetStep(7,'active',null);
+        } else if(d.type==='done'){
+          for(var i=1;i<=7;i++)rsetStep(i,'done','');
+          document.getElementById('rres-week').textContent=d.week||'—';
+          document.getElementById('rres-uv').textContent=(d.uv||0).toLocaleString();
+          document.getElementById('rres-leads').textContent=d.total_leads||'—';
+          document.getElementById('rmodal-result').classList.add('show');
+          es.close();
+        } else if(d.type==='error'){
+          document.getElementById('rmodal-error').textContent='Error: '+d.message;
+          document.getElementById('rmodal-error').classList.add('show');
+          es.close();
+          refreshBtn.disabled=false;
+        }
+      };
+      es.onerror=function(){
+        document.getElementById('rmodal-error').textContent='Connection lost — is the local server running?';
+        document.getElementById('rmodal-error').classList.add('show');
+        es.close();
+        refreshBtn.disabled=false;
+      };
     });
   }
+
+  if(rmodalClose){
+    rmodalClose.addEventListener('click',function(){
+      roverlay.classList.remove('open');
+      refreshBtn.disabled=false;
+      loadConvBehavior();
+      loadPaidParticipation();
+      attrCache={};
+      var activeModel=(document.getElementById('attr-model-select')||{}).value||'last';
+      loadAttribution(activeModel);
+      loadData();
+    });
+  }
+
+  roverlay&&roverlay.addEventListener('click',function(e){
+    if(e.target===roverlay&&document.getElementById('rmodal-result').classList.contains('show')){
+      rmodalClose.click();
+    }
+  });
 
   loadData().catch(function(e){console.error('weekly.json load failed:',e);});
   loadConvBehavior();
