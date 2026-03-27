@@ -1287,14 +1287,15 @@ td.num, th.num { text-align: center; }
 
   function buildWeekTabs(){
     var c=document.getElementById('wk-tabs');
-    var tabs=weeks.map(function(w,i){return '<button class="wk-tab'+(!activePeriodOverride&&i===activeIdx?' active':'')+'" data-idx="'+i+'">'+w.label+'</button>';});
+    var slots=activePeriodOverride?weeks.slice(0,-1):weeks;
+    var tabs=slots.map(function(w,i){return '<button class="wk-tab'+(!activePeriodOverride&&i===activeIdx?' active':'')+'" data-idx="'+i+'">'+w.label+'</button>';});
     if(activePeriodOverride)tabs.push('<button class="wk-tab active" data-idx="range" style="color:var(--accent)">'+activePeriodOverride.label+'</button>');
     c.innerHTML=tabs.join('');
     c.querySelectorAll('.wk-tab').forEach(function(btn){btn.addEventListener('click',function(){
       c.querySelectorAll('.wk-tab').forEach(function(b){b.classList.remove('active');});
       btn.classList.add('active');
       if(btn.dataset.idx==='range'){ /* keep override */ }
-      else { activePeriodOverride=null; activeIdx=parseInt(btn.dataset.idx); }
+      else { activePeriodOverride=null; activeIdx=parseInt(btn.dataset.idx); buildWeekTabs(); }
       refreshAll();
     });});
   }
