@@ -1474,6 +1474,15 @@ td.num, th.num { text-align: center; }
     }
   });
 
+  // Hide refresh controls on static hosts (GitHub Pages etc.)
+  var isStatic = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+  if (isStatic) {
+    var rbtn = document.getElementById('refresh-btn');
+    var fdate = document.getElementById('fetch-date');
+    if (rbtn)  rbtn.style.display  = 'none';
+    if (fdate) fdate.style.display = 'none';
+  }
+
   loadData().catch(function(e){console.error('weekly.json load failed:',e);});
   loadConvBehavior();
   loadPaidParticipation();
