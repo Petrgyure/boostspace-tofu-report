@@ -1,7 +1,7 @@
 {
   "_meta": {
     "source": "PostHog EU — project 100634",
-    "updated_at": "2026-04-15T09:03:16.113Z",
+    "updated_at": "2026-04-20T07:03:45.273Z",
     "updated_by": "fetch-week.js (PostHog HogQL + Google Ads DW + LinkedIn Ads DW)",
     "next_update": "2026-04-06T07:00:00.000Z",
     "version": 3,
@@ -107,52 +107,6 @@
     }
   },
   "weeks": [
-    {
-      "label": "Mar W4",
-      "range": "2026-03-23 – 2026-03-27",
-      "start": "2026-03-23",
-      "end": "2026-03-27",
-      "reach": {
-        "pageviews": 4032,
-        "unique_visitors": 2087,
-        "sessions": 2318,
-        "pages_per_session": 1.74
-      },
-      "engagement": {
-        "cta_clicks": 0,
-        "cta_click_rate": 0,
-        "install_views": 219,
-        "pricing_selections": 16
-      },
-      "leads": {
-        "total_leads": 87,
-        "cvr": 4.17,
-        "plg_signup": 68,
-        "sign_up_account": 15,
-        "demo_lead": 6,
-        "callback": 7,
-        "waiting_list": 4,
-        "newsletter": 2
-      },
-      "mql": {
-        "leady_new_lead": 23
-      },
-      "paid": {
-        "google": {
-          "impressions": 42402,
-          "clicks": 764,
-          "spend_czk": 31952,
-          "conversions": 30
-        },
-        "linkedin": {
-          "impressions": 3718,
-          "clicks": 133,
-          "lp_clicks": 9,
-          "spend_usd": 418.02,
-          "conversions": 0
-        }
-      }
-    },
     {
       "label": "Feb 25–Mar 27",
       "range": "2026-02-25 – 2026-03-27",
@@ -373,6 +327,52 @@
           "clicks": 306,
           "spend_czk": 10994,
           "conversions": 25
+        },
+        "linkedin": {
+          "impressions": 0,
+          "clicks": 0,
+          "lp_clicks": 0,
+          "spend_usd": 0,
+          "conversions": 0
+        }
+      }
+    },
+    {
+      "label": "Apr W3",
+      "range": "2026-04-20 – 2026-04-20",
+      "start": "2026-04-20",
+      "end": "2026-04-20",
+      "reach": {
+        "pageviews": 128,
+        "unique_visitors": 89,
+        "sessions": 88,
+        "pages_per_session": 1.45
+      },
+      "engagement": {
+        "cta_clicks": 0,
+        "cta_click_rate": 0,
+        "install_views": 8,
+        "pricing_selections": 1
+      },
+      "leads": {
+        "total_leads": 2,
+        "cvr": 2.25,
+        "plg_signup": 2,
+        "sign_up_account": 2,
+        "demo_lead": 0,
+        "callback": 0,
+        "waiting_list": 0,
+        "newsletter": 0
+      },
+      "mql": {
+        "leady_new_lead": 0
+      },
+      "paid": {
+        "google": {
+          "impressions": 338,
+          "clicks": 42,
+          "spend_czk": 1081,
+          "conversions": 2
         },
         "linkedin": {
           "impressions": 0,
