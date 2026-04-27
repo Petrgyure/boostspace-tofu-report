@@ -1,7 +1,7 @@
 {
   "_meta": {
     "source": "PostHog EU — project 100634",
-    "updated_at": "2026-04-20T07:03:45.273Z",
+    "updated_at": "2026-04-27T07:03:31.139Z",
     "updated_by": "fetch-week.js (PostHog HogQL + Google Ads DW + LinkedIn Ads DW)",
     "next_update": "2026-04-06T07:00:00.000Z",
     "version": 3,
@@ -107,98 +107,6 @@
     }
   },
   "weeks": [
-    {
-      "label": "Feb 25–Mar 27",
-      "range": "2026-02-25 – 2026-03-27",
-      "start": "2026-02-25",
-      "end": "2026-03-27",
-      "reach": {
-        "pageviews": 37643,
-        "unique_visitors": 20969,
-        "sessions": 25329,
-        "pages_per_session": 1.49
-      },
-      "engagement": {
-        "cta_clicks": 182,
-        "cta_click_rate": 0.87,
-        "install_views": 855,
-        "pricing_selections": 62
-      },
-      "leads": {
-        "total_leads": 405,
-        "cvr": 1.93,
-        "plg_signup": 304,
-        "sign_up_account": 131,
-        "demo_lead": 51,
-        "callback": 25,
-        "waiting_list": 16,
-        "newsletter": 9
-      },
-      "mql": {
-        "leady_new_lead": 79
-      },
-      "paid": {
-        "google": {
-          "impressions": 102955,
-          "clicks": 3060,
-          "spend_czk": 136721,
-          "conversions": 84
-        },
-        "linkedin": {
-          "impressions": 1560352,
-          "clicks": 16081,
-          "lp_clicks": 14514,
-          "spend_usd": 10058.34,
-          "conversions": 0
-        }
-      },
-      "_prev": {
-        "label": "Jan 25–Feb 24",
-        "range": "2026-01-25 – 2026-02-24",
-        "start": "2026-01-25",
-        "end": "2026-02-24",
-        "reach": {
-          "pageviews": 34774,
-          "unique_visitors": 20594,
-          "sessions": 23765,
-          "pages_per_session": 1.46
-        },
-        "engagement": {
-          "cta_clicks": 380,
-          "cta_click_rate": 1.85,
-          "install_views": 539,
-          "pricing_selections": 34
-        },
-        "leads": {
-          "total_leads": 139,
-          "cvr": 0.67,
-          "plg_signup": 78,
-          "sign_up_account": 101,
-          "demo_lead": 25,
-          "callback": 0,
-          "waiting_list": 19,
-          "newsletter": 17
-        },
-        "mql": {
-          "leady_new_lead": 0
-        },
-        "paid": {
-          "google": {
-            "impressions": 9,
-            "clicks": 1,
-            "spend_czk": 0,
-            "conversions": 0
-          },
-          "linkedin": {
-            "impressions": 1486163,
-            "clicks": 13596,
-            "lp_clicks": 9170,
-            "spend_usd": 20452.25,
-            "conversions": 3
-          }
-        }
-      }
-    },
     {
       "label": "Mar W5",
       "range": "2026-03-30 – 2026-04-03",
@@ -373,6 +281,52 @@
           "clicks": 42,
           "spend_czk": 1081,
           "conversions": 2
+        },
+        "linkedin": {
+          "impressions": 0,
+          "clicks": 0,
+          "lp_clicks": 0,
+          "spend_usd": 0,
+          "conversions": 0
+        }
+      }
+    },
+    {
+      "label": "Apr W4",
+      "range": "2026-04-27 – 2026-04-27",
+      "start": "2026-04-27",
+      "end": "2026-04-27",
+      "reach": {
+        "pageviews": 158,
+        "unique_visitors": 93,
+        "sessions": 98,
+        "pages_per_session": 1.61
+      },
+      "engagement": {
+        "cta_clicks": 0,
+        "cta_click_rate": 0,
+        "install_views": 5,
+        "pricing_selections": 0
+      },
+      "leads": {
+        "total_leads": 3,
+        "cvr": 3.23,
+        "plg_signup": 3,
+        "sign_up_account": 2,
+        "demo_lead": 0,
+        "callback": 0,
+        "waiting_list": 0,
+        "newsletter": 0
+      },
+      "mql": {
+        "leady_new_lead": 0
+      },
+      "paid": {
+        "google": {
+          "impressions": 580,
+          "clicks": 18,
+          "spend_czk": 843,
+          "conversions": 0
         },
         "linkedin": {
           "impressions": 0,
